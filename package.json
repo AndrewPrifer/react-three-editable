@@ -1,5 +1,5 @@
 {
-  "version": "0.1.2",
+  "version": "0.1.3",
   "license": "MIT",
   "description": "Tweak your react-three-fiber scene with a visual editor!",
   "repository": "AndrewPrifer/react-three-editable",
