@@ -1,9 +1,9 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Canvas } from 'react-three-fiber';
 import { useEditorStore } from '../store';
 import { OrbitControls } from '@react-three/drei';
 import shallow from 'zustand/shallow';
-import { Vector3 } from 'three';
+import { Vector3, WebGLRenderer } from 'three';
 import { saveAs } from 'file-saver';
 import Proxy from './Proxy';
 
@@ -66,11 +66,37 @@ const EditorScene = () => {
 };
 
 const Editor = () => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
   const [open, setOpen] = useState(false);
-  const [scene, editables] = useEditorStore((state) => [
+  const [scene, gl, editables] = useEditorStore((state) => [
     state.scene,
+    state.gl,
+
     state.editables,
   ]);
+
+  useEffect(() => {
+    let animationHandle: number;
+
+    const draw = (gl: WebGLRenderer) => () => {
+      const width = (gl.domElement.width / gl.domElement.height) * 150;
+
+      const ctx = canvasRef.current!.getContext('2d')!;
+
+      ctx.clearRect(0, 0, width, 150);
+      ctx.drawImage(gl.domElement, 0, 0, width, 150);
+      animationHandle = requestAnimationFrame(draw(gl));
+    };
+
+    if (open && gl) {
+      draw(gl)();
+    }
+
+    return () => {
+      cancelAnimationFrame(animationHandle);
+    };
+  }, [open]);
 
   return open ? (
     <>
@@ -109,6 +135,17 @@ const Editor = () => {
           zIndex: 1001,
         }}
       >
+        {gl && (
+          <canvas
+            ref={canvasRef}
+            width={(gl.domElement.width / gl.domElement.height) * 150}
+            height={150}
+            style={{
+              outline: '1px solid black',
+            }}
+          />
+        )}
+
         <button onClick={() => setOpen(false)}>Close</button>
         <button
           onClick={() => {

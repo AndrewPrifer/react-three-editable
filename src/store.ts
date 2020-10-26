@@ -1,5 +1,5 @@
 import create from 'zustand';
-import { Euler, Object3D, Scene, Vector3 } from 'three';
+import { Euler, Object3D, Scene, Vector3, WebGLRenderer } from 'three';
 import produce, { immerable } from 'immer';
 import { devtools } from 'zustand/middleware';
 
@@ -75,10 +75,13 @@ export type Editable =
 
 export type EditorStore = {
   scene: Scene | null;
+  gl: WebGLRenderer | null;
+
   staticSceneProxy: Scene | null;
   editables: Record<string, Editable>;
   selected: string | null;
-  init: (scene: Scene, initialState?: InitialState) => void;
+  init: (scene: Scene, gl: WebGLRenderer, initialState?: InitialState) => void;
+
   addEditable: (
     type: Exclude<EditableType, 'nil'>,
     object: Object3D,
@@ -93,10 +96,12 @@ export type EditorStore = {
 export const useEditorStore = create<EditorStore>(
   devtools((set) => ({
     scene: null,
+    gl: null,
+
     staticSceneProxy: null,
     editables: {},
     selected: null,
-    init: (scene, initialState) => {
+    init: (scene, gl, initialState) => {
       const staticSceneProxy = scene.clone();
 
       const remove: Object3D[] = [];
@@ -124,7 +129,7 @@ export const useEditorStore = create<EditorStore>(
           )
         : {};
 
-      set({ scene, staticSceneProxy, editables });
+      set({ scene, gl, staticSceneProxy, editables });
     },
     addEditable: (type, object, codeTransform, uniqueName) =>
       set((state) => {
@@ -170,6 +175,8 @@ export const useEditorStore = create<EditorStore>(
     setSelected: (name: string) => {
       set({ selected: name });
     },
+    // Not sure why this line makes the type checker flip out when gl is part of the store, but it kills my computer.
+    // @ts-ignore
     set: (fn) => set(produce(fn)),
   }))
 );
