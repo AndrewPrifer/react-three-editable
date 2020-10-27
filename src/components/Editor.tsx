@@ -84,7 +84,8 @@ const Editor = () => {
 
       const ctx = canvasRef.current!.getContext('2d')!;
 
-      ctx.clearRect(0, 0, width, 150);
+      ctx.fillStyle = 'white';
+      ctx.fillRect(0, 0, width, 150);
       ctx.drawImage(gl.domElement, 0, 0, width, 150);
       animationHandle = requestAnimationFrame(draw(gl));
     };
