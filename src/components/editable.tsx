@@ -6,8 +6,8 @@ import React, {
   useRef,
   VFC,
 } from 'react';
-import { Euler, Group, Vector3 } from 'three';
-import { Transform, useEditorStore } from '../store';
+import { Euler, Group, Matrix4, Quaternion, Vector3 } from 'three';
+import { useEditorStore } from '../store';
 import shallow from 'zustand/shallow';
 import mergeRefs from 'react-merge-refs';
 
@@ -28,73 +28,65 @@ const editable: EditableComponents = {
         shallow
       );
 
-      const positionVector = useMemo(
-        () =>
-          position
-            ? Array.isArray(position)
-              ? new Vector3(...position)
-              : position
-            : new Vector3(),
-        [position]
-      );
+      const codeTransform = useMemo(() => {
+        const positionVector = position
+          ? Array.isArray(position)
+            ? new Vector3(...position)
+            : position
+          : new Vector3();
 
-      const rotationEuler = useMemo(
-        () =>
-          rotation
-            ? Array.isArray(rotation)
-              ? new Euler(...rotation)
-              : rotation
-            : new Euler(),
-        [rotation]
-      );
+        const rotationQuaternion = new Quaternion();
+        const euler = rotation
+          ? Array.isArray(rotation)
+            ? new Euler(...rotation)
+            : rotation
+          : new Euler();
+        rotationQuaternion.setFromEuler(euler);
 
-      const scaleVector = useMemo(
-        () =>
-          scale
-            ? Array.isArray(scale)
-              ? new Vector3(...scale)
-              : scale
-            : new Vector3(),
-        [scale]
-      );
+        const scaleVector = scale
+          ? Array.isArray(scale)
+            ? new Vector3(...scale)
+            : scale
+          : new Vector3(1, 1, 1);
+
+        const transformMatrix = new Matrix4();
+        transformMatrix.compose(
+          positionVector,
+          rotationQuaternion,
+          scaleVector
+        );
+
+        return transformMatrix;
+      }, [position, rotation, scale]);
 
       useLayoutEffect(() => {
-        addEditable(
-          'group',
-          objectRef.current!,
-          new Transform({
-            position: positionVector,
-            rotation: rotationEuler,
-            scale: scaleVector,
-          }),
-          uniqueName
-        );
+        addEditable('group', objectRef.current!, codeTransform, uniqueName);
 
         return () => {
           removeEditable(uniqueName);
         };
-      }, [
-        addEditable,
-        removeEditable,
-        positionVector,
-        rotationEuler,
-        scaleVector,
-      ]);
+      }, [addEditable, removeEditable, codeTransform]);
 
       useLayoutEffect(() => {
-        objectRef.current!.position.addVectors(
-          positionVector,
-          useEditorStore.getState().editables[uniqueName].editorTransform
-            .position
-        );
+        const obj = objectRef.current!;
+        // source of truth is .position, .quaternion and .scale, not the matrix, so we have to do this instead of setting the matrix
+        new Matrix4()
+          .multiplyMatrices(
+            codeTransform,
+            useEditorStore.getState().editables[uniqueName].editorTransform
+          )
+          .decompose(obj.position, obj.quaternion, obj.scale);
 
         const unsub = useEditorStore.subscribe(
-          (editorTransform: Transform | null) => {
+          (editorTransform: Matrix4 | null) => {
             if (editorTransform) {
-              objectRef.current!.position.addVectors(
-                positionVector,
-                editorTransform.position
-              );
+              new Matrix4()
+                .multiplyMatrices(
+                  codeTransform,
+                  useEditorStore.getState().editables[uniqueName]
+                    .editorTransform
+                )
+                .decompose(obj.position, obj.quaternion, obj.scale);
             }
           },
           (state) => state.editables[uniqueName].editorTransform
@@ -103,7 +95,7 @@ const editable: EditableComponents = {
         return () => {
           unsub();
         };
-      }, [positionVector]);
+      }, [codeTransform]);
 
       return (
         <group

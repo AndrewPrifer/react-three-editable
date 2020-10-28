@@ -26,6 +26,7 @@ const SetupScene = () => {
         castShadow
       />
       <pointLight position={[-10, 30, 30]} />
+      <gridHelper />
       <Plane
         rotation={[-Math.PI / 2, 0, 0]}
         scale={[10, 10, 10]}
@@ -34,17 +35,19 @@ const SetupScene = () => {
       >
         <meshStandardMaterial />
       </Plane>
-      <group position={[0, 0.5, 0]}>
-        <e.group position={[1, 0, 1]} uniqueName="Box1">
-          <Box castShadow receiveShadow>
-            <meshStandardMaterial />
-          </Box>
-        </e.group>
-        <e.group position={[3, 2, 1]} uniqueName="Box2">
-          <Sphere material={material.current} castShadow receiveShadow>
-            <meshStandardMaterial />
-          </Sphere>
-        </e.group>
+      <group position={[0, -1, 0]}>
+        <group position={[0, 1, 0]} scale={[2, 1, 1]}>
+          <e.group position={[0.5, 0.5, 0.5]} uniqueName="Box1">
+            <Box castShadow receiveShadow>
+              <meshStandardMaterial />
+            </Box>
+          </e.group>
+          <e.group position={[3, 2, 1]} uniqueName="Box2">
+            <Sphere material={material.current} castShadow receiveShadow>
+              <meshStandardMaterial />
+            </Sphere>
+          </e.group>
+        </group>
       </group>
     </>
   );

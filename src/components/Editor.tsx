@@ -1,22 +1,18 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Canvas } from 'react-three-fiber';
-import { useEditorStore } from '../store';
+import { TransformControlMode, useEditorStore } from '../store';
 import { OrbitControls } from '@react-three/drei';
 import shallow from 'zustand/shallow';
-import { Vector3, WebGLRenderer } from 'three';
+import { WebGLRenderer } from 'three';
 import { saveAs } from 'file-saver';
 import Proxy from './Proxy';
+
+const referenceHeight = 200;
 
 const EditorScene = () => {
   const orbitControlsRef = useRef<OrbitControls>();
 
-  const [
-    staticSceneProxy,
-    editables,
-    selected,
-    setSelected,
-    set,
-  ] = useEditorStore(
+  const [staticSceneProxy, editables, selected, setSelected] = useEditorStore(
     (state) => [
       state.staticSceneProxy,
       state.editables,
@@ -40,23 +36,11 @@ const EditorScene = () => {
         ([name, editable]) =>
           editable.type !== 'nil' && (
             <Proxy
+              editableName={name}
+              editable={editable}
               selected={selected === name}
-              orbitControlsRef={orbitControlsRef}
-              proxyObject={editable.proxy}
               onClick={() => setSelected(name)}
-              onChange={() => {
-                set((state) => {
-                  const newPosition = new Vector3();
-                  newPosition
-                    .subVectors(
-                      editable.proxy.position,
-                      editable.codeTransform.position
-                    )
-                    .sub(editable.original.parent!.position);
-
-                  state.editables[name].editorTransform.position = newPosition;
-                });
-              }}
+              orbitControlsRef={orbitControlsRef}
               key={name}
             />
           )
@@ -69,24 +53,32 @@ const Editor = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   const [open, setOpen] = useState(false);
-  const [scene, gl, editables] = useEditorStore((state) => [
+
+  const [
+    scene,
+    gl,
+    editables,
+    transformControlsMode,
+    setTransformControlsMode,
+  ] = useEditorStore((state) => [
     state.scene,
     state.gl,
-
     state.editables,
+    state.transformControlMode,
+    state.setTransformControlsMode,
   ]);
 
   useEffect(() => {
     let animationHandle: number;
-
     const draw = (gl: WebGLRenderer) => () => {
-      const width = (gl.domElement.width / gl.domElement.height) * 150;
+      const width =
+        (gl.domElement.width / gl.domElement.height) * referenceHeight;
 
       const ctx = canvasRef.current!.getContext('2d')!;
 
       ctx.fillStyle = 'white';
-      ctx.fillRect(0, 0, width, 150);
-      ctx.drawImage(gl.domElement, 0, 0, width, 150);
+      ctx.fillRect(0, 0, width, referenceHeight);
+      ctx.drawImage(gl.domElement, 0, 0, width, referenceHeight);
       animationHandle = requestAnimationFrame(draw(gl));
     };
 
@@ -139,8 +131,10 @@ const Editor = () => {
         {gl && (
           <canvas
             ref={canvasRef}
-            width={(gl.domElement.width / gl.domElement.height) * 150}
-            height={150}
+            width={
+              (gl.domElement.width / gl.domElement.height) * referenceHeight
+            }
+            height={referenceHeight}
             style={{
               outline: '1px solid black',
             }}
@@ -158,7 +152,7 @@ const Editor = () => {
                       Object.entries(editables).map(([name, editable]) => [
                         name,
                         {
-                          transform: editable.editorTransform.toObject(),
+                          transform: editable.editorTransform.toArray(),
                         },
                       ])
                     ),
@@ -174,6 +168,16 @@ const Editor = () => {
         >
           Export
         </button>
+        <select
+          value={transformControlsMode}
+          onChange={(event) =>
+            setTransformControlsMode(event.target.value as TransformControlMode)
+          }
+        >
+          <option value="translate">Translate</option>
+          <option value="rotate">Rotate</option>
+          <option value="scale">Scale</option>
+        </select>
       </div>
     </>
   ) : (
