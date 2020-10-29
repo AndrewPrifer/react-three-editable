@@ -19,13 +19,11 @@ export type Editable =
   | {
       type: Exclude<EditableType, 'nil'>;
       original: Object3D;
-      proxy: Object3D;
-      editorTransform: Matrix4;
-      codeTransform: Matrix4;
+      transform: Matrix4;
     }
   | {
       type: 'nil';
-      editorTransform: Matrix4;
+      transform: Matrix4;
     };
 
 export type EditorStore = {
@@ -40,8 +38,7 @@ export type EditorStore = {
 
   addEditable: (
     type: Exclude<EditableType, 'nil'>,
-    object: Object3D,
-    codeTransform: Matrix4,
+    original: Object3D,
     uniqueName: string
   ) => void;
   removeEditable: (uniqueName: string) => void;
@@ -81,7 +78,7 @@ export const useEditorStore = create<EditorStore>(
               name,
               {
                 type: 'nil',
-                editorTransform: new Matrix4().fromArray(editable.transform),
+                transform: new Matrix4().fromArray(editable.transform),
               },
             ])
           )
@@ -89,33 +86,24 @@ export const useEditorStore = create<EditorStore>(
 
       set({ scene, gl, staticSceneProxy, editables });
     },
-    addEditable: (type, object, codeTransform, uniqueName) =>
+    addEditable: (type, original, uniqueName) =>
       set((state) => {
-        let editorTransform = new Matrix4();
+        let transform = new Matrix4();
         if (state.editables[uniqueName]) {
           if (state.editables[uniqueName].type !== 'nil') {
             console.warn(`Editor already has an object named ${uniqueName}.`);
           } else {
-            editorTransform = state.editables[uniqueName].editorTransform;
+            transform = state.editables[uniqueName].transform;
           }
         }
-        const proxy = object.clone();
-
-        // transforms not applied yet, so we apply them here
-        new Matrix4()
-          .copy(codeTransform)
-          .multiply(editorTransform)
-          .decompose(proxy.position, proxy.quaternion, proxy.scale);
 
         return {
           editables: {
             ...state.editables,
             [uniqueName]: {
               type,
-              original: object,
-              proxy,
-              editorTransform,
-              codeTransform,
+              original: original,
+              transform,
             },
           },
         };
@@ -126,7 +114,7 @@ export const useEditorStore = create<EditorStore>(
         return {
           editables: {
             ...rest,
-            [name]: { type: 'nil', editorTransform: removed.editorTransform },
+            [name]: { type: 'nil', transform: removed.transform },
           },
         };
       }),

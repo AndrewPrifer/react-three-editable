@@ -1,4 +1,4 @@
-import { BoxHelper, Group, Matrix4 } from 'three';
+import { BoxHelper, Group } from 'three';
 import React, { useRef, VFC } from 'react';
 import { OrbitControls, useHelper } from '@react-three/drei';
 import TransformControls from './TransformControls';
@@ -22,9 +22,10 @@ const Proxy: VFC<ProxyProps> = ({
   selected,
   orbitControlsRef,
 }) => {
-  // hacky that we're creating a ref just to accommodate useHelper
-  const proxyObjectRef = useRef(editable.proxy);
   const proxyParentRef = useRef<Group>();
+
+  // we need to rerender when the proxy object is available
+  const proxyObjectRef = useRef(editable.original.clone());
 
   useHelper(proxyObjectRef, BoxHelper, selected ? 'darkred' : 'darkblue');
 
@@ -33,35 +34,35 @@ const Proxy: VFC<ProxyProps> = ({
     shallow
   );
 
+  // update the proxy and the parent every frame
   useFrame(() => {
     const proxyParent = proxyParentRef.current!;
+    // the first parent is the editable group
     editable.original.parent!.matrixWorld.decompose(
       proxyParent.position,
       proxyParent.quaternion,
       proxyParent.scale
     );
+
+    // const proxyObject = proxyObjectRef.current!;
+    // editable.original.copy(proxyObject, true);
   });
 
   return (
     <>
       <group ref={proxyParentRef} onClick={onClick}>
-        <primitive object={editable.proxy} />
+        <primitive object={proxyObjectRef.current} />
       </group>
       {selected && (
         <TransformControls
           mode={transformControlsMode}
           orbitControlsRef={orbitControlsRef}
-          object={editable.proxy}
+          object={proxyObjectRef.current}
           onObjectChange={() => {
             set((state) => {
-              const codeTransformInverse = new Matrix4();
-              codeTransformInverse.getInverse(editable.codeTransform);
-
               state.editables[
                 editableName
-              ].editorTransform = new Matrix4()
-                .copy(codeTransformInverse)
-                .multiply(editable.proxy.matrix);
+              ].transform = proxyObjectRef.current.matrix.clone();
             });
           }}
         />

@@ -152,7 +152,7 @@ const Editor = () => {
                       Object.entries(editables).map(([name, editable]) => [
                         name,
                         {
-                          transform: editable.editorTransform.toArray(),
+                          transform: editable.transform.toArray(),
                         },
                       ])
                     ),
