@@ -1,7 +1,7 @@
-import React, { ReactNode, VFC } from 'react';
+import React, { ReactNode, VFC, Suspense } from 'react';
 import { Canvas, useResource } from 'react-three-fiber';
 
-import { OrbitControls, Box, Plane, Sphere } from '@react-three/drei';
+import { OrbitControls, Box, Plane, Sphere, useGLTF } from '@react-three/drei';
 import e from '../src/components/editable';
 import { Material } from 'three';
 
@@ -10,6 +10,12 @@ interface SetupProps {
   cameraPosition?: [number, number, number];
   controls?: boolean;
 }
+
+const Suzanne = () => {
+  const suzanne = useGLTF('/suzanne.glb');
+
+  return <primitive object={suzanne.scene} />;
+};
 
 const SetupScene = () => {
   const material = useResource<Material>();
@@ -36,6 +42,11 @@ const SetupScene = () => {
         <meshStandardMaterial />
       </Plane>
       <group position={[0, -1, 0]}>
+        <e.group uniqueName="monkey" position={[0, 3, 0]}>
+          <Suspense fallback={null}>
+            <Suzanne />
+          </Suspense>
+        </e.group>
         <group position={[0, 1, 0]} scale={[2, 1, 1]}>
           <e.group position={[0.5, 0.5, 0.5]} uniqueName="Box1">
             <Box castShadow receiveShadow>
