@@ -19,6 +19,10 @@ body,
     overflow: auto;
 }
 
+.sb-show-main {
+    padding: 0 !important;
+}
+
 .html-story-block {
     color: white;
     width: 120px;
