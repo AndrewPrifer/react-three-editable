@@ -1,14 +1,12 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef } from 'react';
 import { Canvas } from 'react-three-fiber';
-import { TransformControlMode, useEditorStore } from '../store';
+import { useEditorStore } from '../store';
 import { OrbitControls } from '@react-three/drei';
 import shallow from 'zustand/shallow';
-import { WebGLRenderer } from 'three';
-import { saveAs } from 'file-saver';
-import root from 'react-shadow';
+import root from 'react-shadow/emotion';
+import { ChakraProvider, Button, Box } from '@chakra-ui/core';
 import Proxy from './Proxy';
-
-const referenceHeight = 200;
+import UI from './UI';
 
 const EditorScene = () => {
   const orbitControlsRef = useRef<OrbitControls>();
@@ -19,7 +17,6 @@ const EditorScene = () => {
       state.editables,
       state.selected,
       state.setSelected,
-      state.set,
     ],
     shallow
   );
@@ -51,151 +48,45 @@ const EditorScene = () => {
 };
 
 const Editor = () => {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-
-  const [open, setOpen] = useState(false);
-
-  const [
-    scene,
-    gl,
-    editables,
-    transformControlsMode,
-    setTransformControlsMode,
-  ] = useEditorStore((state) => [
-    state.scene,
-    state.gl,
-    state.editables,
-    state.transformControlMode,
-    state.setTransformControlsMode,
-  ]);
-
-  useEffect(() => {
-    let animationHandle: number;
-    const draw = (gl: WebGLRenderer) => () => {
-      const width =
-        (gl.domElement.width / gl.domElement.height) * referenceHeight;
-
-      const ctx = canvasRef.current!.getContext('2d')!;
-
-      ctx.fillStyle = 'white';
-      ctx.fillRect(0, 0, width, referenceHeight);
-      ctx.drawImage(gl.domElement, 0, 0, width, referenceHeight);
-      animationHandle = requestAnimationFrame(draw(gl));
-    };
-
-    if (open && gl) {
-      draw(gl)();
-    }
-
-    return () => {
-      cancelAnimationFrame(animationHandle);
-    };
-  }, [open]);
+  const [scene, editorOpen, setEditorOpen] = useEditorStore(
+    (state) => [state.scene, state.editorOpen, state.setEditorOpen],
+    shallow
+  );
 
   return (
     <root.div>
-      {open ? (
-        <>
-          <div
-            style={{
-              position: 'fixed',
-              width: '100%',
-              height: '100%',
-              top: '0',
-              left: '0',
-              right: '0',
-              bottom: '0',
-              backgroundColor: 'rgba(0,0,0,0.5)',
-              zIndex: 1000,
-              cursor: 'pointer',
-            }}
-          >
-            {scene ? (
-              <Canvas
-                colorManagement
-                camera={{ position: [5, 5, 5] }}
-                onCreated={({ gl }) => {
-                  gl.setClearColor('white');
-                }}
-                shadowMap
-              >
-                <EditorScene />
-              </Canvas>
-            ) : (
-              <div>Editor hasn't been attached.</div>
-            )}
-          </div>
-          <div
-            style={{
-              position: 'fixed',
-              zIndex: 1001,
-            }}
-          >
-            {gl && (
-              <canvas
-                ref={canvasRef}
-                width={
-                  (gl.domElement.width / gl.domElement.height) * referenceHeight
-                }
-                height={referenceHeight}
-                style={{
-                  outline: '1px solid black',
-                }}
-              />
-            )}
-
-            <button onClick={() => setOpen(false)}>Close</button>
-            <button
-              onClick={() => {
-                const blob = new Blob(
-                  [
-                    JSON.stringify(
-                      {
-                        editables: Object.fromEntries(
-                          Object.entries(editables).map(([name, editable]) => [
-                            name,
-                            {
-                              transform: editable.transform.toArray(),
-                            },
-                          ])
-                        ),
-                      },
-                      null,
-                      2
-                    ),
-                  ],
-                  { type: 'text/json;charset=utf-8' }
-                );
-                saveAs(blob, 'editableState.json');
-              }}
+      <ChakraProvider>
+        <Box pos="relative" zIndex={1000}>
+          {editorOpen ? (
+            <Box pos="fixed" top={0} bottom={0} left={0} right={0}>
+              {scene ? (
+                <Canvas
+                  colorManagement
+                  camera={{ position: [5, 5, 5] }}
+                  onCreated={({ gl }) => {
+                    gl.setClearColor('white');
+                  }}
+                  shadowMap
+                >
+                  <EditorScene />
+                </Canvas>
+              ) : (
+                <div>Editor hasn't been attached.</div>
+              )}
+              <UI />
+            </Box>
+          ) : (
+            <Button
+              pos="fixed"
+              bottom="20px"
+              left="20px"
+              onClick={() => setEditorOpen(true)}
             >
-              Export
-            </button>
-            <select
-              value={transformControlsMode}
-              onChange={(event) =>
-                setTransformControlsMode(
-                  event.target.value as TransformControlMode
-                )
-              }
-            >
-              <option value="translate">Translate</option>
-              <option value="rotate">Rotate</option>
-              <option value="scale">Scale</option>
-            </select>
-          </div>
-        </>
-      ) : (
-        <button
-          style={{
-            position: 'fixed',
-            zIndex: 1000,
-          }}
-          onClick={() => setOpen(true)}
-        >
-          Editor
-        </button>
-      )}
+              Editor
+            </Button>
+          )}
+        </Box>
+      </ChakraProvider>
     </root.div>
   );
 };

@@ -29,13 +29,13 @@ export type Editable =
 export type EditorStore = {
   scene: Scene | null;
   gl: WebGLRenderer | null;
-
   staticSceneProxy: Scene | null;
   editables: Record<string, Editable>;
   selected: string | null;
   transformControlMode: TransformControlMode;
-  init: (scene: Scene, gl: WebGLRenderer, initialState?: InitialState) => void;
+  editorOpen: boolean;
 
+  init: (scene: Scene, gl: WebGLRenderer, initialState?: InitialState) => void;
   addEditable: (
     type: Exclude<EditableType, 'nil'>,
     original: Object3D,
@@ -44,6 +44,7 @@ export type EditorStore = {
   removeEditable: (uniqueName: string) => void;
   setSelected: (name: string) => void;
   setTransformControlsMode: (mode: TransformControlMode) => void;
+  setEditorOpen: (open: boolean) => void;
   set: (fn: (state: EditorStore) => void) => void;
 };
 
@@ -51,11 +52,12 @@ export const useEditorStore = create<EditorStore>(
   devtools((set) => ({
     scene: null,
     gl: null,
-
     staticSceneProxy: null,
     editables: {},
     selected: null,
     transformControlMode: 'translate',
+    editorOpen: false,
+
     init: (scene, gl, initialState) => {
       const staticSceneProxy = scene.clone();
 
@@ -123,6 +125,9 @@ export const useEditorStore = create<EditorStore>(
     },
     setTransformControlsMode: (mode) => {
       set({ transformControlMode: mode });
+    },
+    setEditorOpen: (open) => {
+      set({ editorOpen: open });
     },
     // Not sure why this line makes the type checker flip out when gl is part of the store, but it kills my computer.
     // @ts-ignore

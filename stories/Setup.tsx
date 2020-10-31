@@ -32,7 +32,6 @@ const SetupScene = () => {
         castShadow
       />
       <pointLight position={[-10, 30, 30]} />
-      <gridHelper />
       <Plane
         rotation={[-Math.PI / 2, 0, 0]}
         scale={[10, 10, 10]}
