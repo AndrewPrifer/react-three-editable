@@ -5,7 +5,7 @@ import { devtools } from 'zustand/middleware';
 
 // nil is an object that has either been removed, or yet has to be added
 export type EditableType = 'group' | 'nil';
-export type TransformControlMode = 'translate' | 'rotate' | 'scale';
+export type TransformControlsMode = 'translate' | 'rotate' | 'scale';
 export type TransformControlsSpace = 'world' | 'local';
 
 export interface InitialState {
@@ -33,7 +33,7 @@ export type EditorStore = {
   staticSceneProxy: Scene | null;
   editables: Record<string, Editable>;
   selected: string | null;
-  transformControlMode: TransformControlMode;
+  transformControlsMode: TransformControlsMode;
   transformControlsSpace: TransformControlsSpace;
   editorOpen: boolean;
 
@@ -45,7 +45,7 @@ export type EditorStore = {
   ) => void;
   removeEditable: (uniqueName: string) => void;
   setSelected: (name: string) => void;
-  setTransformControlsMode: (mode: TransformControlMode) => void;
+  setTransformControlsMode: (mode: TransformControlsMode) => void;
   setTransformControlsSpace: (mode: TransformControlsSpace) => void;
   setEditorOpen: (open: boolean) => void;
   set: (fn: (state: EditorStore) => void) => void;
@@ -58,7 +58,7 @@ export const useEditorStore = create<EditorStore>(
     staticSceneProxy: null,
     editables: {},
     selected: null,
-    transformControlMode: 'translate',
+    transformControlsMode: 'translate',
     transformControlsSpace: 'world',
     editorOpen: false,
 
@@ -128,7 +128,7 @@ export const useEditorStore = create<EditorStore>(
       set({ selected: name });
     },
     setTransformControlsMode: (mode) => {
-      set({ transformControlMode: mode });
+      set({ transformControlsMode: mode });
     },
     setTransformControlsSpace: (mode) => {
       set({ transformControlsSpace: mode });

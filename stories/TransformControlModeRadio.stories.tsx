@@ -1,6 +1,6 @@
 import React from 'react';
 import { Meta, Story } from '@storybook/react';
-import TransformControlsModeRadio from '../src/components/TransformControlModeRadio';
+import TransformControlsModeRadio from '../src/components/TransformControlsModeRadio';
 import { ChakraProvider } from '@chakra-ui/core';
 
 const meta: Meta = {

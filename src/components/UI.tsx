@@ -1,6 +1,6 @@
 import React, { VFC } from 'react';
 import { Box, Flex, Button } from '@chakra-ui/core';
-import TransformControlModeRadio from './TransformControlModeRadio';
+import TransformControlsModeRadio from './TransformControlsModeRadio';
 import { useEditorStore } from '../store';
 import shallow from 'zustand/shallow';
 import ReferenceWindow from './ReferenceWindow';
@@ -10,15 +10,15 @@ import TransformControlsSpaceRadio from './TransformControlsSpaceRadio';
 const UI: VFC = () => {
   const [
     editables,
-    transformControlMode,
+    transformControlsMode,
     transformControlsSpace,
-    setTransformControlMode,
+    setTransformControlsMode,
     setTransformControlsSpace,
     setEditorOpen,
   ] = useEditorStore(
     (state) => [
       state.editables,
-      state.transformControlMode,
+      state.transformControlsMode,
       state.transformControlsSpace,
       state.setTransformControlsMode,
       state.setTransformControlsSpace,
@@ -44,9 +44,9 @@ const UI: VFC = () => {
       {/* Top row */}
       <Flex pos="absolute" left={0} right={0} top={0} justifyContent="center">
         <Box pointerEvents="all" mr={5}>
-          <TransformControlModeRadio
-            value={transformControlMode}
-            onChange={(value) => setTransformControlMode(value)}
+          <TransformControlsModeRadio
+            value={transformControlsMode}
+            onChange={(value) => setTransformControlsMode(value)}
           />
         </Box>
         <Box pointerEvents="all">

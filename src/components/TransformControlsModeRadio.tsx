@@ -8,7 +8,7 @@ import {
 } from '@chakra-ui/core';
 import { GiClockwiseRotation, GiMove, GiResize } from 'react-icons/gi';
 import { IconType } from 'react-icons';
-import { TransformControlMode } from '../store';
+import { TransformControlsMode } from '../store';
 
 interface RadioCardProps extends UseRadioProps {
   label: string;
@@ -41,12 +41,12 @@ const RadioCard: VFC<RadioCardProps> = (props) => {
   );
 };
 
-export interface TransformControlModeRadioProps {
-  value: TransformControlMode;
-  onChange: (value: TransformControlMode) => void;
+export interface TransformControlsModeRadioProps {
+  value: TransformControlsMode;
+  onChange: (value: TransformControlsMode) => void;
 }
 
-const TransformControlModeRadio: VFC<TransformControlModeRadioProps> = ({
+const TransformControlsModeRadio: VFC<TransformControlsModeRadioProps> = ({
   value,
   onChange,
 }) => {
@@ -79,4 +79,4 @@ const TransformControlModeRadio: VFC<TransformControlModeRadioProps> = ({
   );
 };
 
-export default TransformControlModeRadio;
+export default TransformControlsModeRadio;

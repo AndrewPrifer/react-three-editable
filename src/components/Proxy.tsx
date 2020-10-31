@@ -31,7 +31,7 @@ const Proxy: VFC<ProxyProps> = ({
 
   const [transformControlsMode, transformControlsSpace, set] = useEditorStore(
     (state) => [
-      state.transformControlMode,
+      state.transformControlsMode,
       state.transformControlsSpace,
       state.set,
     ],
