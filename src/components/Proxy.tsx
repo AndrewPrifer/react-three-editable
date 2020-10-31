@@ -29,12 +29,16 @@ const Proxy: VFC<ProxyProps> = ({
 
   useHelper(proxyObjectRef, BoxHelper, selected ? 'darkred' : 'darkblue');
 
-  const [transformControlsMode, set] = useEditorStore(
-    (state) => [state.transformControlMode, state.set],
+  const [transformControlsMode, transformControlsSpace, set] = useEditorStore(
+    (state) => [
+      state.transformControlMode,
+      state.transformControlsSpace,
+      state.set,
+    ],
     shallow
   );
 
-  // update the proxy and the parent every frame
+  // update the parent every frame
   useFrame(() => {
     const proxyParent = proxyParentRef.current!;
     // the first parent is the editable group
@@ -43,9 +47,6 @@ const Proxy: VFC<ProxyProps> = ({
       proxyParent.quaternion,
       proxyParent.scale
     );
-
-    // const proxyObject = proxyObjectRef.current!;
-    // editable.original.copy(proxyObject, true);
   });
 
   return (
@@ -56,6 +57,7 @@ const Proxy: VFC<ProxyProps> = ({
       {selected && (
         <TransformControls
           mode={transformControlsMode}
+          space={transformControlsSpace}
           orbitControlsRef={orbitControlsRef}
           object={proxyObjectRef.current}
           onObjectChange={() => {

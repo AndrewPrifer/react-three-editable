@@ -6,9 +6,9 @@ import {
   useRadioGroup,
   UseRadioProps,
 } from '@chakra-ui/core';
-import { GiClockwiseRotation, GiMove, GiResize } from 'react-icons/gi';
 import { IconType } from 'react-icons';
-import { TransformControlMode } from '../store';
+import { TransformControlsSpace } from '../store';
+import { BiCube, BiGlobe } from 'react-icons/bi';
 
 interface RadioCardProps extends UseRadioProps {
   label: string;
@@ -41,12 +41,12 @@ const RadioCard: VFC<RadioCardProps> = (props) => {
   );
 };
 
-export interface TransformControlModeRadioProps {
-  value: TransformControlMode;
-  onChange: (value: TransformControlMode) => void;
+export interface TransformControlsSpaceRadioProps {
+  value: TransformControlsSpace;
+  onChange: (value: TransformControlsSpace) => void;
 }
 
-const TransformControlModeRadio: VFC<TransformControlModeRadioProps> = ({
+const TransformControlsSpaceRadio: VFC<TransformControlsSpaceRadioProps> = ({
   value,
   onChange,
 }) => {
@@ -61,22 +61,17 @@ const TransformControlModeRadio: VFC<TransformControlModeRadioProps> = ({
   return (
     <ButtonGroup {...group} isAttached>
       <RadioCard
-        {...getRadioProps({ value: 'translate' })}
-        label="Translate"
-        icon={<GiMove />}
+        {...getRadioProps({ value: 'world' })}
+        label="World"
+        icon={<BiGlobe />}
       />
       <RadioCard
-        {...getRadioProps({ value: 'rotate' })}
-        label="Rotate"
-        icon={<GiClockwiseRotation />}
-      />
-      <RadioCard
-        {...getRadioProps({ value: 'scale' })}
-        label="Scale"
-        icon={<GiResize />}
+        {...getRadioProps({ value: 'local' })}
+        label="Local"
+        icon={<BiCube />}
       />
     </ButtonGroup>
   );
 };
 
-export default TransformControlModeRadio;
+export default TransformControlsSpaceRadio;

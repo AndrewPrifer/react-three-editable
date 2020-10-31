@@ -6,6 +6,7 @@ import { devtools } from 'zustand/middleware';
 // nil is an object that has either been removed, or yet has to be added
 export type EditableType = 'group' | 'nil';
 export type TransformControlMode = 'translate' | 'rotate' | 'scale';
+export type TransformControlsSpace = 'world' | 'local';
 
 export interface InitialState {
   editables: {
@@ -33,6 +34,7 @@ export type EditorStore = {
   editables: Record<string, Editable>;
   selected: string | null;
   transformControlMode: TransformControlMode;
+  transformControlsSpace: TransformControlsSpace;
   editorOpen: boolean;
 
   init: (scene: Scene, gl: WebGLRenderer, initialState?: InitialState) => void;
@@ -44,6 +46,7 @@ export type EditorStore = {
   removeEditable: (uniqueName: string) => void;
   setSelected: (name: string) => void;
   setTransformControlsMode: (mode: TransformControlMode) => void;
+  setTransformControlsSpace: (mode: TransformControlsSpace) => void;
   setEditorOpen: (open: boolean) => void;
   set: (fn: (state: EditorStore) => void) => void;
 };
@@ -56,6 +59,7 @@ export const useEditorStore = create<EditorStore>(
     editables: {},
     selected: null,
     transformControlMode: 'translate',
+    transformControlsSpace: 'world',
     editorOpen: false,
 
     init: (scene, gl, initialState) => {
@@ -125,6 +129,9 @@ export const useEditorStore = create<EditorStore>(
     },
     setTransformControlsMode: (mode) => {
       set({ transformControlMode: mode });
+    },
+    setTransformControlsSpace: (mode) => {
+      set({ transformControlsSpace: mode });
     },
     setEditorOpen: (open) => {
       set({ editorOpen: open });
