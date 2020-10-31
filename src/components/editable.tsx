@@ -14,7 +14,7 @@ interface EditableComponents {
   group: VFC<
     ComponentProps<'group'> & {
       uniqueName: string;
-      // working on the name, the idea is that you really only need a ref to this if you want to reparent the object
+      // you need a ref to this if you want to apply transforms programmatically or want to re-parent the object
       editableRootRef?: React.Ref<Group>;
     }
   >;
