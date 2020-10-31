@@ -67,6 +67,7 @@ const Editor = () => {
                     gl.setClearColor('white');
                   }}
                   shadowMap
+                  pixelRatio={window.devicePixelRatio}
                 >
                   <EditorScene />
                 </Canvas>
