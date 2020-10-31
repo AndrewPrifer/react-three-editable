@@ -38,7 +38,7 @@ const ReferenceWindow: VFC<ReferenceWindowProps> = ({ height }) => {
   return (
     gl && (
       <Box
-        display="inline-box"
+        display="inline-block"
         borderRadius={5}
         overflow="hidden"
         boxShadow="0px 0px 50px 10px rgba(0,0,0,0.20)"
