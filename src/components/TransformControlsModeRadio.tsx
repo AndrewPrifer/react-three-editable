@@ -1,9 +1,10 @@
 import React, { ReactElement, VFC } from 'react';
 import {
-  Button,
+  IconButton,
   ButtonGroup,
   useRadio,
   useRadioGroup,
+  useId,
   UseRadioProps,
 } from '@chakra-ui/core';
 import { GiClockwiseRotation, GiMove, GiResize } from 'react-icons/gi';
@@ -16,27 +17,28 @@ interface RadioCardProps extends UseRadioProps {
 }
 
 const RadioCard: VFC<RadioCardProps> = (props) => {
-  const { getInputProps, getCheckboxProps } = useRadio(props);
+  const id = useId(props.id, `transformControlsModeIcons`);
+  const { getInputProps, getCheckboxProps } = useRadio({ id, ...props });
 
   const input = getInputProps();
   const checkbox = getCheckboxProps();
 
   return (
     <>
-      <Button
+      <IconButton
+        aria-label={props.label}
         size="sm"
-        leftIcon={props.icon}
+        icon={props.icon}
         as="label"
+        htmlFor={input.id}
         {...checkbox}
         _checked={{
           bg: 'teal.600',
           color: 'white',
           borderColor: 'teal.600',
         }}
-      >
-        {props.label}
-        <input {...input} />
-      </Button>
+      />
+      <input {...input} />
     </>
   );
 };
