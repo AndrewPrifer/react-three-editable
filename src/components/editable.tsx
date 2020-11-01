@@ -5,32 +5,83 @@ import React, {
   useRef,
   VFC,
 } from 'react';
-import { Group, Matrix4 } from 'three';
-import { useEditorStore } from '../store';
+import { Group, Matrix4, Mesh, SpotLight } from 'three';
+import { EditableType, useEditorStore } from '../store';
 import shallow from 'zustand/shallow';
 import mergeRefs from 'react-merge-refs';
 
-interface EditableComponents {
-  group: VFC<
-    ComponentProps<'group'> & {
+type EditableComponents = {
+  [K in Exclude<EditableType, 'nil'>]: VFC<
+    ComponentProps<K> & {
       uniqueName: string;
       // you need a ref to this if you want to apply transforms programmatically or want to re-parent the object
       editableRootRef?: React.Ref<Group>;
     }
   >;
-  mesh: VFC<
-    ComponentProps<'mesh'> & {
-      uniqueName: string;
-      editableRootRef?: React.Ref<Group>;
-    }
-  >;
-  spotLight: VFC<
-    ComponentProps<'spotLight'> & {
-      uniqueName: string;
-      editableRootRef?: React.Ref<Group>;
-    }
-  >;
+};
+
+interface Elements {
+  group: Group;
+  mesh: Mesh;
+  spotLight: SpotLight;
 }
+
+const useEditable = <T extends Exclude<EditableType, 'nil'>>(
+  uniqueName: string,
+  type: T
+) => {
+  const objectRef = useRef<Elements[T]>();
+
+  const [addEditable, removeEditable] = useEditorStore(
+    (state) => [
+      state.addEditable,
+      state.removeEditable,
+      state.editables[uniqueName],
+    ],
+    shallow
+  );
+
+  useLayoutEffect(() => {
+    addEditable(type, objectRef.current!, uniqueName);
+
+    return () => {
+      removeEditable(uniqueName);
+    };
+  }, [addEditable, removeEditable]);
+
+  useLayoutEffect(() => {
+    const object = objectRef.current!;
+    // source of truth is .position, .quaternion and .scale, not the matrix, so we have to do this instead of setting the matrix
+    useEditorStore
+      .getState()
+      .editables[uniqueName].transform.decompose(
+        object.position,
+        object.quaternion,
+        object.scale
+      );
+
+    const unsub = useEditorStore.subscribe(
+      (transform: Matrix4 | null) => {
+        if (transform) {
+          useEditorStore
+            .getState()
+            .editables[uniqueName].transform.decompose(
+              object.position,
+              object.quaternion,
+              object.scale
+            );
+        }
+      },
+      (state) => state.editables[uniqueName].transform
+    );
+
+    return () => {
+      unsub();
+    };
+  }, []);
+
+  return objectRef;
+};
 
 const editable: EditableComponents = {
   group: forwardRef(
@@ -38,55 +89,7 @@ const editable: EditableComponents = {
       { uniqueName, editableRootRef, position, rotation, scale, ...props },
       ref
     ) => {
-      const objectRef = useRef<Group>();
-
-      const [addEditable, removeEditable] = useEditorStore(
-        (state) => [
-          state.addEditable,
-          state.removeEditable,
-          state.editables[uniqueName],
-        ],
-        shallow
-      );
-
-      useLayoutEffect(() => {
-        addEditable('group', objectRef.current!, uniqueName);
-
-        return () => {
-          removeEditable(uniqueName);
-        };
-      }, [addEditable, removeEditable]);
-
-      useLayoutEffect(() => {
-        const object = objectRef.current!;
-        // source of truth is .position, .quaternion and .scale, not the matrix, so we have to do this instead of setting the matrix
-        useEditorStore
-          .getState()
-          .editables[uniqueName].transform.decompose(
-            object.position,
-            object.quaternion,
-            object.scale
-          );
-
-        const unsub = useEditorStore.subscribe(
-          (transform: Matrix4 | null) => {
-            if (transform) {
-              useEditorStore
-                .getState()
-                .editables[uniqueName].transform.decompose(
-                  object.position,
-                  object.quaternion,
-                  object.scale
-                );
-            }
-          },
-          (state) => state.editables[uniqueName].transform
-        );
-
-        return () => {
-          unsub();
-        };
-      }, []);
+      const objectRef = useEditable(uniqueName, 'group');
 
       return (
         <group
@@ -106,55 +109,7 @@ const editable: EditableComponents = {
       { uniqueName, editableRootRef, position, rotation, scale, ...props },
       ref
     ) => {
-      const objectRef = useRef<Group>();
-
-      const [addEditable, removeEditable] = useEditorStore(
-        (state) => [
-          state.addEditable,
-          state.removeEditable,
-          state.editables[uniqueName],
-        ],
-        shallow
-      );
-
-      useLayoutEffect(() => {
-        addEditable('mesh', objectRef.current!, uniqueName);
-
-        return () => {
-          removeEditable(uniqueName);
-        };
-      }, [addEditable, removeEditable]);
-
-      useLayoutEffect(() => {
-        const object = objectRef.current!;
-        // source of truth is .position, .quaternion and .scale, not the matrix, so we have to do this instead of setting the matrix
-        useEditorStore
-          .getState()
-          .editables[uniqueName].transform.decompose(
-            object.position,
-            object.quaternion,
-            object.scale
-          );
-
-        const unsub = useEditorStore.subscribe(
-          (transform: Matrix4 | null) => {
-            if (transform) {
-              useEditorStore
-                .getState()
-                .editables[uniqueName].transform.decompose(
-                  object.position,
-                  object.quaternion,
-                  object.scale
-                );
-            }
-          },
-          (state) => state.editables[uniqueName].transform
-        );
-
-        return () => {
-          unsub();
-        };
-      }, []);
+      const objectRef = useEditable(uniqueName, 'mesh');
 
       return (
         <group
@@ -174,55 +129,7 @@ const editable: EditableComponents = {
       { uniqueName, editableRootRef, position, rotation, scale, ...props },
       ref
     ) => {
-      const objectRef = useRef<Group>();
-
-      const [addEditable, removeEditable] = useEditorStore(
-        (state) => [
-          state.addEditable,
-          state.removeEditable,
-          state.editables[uniqueName],
-        ],
-        shallow
-      );
-
-      useLayoutEffect(() => {
-        addEditable('spotLight', objectRef.current!, uniqueName);
-
-        return () => {
-          removeEditable(uniqueName);
-        };
-      }, [addEditable, removeEditable]);
-
-      useLayoutEffect(() => {
-        const object = objectRef.current!;
-        // source of truth is .position, .quaternion and .scale, not the matrix, so we have to do this instead of setting the matrix
-        useEditorStore
-          .getState()
-          .editables[uniqueName].transform.decompose(
-            object.position,
-            object.quaternion,
-            object.scale
-          );
-
-        const unsub = useEditorStore.subscribe(
-          (transform: Matrix4 | null) => {
-            if (transform) {
-              useEditorStore
-                .getState()
-                .editables[uniqueName].transform.decompose(
-                  object.position,
-                  object.quaternion,
-                  object.scale
-                );
-            }
-          },
-          (state) => state.editables[uniqueName].transform
-        );
-
-        return () => {
-          unsub();
-        };
-      }, []);
+      const objectRef = useEditable(uniqueName, 'spotLight');
 
       return (
         <group
