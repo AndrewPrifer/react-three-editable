@@ -22,6 +22,7 @@ const SetupScene = () => {
 
   return (
     <>
+      <e.orthographicCamera uniqueName="Camera1" />
       <ambientLight intensity={0.2} />
       <e.spotLight
         position={[5, 5, 5]}

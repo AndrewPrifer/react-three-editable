@@ -10,6 +10,8 @@ export type EditableType =
   | 'spotLight'
   | 'directionalLight'
   | 'pointLight'
+  | 'perspectiveCamera'
+  | 'orthographicCamera'
   | 'nil';
 export type TransformControlsMode = 'translate' | 'rotate' | 'scale';
 export type TransformControlsSpace = 'world' | 'local';

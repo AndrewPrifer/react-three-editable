@@ -10,6 +10,8 @@ import {
   Group,
   Matrix4,
   Mesh,
+  OrthographicCamera,
+  PerspectiveCamera,
   PointLight,
   SpotLight,
 } from 'three';
@@ -32,6 +34,8 @@ interface Elements {
   mesh: Mesh;
   spotLight: SpotLight;
   directionalLight: DirectionalLight;
+  perspectiveCamera: PerspectiveCamera;
+  orthographicCamera: OrthographicCamera;
   pointLight: PointLight;
 }
 
@@ -189,6 +193,46 @@ const editable: EditableComponents = {
           scale={scale}
         >
           <pointLight ref={mergeRefs([objectRef, ref])} {...props} />
+        </group>
+      );
+    }
+  ),
+  perspectiveCamera: forwardRef(
+    (
+      { uniqueName, editableRootRef, position, rotation, scale, ...props },
+      ref
+    ) => {
+      const objectRef = useEditable(uniqueName, 'perspectiveCamera');
+
+      return (
+        <group
+          ref={editableRootRef}
+          userData={{ editable: true }}
+          position={position}
+          rotation={rotation}
+          scale={scale}
+        >
+          <perspectiveCamera ref={mergeRefs([objectRef, ref])} {...props} />
+        </group>
+      );
+    }
+  ),
+  orthographicCamera: forwardRef(
+    (
+      { uniqueName, editableRootRef, position, rotation, scale, ...props },
+      ref
+    ) => {
+      const objectRef = useEditable(uniqueName, 'orthographicCamera');
+
+      return (
+        <group
+          ref={editableRootRef}
+          userData={{ editable: true }}
+          position={position}
+          rotation={rotation}
+          scale={scale}
+        >
+          <orthographicCamera ref={mergeRefs([objectRef, ref])} {...props} />
         </group>
       );
     }

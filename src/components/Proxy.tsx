@@ -1,5 +1,6 @@
 import {
   BoxHelper,
+  CameraHelper,
   DirectionalLightHelper,
   Group,
   PointLightHelper,
@@ -35,7 +36,8 @@ const Proxy: VFC<ProxyProps> = ({
     | typeof SpotLightHelper
     | typeof DirectionalLightHelper
     | typeof PointLightHelper
-    | typeof BoxHelper;
+    | typeof BoxHelper
+    | typeof CameraHelper;
 
   switch (editable.type) {
     case 'spotLight':
@@ -47,12 +49,16 @@ const Proxy: VFC<ProxyProps> = ({
     case 'pointLight':
       Helper = PointLightHelper;
       break;
+    case 'perspectiveCamera':
+    case 'orthographicCamera':
+      Helper = CameraHelper;
+      break;
     case 'group':
     case 'mesh':
       Helper = BoxHelper;
   }
 
-  let helperArgs: [string] | [number, string];
+  let helperArgs: [string] | [number, string] | [];
   const size = 1;
   const color = selected ? 'darkred' : 'darkblue';
 
@@ -66,6 +72,9 @@ const Proxy: VFC<ProxyProps> = ({
     case 'spotLight':
       helperArgs = [color];
       break;
+    case 'perspectiveCamera':
+    case 'orthographicCamera':
+      helperArgs = [];
   }
 
   useHelper(proxyObjectRef, Helper, ...helperArgs);
@@ -93,9 +102,13 @@ const Proxy: VFC<ProxyProps> = ({
     <>
       <group ref={proxyParentRef} onClick={onClick}>
         <primitive object={proxyObjectRef.current}>
-          {['spotLight', 'pointLight', 'directionalLight'].includes(
-            editable.type
-          ) && (
+          {[
+            'spotLight',
+            'pointLight',
+            'directionalLight',
+            'perspectiveCamera',
+            'orthographicCamera',
+          ].includes(editable.type) && (
             <Sphere args={[2, 4, 2]} onClick={onClick}>
               <meshBasicMaterial visible={false} />
             </Sphere>
