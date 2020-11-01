@@ -23,13 +23,14 @@ const SetupScene = () => {
   return (
     <>
       <ambientLight intensity={0.2} />
-      <spotLight
+      <e.spotLight
         position={[10, 30, 30]}
         penumbra={1}
         angle={Math.PI / 6}
         shadow-mapSize-width={2048}
         shadow-mapSize-height={2048}
         castShadow
+        uniqueName="SpotLight1"
       />
       <pointLight position={[-10, 30, 30]} />
       <Plane
@@ -57,6 +58,10 @@ const SetupScene = () => {
               <meshStandardMaterial />
             </Sphere>
           </e.group>
+          <e.mesh uniqueName="Mesh1">
+            <dodecahedronBufferGeometry />
+            <meshStandardMaterial />
+          </e.mesh>
         </group>
       </group>
     </>

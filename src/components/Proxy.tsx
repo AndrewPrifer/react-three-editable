@@ -1,6 +1,6 @@
-import { BoxHelper, Group } from 'three';
+import { BoxHelper, Group, SpotLightHelper } from 'three';
 import React, { useRef, VFC } from 'react';
-import { OrbitControls, useHelper } from '@react-three/drei';
+import { OrbitControls, useHelper, Sphere } from '@react-three/drei';
 import TransformControls from './TransformControls';
 import { Editable, useEditorStore } from '../store';
 import shallow from 'zustand/shallow';
@@ -25,7 +25,18 @@ const Proxy: VFC<ProxyProps> = ({
   const proxyParentRef = useRef<Group>();
   const proxyObjectRef = useRef(editable.original.clone());
 
-  useHelper(proxyObjectRef, BoxHelper, selected ? 'darkred' : 'darkblue');
+  let Helper: typeof SpotLightHelper | typeof BoxHelper;
+
+  switch (editable.type) {
+    case 'spotLight':
+      Helper = SpotLightHelper;
+      break;
+    case 'group':
+    case 'mesh':
+      Helper = BoxHelper;
+  }
+
+  useHelper(proxyObjectRef, Helper, selected ? 'darkred' : 'darkblue');
 
   const [transformControlsMode, transformControlsSpace, set] = useEditorStore(
     (state) => [
@@ -49,7 +60,13 @@ const Proxy: VFC<ProxyProps> = ({
   return (
     <>
       <group ref={proxyParentRef} onClick={onClick}>
-        <primitive object={proxyObjectRef.current} />
+        <primitive object={proxyObjectRef.current}>
+          {editable.type == 'spotLight' && (
+            <Sphere args={[2, 4, 2]} onClick={onClick}>
+              <meshBasicMaterial visible={false} />
+            </Sphere>
+          )}
+        </primitive>
       </group>
       {selected && (
         <TransformControls

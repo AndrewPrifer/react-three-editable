@@ -4,7 +4,7 @@ import produce from 'immer';
 import { devtools } from 'zustand/middleware';
 
 // nil is an object that has either been removed, or yet has to be added
-export type EditableType = 'group' | 'nil';
+export type EditableType = 'group' | 'mesh' | 'spotLight' | 'nil';
 export type TransformControlsMode = 'translate' | 'rotate' | 'scale';
 export type TransformControlsSpace = 'world' | 'local';
 
@@ -108,7 +108,7 @@ export const useEditorStore = create<EditorStore>(
             ...state.editables,
             [uniqueName]: {
               type,
-              original: original,
+              original,
               transform,
             },
           },
