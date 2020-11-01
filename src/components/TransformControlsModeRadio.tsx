@@ -17,7 +17,7 @@ interface RadioCardProps extends UseRadioProps {
 }
 
 const RadioCard: VFC<RadioCardProps> = (props) => {
-  const id = useId(props.id, `transformControlsModeIcons`);
+  const id = useId(props.id, `transformControlsModeRadio`);
   const { getInputProps, getCheckboxProps } = useRadio({ id, ...props });
 
   const input = getInputProps();

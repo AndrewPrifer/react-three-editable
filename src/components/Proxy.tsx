@@ -23,8 +23,6 @@ const Proxy: VFC<ProxyProps> = ({
   orbitControlsRef,
 }) => {
   const proxyParentRef = useRef<Group>();
-
-  // we need to rerender when the proxy object is available
   const proxyObjectRef = useRef(editable.original.clone());
 
   useHelper(proxyObjectRef, BoxHelper, selected ? 'darkred' : 'darkblue');
@@ -41,7 +39,6 @@ const Proxy: VFC<ProxyProps> = ({
   // update the parent every frame
   useFrame(() => {
     const proxyParent = proxyParentRef.current!;
-    // the first parent is the editable group
     editable.original.parent!.matrixWorld.decompose(
       proxyParent.position,
       proxyParent.quaternion,
