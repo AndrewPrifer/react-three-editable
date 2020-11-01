@@ -24,7 +24,7 @@ const SetupScene = () => {
     <>
       <ambientLight intensity={0.2} />
       <e.spotLight
-        position={[10, 30, 30]}
+        position={[5, 5, 5]}
         penumbra={1}
         angle={Math.PI / 6}
         shadow-mapSize-width={2048}

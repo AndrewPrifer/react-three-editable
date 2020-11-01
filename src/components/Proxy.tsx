@@ -1,4 +1,10 @@
-import { BoxHelper, Group, SpotLightHelper } from 'three';
+import {
+  BoxHelper,
+  DirectionalLightHelper,
+  Group,
+  PointLightHelper,
+  SpotLightHelper,
+} from 'three';
 import React, { useRef, VFC } from 'react';
 import { OrbitControls, useHelper, Sphere } from '@react-three/drei';
 import TransformControls from './TransformControls';
@@ -25,18 +31,44 @@ const Proxy: VFC<ProxyProps> = ({
   const proxyParentRef = useRef<Group>();
   const proxyObjectRef = useRef(editable.original.clone());
 
-  let Helper: typeof SpotLightHelper | typeof BoxHelper;
+  let Helper:
+    | typeof SpotLightHelper
+    | typeof DirectionalLightHelper
+    | typeof PointLightHelper
+    | typeof BoxHelper;
 
   switch (editable.type) {
     case 'spotLight':
       Helper = SpotLightHelper;
+      break;
+    case 'directionalLight':
+      Helper = DirectionalLightHelper;
+      break;
+    case 'pointLight':
+      Helper = PointLightHelper;
       break;
     case 'group':
     case 'mesh':
       Helper = BoxHelper;
   }
 
-  useHelper(proxyObjectRef, Helper, selected ? 'darkred' : 'darkblue');
+  let helperArgs: [string] | [number, string];
+  const size = 1;
+  const color = selected ? 'darkred' : 'darkblue';
+
+  switch (editable.type) {
+    case 'directionalLight':
+    case 'pointLight':
+      helperArgs = [size, color];
+      break;
+    case 'group':
+    case 'mesh':
+    case 'spotLight':
+      helperArgs = [color];
+      break;
+  }
+
+  useHelper(proxyObjectRef, Helper, ...helperArgs);
 
   const [transformControlsMode, transformControlsSpace, set] = useEditorStore(
     (state) => [
@@ -61,7 +93,9 @@ const Proxy: VFC<ProxyProps> = ({
     <>
       <group ref={proxyParentRef} onClick={onClick}>
         <primitive object={proxyObjectRef.current}>
-          {editable.type == 'spotLight' && (
+          {['spotLight', 'pointLight', 'directionalLight'].includes(
+            editable.type
+          ) && (
             <Sphere args={[2, 4, 2]} onClick={onClick}>
               <meshBasicMaterial visible={false} />
             </Sphere>

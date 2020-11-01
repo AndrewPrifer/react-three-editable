@@ -5,7 +5,14 @@ import React, {
   useRef,
   VFC,
 } from 'react';
-import { Group, Matrix4, Mesh, SpotLight } from 'three';
+import {
+  DirectionalLight,
+  Group,
+  Matrix4,
+  Mesh,
+  PointLight,
+  SpotLight,
+} from 'three';
 import { EditableType, useEditorStore } from '../store';
 import shallow from 'zustand/shallow';
 import mergeRefs from 'react-merge-refs';
@@ -24,6 +31,8 @@ interface Elements {
   group: Group;
   mesh: Mesh;
   spotLight: SpotLight;
+  directionalLight: DirectionalLight;
+  pointLight: PointLight;
 }
 
 const useEditable = <T extends Exclude<EditableType, 'nil'>>(
@@ -140,6 +149,46 @@ const editable: EditableComponents = {
           scale={scale}
         >
           <spotLight ref={mergeRefs([objectRef, ref])} {...props} />
+        </group>
+      );
+    }
+  ),
+  directionalLight: forwardRef(
+    (
+      { uniqueName, editableRootRef, position, rotation, scale, ...props },
+      ref
+    ) => {
+      const objectRef = useEditable(uniqueName, 'directionalLight');
+
+      return (
+        <group
+          ref={editableRootRef}
+          userData={{ editable: true }}
+          position={position}
+          rotation={rotation}
+          scale={scale}
+        >
+          <directionalLight ref={mergeRefs([objectRef, ref])} {...props} />
+        </group>
+      );
+    }
+  ),
+  pointLight: forwardRef(
+    (
+      { uniqueName, editableRootRef, position, rotation, scale, ...props },
+      ref
+    ) => {
+      const objectRef = useEditable(uniqueName, 'pointLight');
+
+      return (
+        <group
+          ref={editableRootRef}
+          userData={{ editable: true }}
+          position={position}
+          rotation={rotation}
+          scale={scale}
+        >
+          <pointLight ref={mergeRefs([objectRef, ref])} {...props} />
         </group>
       );
     }
