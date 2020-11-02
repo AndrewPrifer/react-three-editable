@@ -1,7 +1,13 @@
 import React, { ReactNode, VFC, Suspense } from 'react';
 import { Canvas, useResource } from 'react-three-fiber';
 
-import { OrbitControls, Box, Plane, Sphere, useGLTF } from '@react-three/drei';
+import {
+  Box,
+  Plane,
+  Sphere,
+  useGLTF,
+  PerspectiveCamera,
+} from '@react-three/drei';
 import e from '../src/components/editable';
 import { Material } from 'three';
 
@@ -17,12 +23,14 @@ const Suzanne = () => {
   return <primitive object={suzanne.scene} />;
 };
 
+const EditableCamera = e(PerspectiveCamera, 'perspectiveCamera');
+
 const SetupScene = () => {
   const material = useResource<Material>();
 
   return (
     <>
-      <e.orthographicCamera uniqueName="Camera1" />
+      <EditableCamera makeDefault uniqueName="Camera1" position={[0, 3, 15]} />
       <ambientLight intensity={0.2} />
       <e.spotLight
         position={[5, 5, 5]}
@@ -72,7 +80,6 @@ const SetupScene = () => {
 const Setup: VFC<SetupProps> = ({
   children,
   cameraPosition = [5, 5, 5] as [number, number, number],
-  controls = true,
 }) => {
   return (
     <div
@@ -87,7 +94,6 @@ const Setup: VFC<SetupProps> = ({
         pixelRatio={window.devicePixelRatio}
       >
         {children}
-        {controls && <OrbitControls />}
         <SetupScene />
       </Canvas>
     </div>
