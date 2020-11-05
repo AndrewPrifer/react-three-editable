@@ -48,8 +48,13 @@ const EditorScene = () => {
 };
 
 const Editor = () => {
-  const [scene, editorOpen, setEditorOpen] = useEditorStore(
-    (state) => [state.scene, state.editorOpen, state.setEditorOpen],
+  const [scene, editorOpen, setEditorOpen, setSelected] = useEditorStore(
+    (state) => [
+      state.scene,
+      state.editorOpen,
+      state.setEditorOpen,
+      state.setSelected,
+    ],
     shallow
   );
 
@@ -68,6 +73,7 @@ const Editor = () => {
                   }}
                   shadowMap
                   pixelRatio={window.devicePixelRatio}
+                  onPointerMissed={() => setSelected(null)}
                 >
                   <EditorScene />
                 </Canvas>

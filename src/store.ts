@@ -52,7 +52,7 @@ export type EditorStore = {
     uniqueName: string
   ) => void;
   removeEditable: (uniqueName: string) => void;
-  setSelected: (name: string) => void;
+  setSelected: (name: string | null) => void;
   setTransformControlsMode: (mode: TransformControlsMode) => void;
   setTransformControlsSpace: (mode: TransformControlsSpace) => void;
   setEditorOpen: (open: boolean) => void;
