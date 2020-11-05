@@ -35,7 +35,11 @@ const TransformControls = forwardRef(
       [camera, gl.domElement]
     );
 
-    useLayoutEffect(() => void controls.attach(object), [object, controls]);
+    useLayoutEffect(() => {
+      controls.attach(object);
+
+      return () => void controls.detach();
+    }, [object, controls]);
 
     useEffect(() => {
       controls?.addEventListener?.('change', invalidate);
