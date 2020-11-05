@@ -79,11 +79,15 @@ const Proxy: VFC<ProxyProps> = ({
 
   useHelper(proxyObjectRef, Helper, ...helperArgs);
 
-  const [transformControlsMode, transformControlsSpace, set] = useEditorStore(
+  const [
+    transformControlsMode,
+    transformControlsSpace,
+    setEditableTransform,
+  ] = useEditorStore(
     (state) => [
       state.transformControlsMode,
       state.transformControlsSpace,
-      state.set,
+      state.setEditableTransform,
     ],
     shallow
   );
@@ -122,11 +126,10 @@ const Proxy: VFC<ProxyProps> = ({
           orbitControlsRef={orbitControlsRef}
           object={proxyObjectRef.current}
           onObjectChange={() => {
-            set((state) => {
-              state.editables[
-                editableName
-              ].transform = proxyObjectRef.current.matrix.clone();
-            });
+            setEditableTransform(
+              editableName,
+              proxyObjectRef.current.matrix.clone()
+            );
           }}
         />
       )}
