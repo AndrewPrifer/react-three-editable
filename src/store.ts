@@ -37,7 +37,6 @@ export type Editable =
 export type EditorStore = {
   scene: Scene | null;
   gl: WebGLRenderer | null;
-  staticSceneProxy: Scene | null;
   editables: Record<string, Editable>;
   selected: string | null;
   transformControlsMode: TransformControlsMode;
@@ -63,7 +62,6 @@ export type EditorStore = {
 export const useEditorStore = create<EditorStore>((set) => ({
   scene: null,
   gl: null,
-  staticSceneProxy: null,
   editables: {},
   selected: null,
   transformControlsMode: 'translate',
@@ -72,21 +70,6 @@ export const useEditorStore = create<EditorStore>((set) => ({
   editorOpen: false,
 
   init: (scene, gl, initialState) => {
-    const staticSceneProxy = scene.clone();
-
-    const remove: Object3D[] = [];
-
-    // could also just reimplement .clone to accept a filter function
-    staticSceneProxy.traverse((object) => {
-      if (object.userData.editable) {
-        remove.push(object);
-      }
-    });
-
-    remove.forEach((object) => {
-      object.parent?.remove(object);
-    });
-
     const editables: Record<string, Editable> = initialState
       ? Object.fromEntries(
           Object.entries(initialState.editables).map(([name, editable]) => [
@@ -99,7 +82,7 @@ export const useEditorStore = create<EditorStore>((set) => ({
         )
       : {};
 
-    set({ scene, gl, staticSceneProxy, editables });
+    set({ scene, gl, editables });
   },
   addEditable: (type, original, uniqueName) =>
     set((state) => {

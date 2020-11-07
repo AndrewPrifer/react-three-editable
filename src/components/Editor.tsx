@@ -7,13 +7,14 @@ import root from 'react-shadow/emotion';
 import { ChakraProvider, PortalManager, Button, Box } from '@chakra-ui/core';
 import Proxy from './Proxy';
 import UI from './UI';
+import StaticSceneProxy from './StaticSceneProxy';
 
 const EditorScene = () => {
   const orbitControlsRef = useRef<OrbitControls>();
 
-  const [staticSceneProxy, editables, selected, setSelected] = useEditorStore(
+  const [scene, editables, selected, setSelected] = useEditorStore(
     (state) => [
-      state.staticSceneProxy,
+      state.scene,
       state.editables,
       state.selected,
       state.setSelected,
@@ -23,7 +24,7 @@ const EditorScene = () => {
 
   return (
     <>
-      <primitive object={staticSceneProxy} />
+      {scene && <StaticSceneProxy scene={scene} />}
 
       <directionalLight position={[10, 20, 15]} />
       <gridHelper args={[30, 30, 30]} />
