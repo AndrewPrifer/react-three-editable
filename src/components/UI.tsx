@@ -44,7 +44,7 @@ const UI: VFC = () => {
       pointerEvents="none"
     >
       {/* Top-left corner */}
-      {/*<ReferenceWindow height={200} />*/}
+      <ReferenceWindow height={200} />
 
       {/* Top row */}
       <Flex pos="absolute" left={0} right={0} top={0} justifyContent="center">
