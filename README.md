@@ -52,7 +52,7 @@ When creating a 3D scene for react-three-fiber, you can choose two routes: you c
 
 The best middle ground so far has been gltfjsx, which generates JSX from your exported scene, however it still involves a lot of manual work if you want to split your scene into components, and any modifications you make will have to be reapplied if you make changes to the scene.
 
-React Three Editable aims to fill this gap by allowing you to set up your scene in JSX, giving you reactivity, while allowing you to tweak the properties of these objects in a visual editor, including their transforms, which you can then bake into a json file to be used by the runtime in production. An explicit goal of the project is to require as few modifications to the original code as possible, and to allow freely mixing and blending the static values applied in the editor with dynamic values applied in code.
+React Three Editable aims to fill this gap by allowing you to set up your scene in JSX, giving you reactivity, while allowing you to tweak the properties of these objects in a visual editor, including their transforms, which you can then bake into a json file to be used by the runtime in production. An explicit goal of the project is to require as few modifications to the original code as possible, and to allow freely mixing and blending the static values applied in the editor with dynamic ones applied in code.
 
 In production, you can freely remove the `<Editor />` component, leaving you with a ~1 KB runtime.
 
@@ -62,15 +62,15 @@ In production, you can freely remove the `<Editor />` component, leaving you wit
 
 The component responsible for displaying the editor. This is rendered in HTML, so don't place it inside `<Canvas>`.
 
-### `<ConnectEditor />`
+### `<EditorConnector />`
 
 By placing it inside your r3f `<Canvas>`, you connect it to React Three Editable. You can pass a previously exported state to it through the `initialState` property. You need to leave this in for production to be able to use your exported state.
 
-For now, you can only connect a single canvas, but multi-canvas support is planned before `1.0.0`.
+For now you can only connect a single canvas, however multi-canvas support is planned before `1.0.0`.
 
 ### `editable`
 
-Use it to make objects editable. The properties on `editable` mirror the intrinsic elements of react-three-fiber, however there's not full parity yet. E.g. if you want to create an editable `<mesh>`, you, do it by using `<editable.mesh>` instead. These elements have the same interface as the normal ones, with the addition of a single `uniqueName` property, which is used to identify the object in the editor.
+Use it to make objects editable. The properties on `editable` mirror the intrinsic elements of react-three-fiber, however there's no full parity yet. E.g. if you want to create an editable `<mesh>`, you do it by using `<editable.mesh>` instead. These elements have the same interface as the normal ones, with the addition of a single `uniqueName` property, which is used to identify the object in the editor.
 
 `editable` is also a function, which allows you to make your custom components editable. Your component does have to be compatible with the interface of the editable object type it is meant to represent. You need to pass it the component you want to wrap, and the object type it represents (see object types).
 
@@ -78,7 +78,7 @@ Use it to make objects editable. The properties on `editable` mirror the intrins
 import { editable } from 'react-three-editable';
 import { PerspectiveCamera } from '@react-three/drei';
 
-const EditableCamera = e(PerspectiveCamera, 'perspectiveCamera');
+const EditableCamera = editable(PerspectiveCamera, 'perspectiveCamera');
 ```
 
 ## Object types
@@ -101,4 +101,4 @@ These are available as properties of `editable`, and you need to pass them as th
 
 This project is still very much in the concept phase, so feedback and ideas are just as valuable a contribution as helping out with the code, or supporting development.
 
-If you have time, please go through the issues and if there's anything you can help with.
+If you have time, please go through the issues and see if there's anything you can help with.
