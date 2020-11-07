@@ -59,7 +59,7 @@ const SetupScene = () => {
         <group position={[0, 1, 0]} scale={[2, 1, 1]}>
           <e.group position={[0.5, 0.5, 0.5]} uniqueName="Box1">
             <Box castShadow receiveShadow>
-              <meshStandardMaterial />
+              <meshStandardMaterial color="hotpink" />
             </Box>
           </e.group>
           <e.group position={[3, 2, 1]} uniqueName="Box2">

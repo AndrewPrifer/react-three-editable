@@ -3,10 +3,14 @@ import {
   CameraHelper,
   DirectionalLightHelper,
   Group,
+  Material,
+  Mesh,
+  MeshBasicMaterial,
+  MeshPhongMaterial,
   PointLightHelper,
   SpotLightHelper,
 } from 'three';
-import React, { useRef, VFC } from 'react';
+import React, { useLayoutEffect, useRef, VFC } from 'react';
 import { OrbitControls, useHelper, Sphere } from '@react-three/drei';
 import TransformControls from './TransformControls';
 import { Editable, useEditorStore } from '../store';
@@ -31,6 +35,9 @@ const Proxy: VFC<ProxyProps> = ({
 }) => {
   const proxyParentRef = useRef<Group>();
   const proxyObjectRef = useRef(editable.original.clone());
+  const renderMaterials = useRef<{
+    [id: string]: Material | Material[];
+  }>({});
 
   let Helper:
     | typeof SpotLightHelper
@@ -82,11 +89,13 @@ const Proxy: VFC<ProxyProps> = ({
   const [
     transformControlsMode,
     transformControlsSpace,
+    viewportShading,
     setEditableTransform,
   ] = useEditorStore(
     (state) => [
       state.transformControlsMode,
       state.transformControlsSpace,
+      state.viewportShading,
       state.setEditableTransform,
     ],
     shallow
@@ -102,6 +111,62 @@ const Proxy: VFC<ProxyProps> = ({
     );
   });
 
+  useLayoutEffect(() => {
+    proxyObjectRef.current.traverse((object) => {
+      const mesh = object as Mesh;
+      if (mesh.isMesh && !mesh.userData.helper) {
+        renderMaterials.current[mesh.id] = mesh.material;
+      }
+    });
+
+    return () => {
+      Object.entries(renderMaterials.current).forEach(([id, material]) => {
+        (proxyObjectRef.current.getObjectById(
+          Number.parseInt(id)
+        ) as Mesh).material = material;
+      });
+    };
+  }, []);
+
+  useLayoutEffect(() => {
+    proxyObjectRef.current.traverse((object) => {
+      const mesh = object as Mesh;
+      if (mesh.isMesh && !mesh.userData.helper) {
+        let material;
+        switch (viewportShading) {
+          case 'wireframe':
+            mesh.material = new MeshBasicMaterial({
+              wireframe: true,
+              color: 'black',
+            });
+            break;
+          case 'flat':
+            material = new MeshBasicMaterial();
+            if (renderMaterials.current[mesh.id].hasOwnProperty('color')) {
+              material.color = (renderMaterials.current[mesh.id] as any).color;
+            }
+            if (renderMaterials.current[mesh.id].hasOwnProperty('map')) {
+              material.map = (renderMaterials.current[mesh.id] as any).map;
+            }
+            mesh.material = material;
+            break;
+          case 'solid':
+            material = new MeshPhongMaterial();
+            if (renderMaterials.current[mesh.id].hasOwnProperty('color')) {
+              material.color = (renderMaterials.current[mesh.id] as any).color;
+            }
+            if (renderMaterials.current[mesh.id].hasOwnProperty('map')) {
+              material.map = (renderMaterials.current[mesh.id] as any).map;
+            }
+            mesh.material = material;
+            break;
+          case 'rendered':
+            mesh.material = renderMaterials.current[mesh.id];
+        }
+      }
+    });
+  }, [viewportShading]);
+
   return (
     <>
       <group ref={proxyParentRef} onClick={onClick}>
@@ -113,7 +178,11 @@ const Proxy: VFC<ProxyProps> = ({
             'perspectiveCamera',
             'orthographicCamera',
           ].includes(editable.type) && (
-            <Sphere args={[2, 4, 2]} onClick={onClick}>
+            <Sphere
+              args={[2, 4, 2]}
+              onClick={onClick}
+              userData={{ helper: true }}
+            >
               <meshBasicMaterial visible={false} />
             </Sphere>
           )}

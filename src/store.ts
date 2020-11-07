@@ -13,6 +13,7 @@ export type EditableType =
   | 'nil';
 export type TransformControlsMode = 'translate' | 'rotate' | 'scale';
 export type TransformControlsSpace = 'world' | 'local';
+export type ViewportShading = 'wireframe' | 'flat' | 'solid' | 'rendered';
 
 export interface InitialState {
   editables: {
@@ -41,6 +42,7 @@ export type EditorStore = {
   selected: string | null;
   transformControlsMode: TransformControlsMode;
   transformControlsSpace: TransformControlsSpace;
+  viewportShading: ViewportShading;
   editorOpen: boolean;
 
   init: (scene: Scene, gl: WebGLRenderer, initialState?: InitialState) => void;
@@ -54,6 +56,7 @@ export type EditorStore = {
   setSelected: (name: string | null) => void;
   setTransformControlsMode: (mode: TransformControlsMode) => void;
   setTransformControlsSpace: (mode: TransformControlsSpace) => void;
+  setViewportShading: (mode: ViewportShading) => void;
   setEditorOpen: (open: boolean) => void;
 };
 
@@ -65,6 +68,7 @@ export const useEditorStore = create<EditorStore>((set) => ({
   selected: null,
   transformControlsMode: 'translate',
   transformControlsSpace: 'world',
+  viewportShading: 'rendered',
   editorOpen: false,
 
   init: (scene, gl, initialState) => {
@@ -145,6 +149,9 @@ export const useEditorStore = create<EditorStore>((set) => ({
   },
   setTransformControlsSpace: (mode) => {
     set({ transformControlsSpace: mode });
+  },
+  setViewportShading: (mode) => {
+    set({ viewportShading: mode });
   },
   setEditorOpen: (open) => {
     set({ editorOpen: open });

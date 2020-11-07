@@ -1,27 +1,32 @@
 import React, { VFC } from 'react';
-import { Box, Flex, Button } from '@chakra-ui/core';
+import { Box, Flex, HStack, Button } from '@chakra-ui/core';
 import TransformControlsModeRadio from './TransformControlsModeRadio';
 import { useEditorStore } from '../store';
 import shallow from 'zustand/shallow';
 import ReferenceWindow from './ReferenceWindow';
 import { saveAs } from 'file-saver';
 import TransformControlsSpaceRadio from './TransformControlsSpaceRadio';
+import ViewportShadingRadio from './ViewportShadingRadio';
 
 const UI: VFC = () => {
   const [
     editables,
     transformControlsMode,
     transformControlsSpace,
+    viewportShading,
     setTransformControlsMode,
     setTransformControlsSpace,
+    setViewportShading,
     setEditorOpen,
   ] = useEditorStore(
     (state) => [
       state.editables,
       state.transformControlsMode,
       state.transformControlsSpace,
+      state.viewportShading,
       state.setTransformControlsMode,
       state.setTransformControlsSpace,
+      state.setViewportShading,
       state.setEditorOpen,
     ],
     shallow
@@ -39,22 +44,30 @@ const UI: VFC = () => {
       pointerEvents="none"
     >
       {/* Top-left corner */}
-      <ReferenceWindow height={200} />
+      {/*<ReferenceWindow height={200} />*/}
 
       {/* Top row */}
       <Flex pos="absolute" left={0} right={0} top={0} justifyContent="center">
-        <Box pointerEvents="all" mr={5}>
-          <TransformControlsModeRadio
-            value={transformControlsMode}
-            onChange={(value) => setTransformControlsMode(value)}
-          />
-        </Box>
-        <Box pointerEvents="all">
-          <TransformControlsSpaceRadio
-            value={transformControlsSpace}
-            onChange={setTransformControlsSpace}
-          />
-        </Box>
+        <HStack spacing={4}>
+          <Box pointerEvents="all">
+            <TransformControlsModeRadio
+              value={transformControlsMode}
+              onChange={(value) => setTransformControlsMode(value)}
+            />
+          </Box>
+          <Box pointerEvents="all">
+            <TransformControlsSpaceRadio
+              value={transformControlsSpace}
+              onChange={setTransformControlsSpace}
+            />
+          </Box>
+          <Box pointerEvents="all">
+            <ViewportShadingRadio
+              value={viewportShading}
+              onChange={setViewportShading}
+            />
+          </Box>
+        </HStack>
       </Flex>
 
       {/* Bottom-left corner*/}

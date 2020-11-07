@@ -1,15 +1,15 @@
 import React, { ReactElement, VFC } from 'react';
 import {
-  ButtonGroup,
-  IconButton,
-  useId,
   useRadio,
   useRadioGroup,
   UseRadioProps,
+  useId,
+  IconButton,
+  ButtonGroup,
 } from '@chakra-ui/core';
 import { IconType } from 'react-icons';
-import { TransformControlsSpace } from '../store';
-import { BiCube, BiGlobe } from 'react-icons/bi';
+import { ViewportShading } from '../store';
+import { FaCube, GiCube, GiIceCube, BiCube } from 'react-icons/all';
 
 interface RadioCardProps extends UseRadioProps {
   label: string;
@@ -43,17 +43,38 @@ const RadioCard: VFC<RadioCardProps> = (props) => {
   );
 };
 
-export interface TransformControlsSpaceRadioProps {
-  value: TransformControlsSpace;
-  onChange: (value: TransformControlsSpace) => void;
+export interface ViewportShadingRadioProps {
+  value: ViewportShading;
+  onChange: (value: ViewportShading) => void;
 }
 
-const TransformControlsSpaceRadio: VFC<TransformControlsSpaceRadioProps> = ({
+const ViewportShadingRadio: VFC<ViewportShadingRadioProps> = ({
   value,
   onChange,
 }) => {
+  const controls: {
+    [key in ViewportShading]: RadioCardProps;
+  } = {
+    wireframe: {
+      label: 'Wireframe',
+      icon: <BiCube />,
+    },
+    flat: {
+      label: 'Flat',
+      icon: <GiCube />,
+    },
+    solid: {
+      label: 'Solid',
+      icon: <FaCube />,
+    },
+    rendered: {
+      label: 'Rendered',
+      icon: <GiIceCube />,
+    },
+  };
+
   const { getRootProps, getRadioProps } = useRadioGroup({
-    name: 'transformControlsMode',
+    name: 'viewportShading',
     value,
     onChange,
   });
@@ -62,18 +83,15 @@ const TransformControlsSpaceRadio: VFC<TransformControlsSpaceRadioProps> = ({
 
   return (
     <ButtonGroup {...group} isAttached>
-      <RadioCard
-        {...getRadioProps({ value: 'world' })}
-        label="World"
-        icon={<BiGlobe />}
-      />
-      <RadioCard
-        {...getRadioProps({ value: 'local' })}
-        label="Local"
-        icon={<BiCube />}
-      />
+      {Object.entries(controls).map(([key, { label, icon }]) => (
+        <RadioCard
+          {...getRadioProps({ value: key })}
+          label={label}
+          icon={icon}
+        />
+      ))}
     </ButtonGroup>
   );
 };
 
-export default TransformControlsSpaceRadio;
+export default ViewportShadingRadio;
