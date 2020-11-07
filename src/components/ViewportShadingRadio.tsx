@@ -6,6 +6,7 @@ import {
   useId,
   IconButton,
   ButtonGroup,
+  Tooltip,
 } from '@chakra-ui/core';
 import { IconType } from 'react-icons';
 import { ViewportShading } from '../store';
@@ -25,19 +26,21 @@ const RadioCard: VFC<RadioCardProps> = (props) => {
 
   return (
     <>
-      <IconButton
-        aria-label={props.label}
-        size="sm"
-        icon={props.icon}
-        as="label"
-        htmlFor={input.id}
-        {...checkbox}
-        _checked={{
-          bg: 'teal.600',
-          color: 'white',
-          borderColor: 'teal.600',
-        }}
-      />
+      <Tooltip label={props.label} hasArrow>
+        <IconButton
+          aria-label={props.label}
+          size="sm"
+          icon={props.icon}
+          as="label"
+          htmlFor={input.id}
+          {...checkbox}
+          _checked={{
+            bg: 'teal.600',
+            color: 'white',
+            borderColor: 'teal.600',
+          }}
+        />
+      </Tooltip>
       <input {...input} />
     </>
   );
@@ -56,19 +59,19 @@ const ViewportShadingRadio: VFC<ViewportShadingRadioProps> = ({
     [key in ViewportShading]: RadioCardProps;
   } = {
     wireframe: {
-      label: 'Wireframe',
+      label: 'Display: Wireframe',
       icon: <BiCube />,
     },
     flat: {
-      label: 'Flat',
+      label: 'Display: Flat',
       icon: <GiCube />,
     },
     solid: {
-      label: 'Solid',
+      label: 'Display: Solid',
       icon: <FaCube />,
     },
     rendered: {
-      label: 'Rendered',
+      label: 'Display: Rendered',
       icon: <GiIceCube />,
     },
   };

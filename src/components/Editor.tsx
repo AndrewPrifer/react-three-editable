@@ -4,7 +4,7 @@ import { useEditorStore } from '../store';
 import { OrbitControls } from '@react-three/drei';
 import shallow from 'zustand/shallow';
 import root from 'react-shadow/emotion';
-import { ChakraProvider, Button, Box } from '@chakra-ui/core';
+import { ChakraProvider, PortalManager, Button, Box } from '@chakra-ui/core';
 import Proxy from './Proxy';
 import UI from './UI';
 
@@ -61,38 +61,40 @@ const Editor = () => {
   return (
     <root.div>
       <ChakraProvider>
-        <Box pos="relative" zIndex={1000}>
-          {editorOpen ? (
-            <Box pos="fixed" top={0} bottom={0} left={0} right={0}>
-              {scene ? (
-                <Canvas
-                  colorManagement
-                  camera={{ position: [5, 5, 5] }}
-                  onCreated={({ gl }) => {
-                    gl.setClearColor('white');
-                  }}
-                  shadowMap
-                  pixelRatio={window.devicePixelRatio}
-                  onPointerMissed={() => setSelected(null)}
-                >
-                  <EditorScene />
-                </Canvas>
-              ) : (
-                <div>Editor hasn't been attached.</div>
-              )}
-              <UI />
-            </Box>
-          ) : (
-            <Button
-              pos="fixed"
-              bottom="20px"
-              left="20px"
-              onClick={() => setEditorOpen(true)}
-            >
-              Editor
-            </Button>
-          )}
-        </Box>
+        <PortalManager>
+          <Box pos="relative" zIndex={1000}>
+            {editorOpen ? (
+              <Box pos="fixed" top={0} bottom={0} left={0} right={0}>
+                {scene ? (
+                  <Canvas
+                    colorManagement
+                    camera={{ position: [5, 5, 5] }}
+                    onCreated={({ gl }) => {
+                      gl.setClearColor('white');
+                    }}
+                    shadowMap
+                    pixelRatio={window.devicePixelRatio}
+                    onPointerMissed={() => setSelected(null)}
+                  >
+                    <EditorScene />
+                  </Canvas>
+                ) : (
+                  <div>Editor hasn't been attached.</div>
+                )}
+                <UI />
+              </Box>
+            ) : (
+              <Button
+                pos="fixed"
+                bottom="20px"
+                left="20px"
+                onClick={() => setEditorOpen(true)}
+              >
+                Editor
+              </Button>
+            )}
+          </Box>
+        </PortalManager>
       </ChakraProvider>
     </root.div>
   );

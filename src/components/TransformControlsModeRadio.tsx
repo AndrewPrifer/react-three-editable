@@ -6,6 +6,7 @@ import {
   useRadioGroup,
   useId,
   UseRadioProps,
+  Tooltip,
 } from '@chakra-ui/core';
 import { GiClockwiseRotation, GiMove, GiResize } from 'react-icons/gi';
 import { IconType } from 'react-icons';
@@ -25,19 +26,22 @@ const RadioCard: VFC<RadioCardProps> = (props) => {
 
   return (
     <>
-      <IconButton
-        aria-label={props.label}
-        size="sm"
-        icon={props.icon}
-        as="label"
-        htmlFor={input.id}
-        {...checkbox}
-        _checked={{
-          bg: 'teal.600',
-          color: 'white',
-          borderColor: 'teal.600',
-        }}
-      />
+      <Tooltip label={props.label} hasArrow>
+        <IconButton
+          aria-label={props.label}
+          size="sm"
+          icon={props.icon}
+          as="label"
+          htmlFor={input.id}
+          {...checkbox}
+          _checked={{
+            bg: 'teal.600',
+            color: 'white',
+            borderColor: 'teal.600',
+          }}
+        />
+      </Tooltip>
+
       <input {...input} />
     </>
   );
@@ -64,17 +68,17 @@ const TransformControlsModeRadio: VFC<TransformControlsModeRadioProps> = ({
     <ButtonGroup {...group} isAttached>
       <RadioCard
         {...getRadioProps({ value: 'translate' })}
-        label="Translate"
+        label="Tool: Translate"
         icon={<GiMove />}
       />
       <RadioCard
         {...getRadioProps({ value: 'rotate' })}
-        label="Rotate"
+        label="Tool: Rotate"
         icon={<GiClockwiseRotation />}
       />
       <RadioCard
         {...getRadioProps({ value: 'scale' })}
-        label="Scale"
+        label="Tool: Scale"
         icon={<GiResize />}
       />
     </ButtonGroup>

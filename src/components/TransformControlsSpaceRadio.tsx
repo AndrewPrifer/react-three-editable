@@ -2,6 +2,7 @@ import React, { ReactElement, VFC } from 'react';
 import {
   ButtonGroup,
   IconButton,
+  Tooltip,
   useId,
   useRadio,
   useRadioGroup,
@@ -25,19 +26,21 @@ const RadioCard: VFC<RadioCardProps> = (props) => {
 
   return (
     <>
-      <IconButton
-        aria-label={props.label}
-        size="sm"
-        icon={props.icon}
-        as="label"
-        htmlFor={input.id}
-        {...checkbox}
-        _checked={{
-          bg: 'teal.600',
-          color: 'white',
-          borderColor: 'teal.600',
-        }}
-      />
+      <Tooltip label={props.label} hasArrow>
+        <IconButton
+          aria-label={props.label}
+          size="sm"
+          icon={props.icon}
+          as="label"
+          htmlFor={input.id}
+          {...checkbox}
+          _checked={{
+            bg: 'teal.600',
+            color: 'white',
+            borderColor: 'teal.600',
+          }}
+        />
+      </Tooltip>
       <input {...input} />
     </>
   );
@@ -64,12 +67,12 @@ const TransformControlsSpaceRadio: VFC<TransformControlsSpaceRadioProps> = ({
     <ButtonGroup {...group} isAttached>
       <RadioCard
         {...getRadioProps({ value: 'world' })}
-        label="World"
+        label="Space: World"
         icon={<BiGlobe />}
       />
       <RadioCard
         {...getRadioProps({ value: 'local' })}
-        label="Local"
+        label="Space: Local"
         icon={<BiCube />}
       />
     </ButtonGroup>
