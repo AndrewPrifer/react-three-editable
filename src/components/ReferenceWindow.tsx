@@ -16,6 +16,10 @@ const ReferenceWindow: VFC<ReferenceWindowProps> = ({ height }) => {
   useEffect(() => {
     let animationHandle: number;
     const draw = (gl: WebGLRenderer) => () => {
+      if (!gl.domElement) {
+        return;
+      }
+
       const width = (gl.domElement.width / gl.domElement.height) * height;
 
       const ctx = canvasRef.current!.getContext('2d')!;
@@ -29,31 +33,29 @@ const ReferenceWindow: VFC<ReferenceWindowProps> = ({ height }) => {
       animationHandle = requestAnimationFrame(draw(gl));
     };
 
-    if (open && gl) {
+    if (gl) {
       draw(gl)();
     }
 
     return () => {
       cancelAnimationFrame(animationHandle);
     };
-  }, [open]);
+  }, [gl, height]);
 
-  return (
-    gl && (
-      <Box
-        display="inline-block"
-        borderRadius={5}
-        overflow="hidden"
-        boxShadow="0px 0px 50px 10px rgba(0,0,0,0.20)"
-      >
-        <canvas
-          ref={canvasRef}
-          width={(gl.domElement.width / gl.domElement.height) * height}
-          height={height}
-        />
-      </Box>
-    )
-  );
+  return gl?.domElement ? (
+    <Box
+      display="inline-block"
+      borderRadius={5}
+      overflow="hidden"
+      boxShadow="0px 0px 50px 10px rgba(0,0,0,0.20)"
+    >
+      <canvas
+        ref={canvasRef}
+        width={(gl.domElement.width / gl.domElement.height) * height}
+        height={height}
+      />
+    </Box>
+  ) : null;
 };
 
 export default ReferenceWindow;
