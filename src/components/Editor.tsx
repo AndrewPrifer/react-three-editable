@@ -15,6 +15,7 @@ import {
   Text,
   Code,
 } from '@chakra-ui/core';
+import theme from '../theme';
 import Proxy from './Proxy';
 import UI from './UI';
 import StaticSceneProxy from './StaticSceneProxy';
@@ -71,9 +72,13 @@ const Editor = () => {
 
   return (
     <root.div>
-      <ChakraProvider>
+      <ChakraProvider theme={theme}>
         <PortalManager>
-          <Box pos="relative" zIndex={1000}>
+          <Box
+            pos="relative"
+            zIndex={1000}
+            id="react-three-editable-editor-root"
+          >
             {editorOpen ? (
               <Box pos="fixed" top={0} bottom={0} left={0} right={0}>
                 {scene ? (
