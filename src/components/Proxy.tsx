@@ -7,10 +7,11 @@ import {
   Mesh,
   MeshBasicMaterial,
   MeshPhongMaterial,
+  Object3D,
   PointLightHelper,
   SpotLightHelper,
 } from 'three';
-import React, { useLayoutEffect, useRef, VFC } from 'react';
+import React, { useLayoutEffect, useRef, useState, VFC } from 'react';
 import { OrbitControls, useHelper, Sphere } from '@react-three/drei';
 import TransformControls from './TransformControls';
 import { Editable, useEditorStore } from '../store';
@@ -34,11 +35,35 @@ const Proxy: VFC<ProxyProps> = ({
   orbitControlsRef,
 }) => {
   const proxyParentRef = useRef<Group>();
-  const proxyObjectRef = useRef(editable.original.clone());
-  const renderMaterials = useRef<{
+  const [proxy, setProxy] = useState<Object3D>();
+  // this is only for the helper
+  const proxyRef = useRef<Object3D>();
+  const [renderMaterials, setRenderMaterials] = useState<{
     [id: string]: Material | Material[];
   }>({});
 
+  // prepare proxy object
+  useLayoutEffect(() => {
+    const proxy = editable.original.clone();
+
+    const remove: Object3D[] = [];
+
+    // could also just reimplement .clone to accept a filter function
+    proxy.traverse((object) => {
+      if (object.userData.editable) {
+        remove.push(object);
+      }
+    });
+
+    remove.forEach((object) => {
+      object.parent?.remove(object);
+    });
+
+    proxyRef.current = proxy;
+    setProxy(proxy);
+  }, [editable.original]);
+
+  // set up helper
   let Helper:
     | typeof SpotLightHelper
     | typeof DirectionalLightHelper
@@ -84,7 +109,7 @@ const Proxy: VFC<ProxyProps> = ({
       helperArgs = [];
   }
 
-  useHelper(proxyObjectRef, Helper, ...helperArgs);
+  useHelper(proxyRef, Helper, ...helperArgs);
 
   const [
     transformControlsMode,
@@ -111,25 +136,38 @@ const Proxy: VFC<ProxyProps> = ({
     );
   });
 
+  // save original materials
   useLayoutEffect(() => {
-    proxyObjectRef.current.traverse((object) => {
+    if (!proxy) {
+      return;
+    }
+
+    const renderMaterials: {
+      [id: string]: Material | Material[];
+    } = {};
+
+    proxy.traverse((object) => {
       const mesh = object as Mesh;
       if (mesh.isMesh && !mesh.userData.helper) {
-        renderMaterials.current[mesh.id] = mesh.material;
+        renderMaterials[mesh.id] = mesh.material;
       }
     });
 
+    setRenderMaterials(renderMaterials);
+
     return () => {
-      Object.entries(renderMaterials.current).forEach(([id, material]) => {
-        (proxyObjectRef.current.getObjectById(
-          Number.parseInt(id)
-        ) as Mesh).material = material;
+      Object.entries(renderMaterials).forEach(([id, material]) => {
+        (proxy.getObjectById(Number.parseInt(id)) as Mesh).material = material;
       });
     };
-  }, []);
+  }, [proxy]);
 
   useLayoutEffect(() => {
-    proxyObjectRef.current.traverse((object) => {
+    if (!proxy) {
+      return;
+    }
+
+    proxy.traverse((object) => {
       const mesh = object as Mesh;
       if (mesh.isMesh && !mesh.userData.helper) {
         let material;
@@ -142,35 +180,35 @@ const Proxy: VFC<ProxyProps> = ({
             break;
           case 'flat':
             material = new MeshBasicMaterial();
-            if (renderMaterials.current[mesh.id].hasOwnProperty('color')) {
-              material.color = (renderMaterials.current[mesh.id] as any).color;
+            if (renderMaterials[mesh.id].hasOwnProperty('color')) {
+              material.color = (renderMaterials[mesh.id] as any).color;
             }
-            if (renderMaterials.current[mesh.id].hasOwnProperty('map')) {
-              material.map = (renderMaterials.current[mesh.id] as any).map;
+            if (renderMaterials[mesh.id].hasOwnProperty('map')) {
+              material.map = (renderMaterials[mesh.id] as any).map;
             }
             mesh.material = material;
             break;
           case 'solid':
             material = new MeshPhongMaterial();
-            if (renderMaterials.current[mesh.id].hasOwnProperty('color')) {
-              material.color = (renderMaterials.current[mesh.id] as any).color;
+            if (renderMaterials[mesh.id].hasOwnProperty('color')) {
+              material.color = (renderMaterials[mesh.id] as any).color;
             }
-            if (renderMaterials.current[mesh.id].hasOwnProperty('map')) {
-              material.map = (renderMaterials.current[mesh.id] as any).map;
+            if (renderMaterials[mesh.id].hasOwnProperty('map')) {
+              material.map = (renderMaterials[mesh.id] as any).map;
             }
             mesh.material = material;
             break;
           case 'rendered':
-            mesh.material = renderMaterials.current[mesh.id];
+            mesh.material = renderMaterials[mesh.id];
         }
       }
     });
-  }, [viewportShading]);
+  }, [viewportShading, proxy, renderMaterials]);
 
-  return (
+  return proxy ? (
     <>
       <group ref={proxyParentRef} onClick={onClick}>
-        <primitive object={proxyObjectRef.current}>
+        <primitive object={proxy}>
           {[
             'spotLight',
             'pointLight',
@@ -193,17 +231,14 @@ const Proxy: VFC<ProxyProps> = ({
           mode={transformControlsMode}
           space={transformControlsSpace}
           orbitControlsRef={orbitControlsRef}
-          object={proxyObjectRef.current}
+          object={proxy}
           onObjectChange={() => {
-            setEditableTransform(
-              editableName,
-              proxyObjectRef.current.matrix.clone()
-            );
+            setEditableTransform(editableName, proxy.matrix.clone());
           }}
         />
       )}
     </>
-  );
+  ) : null;
 };
 
 export default Proxy;

@@ -70,6 +70,10 @@ const SetupScene = () => {
           <e.mesh uniqueName="Mesh1">
             <dodecahedronBufferGeometry />
             <meshStandardMaterial />
+            <e.mesh uniqueName="Mesh2" position={[0, 3, 0]}>
+              <dodecahedronBufferGeometry />
+              <meshStandardMaterial color="red" />
+            </e.mesh>
           </e.mesh>
         </group>
       </group>

@@ -72,7 +72,7 @@ const TransformControls = forwardRef(
           controls.removeEventListener('objectChange', onObjectChange);
         }
       };
-    }, [onObjectChange]);
+    }, [onObjectChange, controls]);
 
     return <primitive dispose={null} object={controls} ref={ref} {...props} />;
   }
