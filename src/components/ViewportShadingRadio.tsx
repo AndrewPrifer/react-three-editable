@@ -88,6 +88,7 @@ const ViewportShadingRadio: VFC<ViewportShadingRadioProps> = ({
     <ButtonGroup {...group} isAttached>
       {Object.entries(controls).map(([key, { label, icon }]) => (
         <RadioCard
+          key={key}
           {...getRadioProps({ value: key })}
           label={label}
           icon={icon}
