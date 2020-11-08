@@ -1,7 +1,7 @@
 export { default as Editor } from './components/Editor';
 export {
-  default as EditorConnector,
+  default as EditableManager,
   EditorConnectorProps,
-} from './components/EditorConnector';
-export { useEditorConnector } from './hooks';
+} from './components/EditableManager';
+export { useEditableManager } from './hooks';
 export { default as editable } from './components/editable';

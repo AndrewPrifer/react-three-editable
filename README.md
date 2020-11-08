@@ -11,7 +11,7 @@ yarn add react-three-editable
 ```tsx
 import React from "react";
 import { Canvas } from "react-three-fiber";
-import { Editor, EditorConnector, editable as e } from "react-three-editable";
+import { Editor, EditableManager, editable as e } from "react-three-editable";
 
 // Import our previously exported state
 import editableState from "./editableState.json";
@@ -22,8 +22,8 @@ export default function App() {
       {/* The component responsible for displaying the editor. Remove in production. ;) */}
       <Editor />
       <Canvas>
-        {/* EditorConnector connnects this canvas to the editor. Here we can also pass our state. */}
-        <EditorConnector initialState={editableState} />
+        {/* EditableManager connnects this canvas to the editor. Here we can also pass our state. */}
+        <EditableManager state={editableState} />
         <ambientLight intensity={0.5} />
         {/* Mark objects as editable. */}
         {/* Transforms applied in the editor are added on top of transforms applied in code. */}
@@ -62,9 +62,9 @@ In production, you can freely remove the `<Editor />` component, leaving you wit
 
 The component responsible for displaying the editor. This is rendered in HTML, so don't place it inside `<Canvas>`.
 
-### `<EditorConnector />`
+### `<EditableManager />`
 
-By placing it inside your r3f `<Canvas>`, you connect it to React Three Editable. You can pass a previously exported state to it through the `initialState` property. You need to leave this in for production to be able to use your exported state.
+By placing it inside your r3f `<Canvas>`, you connect it to React Three Editable. You can pass a previously exported state to it through the `state` property.
 
 For now you can only connect a single canvas, however multi-canvas support is planned before `1.0.0`.
 

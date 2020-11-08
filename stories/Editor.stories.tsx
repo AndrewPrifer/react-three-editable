@@ -3,8 +3,8 @@ import { Meta, Story } from '@storybook/react';
 import Editor from '../src/components/Editor';
 // @ts-ignore
 import Setup from './Setup';
-import { EditorConnector } from '../src';
-import initialState from './initialState.json';
+import { EditableManager } from '../src';
+import editableState from './editableState.json';
 
 const meta: Meta = {
   title: 'Editor',
@@ -21,7 +21,7 @@ const Template: Story = (args) => (
   <>
     <Editor {...args} />
     <Setup>
-      <EditorConnector initialState={args.initialState} />
+      <EditableManager state={args.editableState} />
     </Setup>
   </>
 );
@@ -33,4 +33,4 @@ export const Default = Template.bind({});
 export const WithInitialState = Template.bind({});
 
 Default.args = {};
-WithInitialState.args = { initialState };
+WithInitialState.args = { editableState };

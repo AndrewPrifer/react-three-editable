@@ -1,11 +1,11 @@
-import { InitialState, useEditorStore } from '../store';
+import { State, useEditorStore } from '../store';
 import { useThree } from 'react-three-fiber';
 import { useLayoutEffect, useRef } from 'react';
 
-export const useEditorConnector = (initialState?: InitialState) => {
+export const useEditableManager = (state?: State) => {
   const init = useEditorStore((state) => state.init);
   const { scene, gl } = useThree();
-  const initialStateRef = useRef(initialState);
+  const initialStateRef = useRef(state);
 
   useLayoutEffect(() => {
     init(scene, gl, initialStateRef.current);

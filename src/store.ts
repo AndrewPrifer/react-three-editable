@@ -15,7 +15,7 @@ export type TransformControlsMode = 'translate' | 'rotate' | 'scale';
 export type TransformControlsSpace = 'world' | 'local';
 export type ViewportShading = 'wireframe' | 'flat' | 'solid' | 'rendered';
 
-export interface InitialState {
+export interface State {
   editables: {
     [key: string]: {
       transform: number[];
@@ -44,7 +44,7 @@ export type EditorStore = {
   viewportShading: ViewportShading;
   editorOpen: boolean;
 
-  init: (scene: Scene, gl: WebGLRenderer, initialState?: InitialState) => void;
+  init: (scene: Scene, gl: WebGLRenderer, initialState?: State) => void;
   addEditable: (
     type: Exclude<EditableType, 'nil'>,
     original: Object3D,
