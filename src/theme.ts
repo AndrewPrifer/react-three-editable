@@ -3,7 +3,7 @@ import { mode } from '@chakra-ui/theme-tools';
 
 const theme = extendTheme({
   styles: {
-    global: (props) => ({
+    global: (props: any) => ({
       '#react-three-editable-editor-root': {
         fontFamily: 'body',
         color: mode('gray.800', 'whiteAlpha.900')(props),
