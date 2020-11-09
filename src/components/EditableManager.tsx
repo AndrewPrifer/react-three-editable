@@ -2,11 +2,11 @@ import { useEditableManager } from '../hooks';
 import { State } from '../store';
 import { VFC } from 'react';
 
-export interface EditorConnectorProps {
+export interface EditableManagerProps {
   state?: State;
 }
 
-const EditableManager: VFC<EditorConnectorProps> = ({ state }) => {
+const EditableManager: VFC<EditableManagerProps> = ({ state }) => {
   useEditableManager(state);
 
   return null;
