@@ -29,8 +29,6 @@ const ObjectRadioButton: VFC<ObjectRadioButtonProps> = ({
   editableType,
   ...props
 }) => {
-  const selected = useEditorStore((state) => state.selected);
-
   const { getInputProps, getCheckboxProps } = useRadio({ ...props });
 
   const input = getInputProps();
@@ -67,16 +65,11 @@ const ObjectRadioButton: VFC<ObjectRadioButtonProps> = ({
       variant="ghost"
       justifyContent="start"
       {...checkbox}
-      _checked={
-        // ugly hack, chakra should uncheck when value is undefined
-        selected !== null
-          ? {
-              bg: 'teal.600',
-              color: 'white',
-              borderColor: 'teal.600',
-            }
-          : {}
-      }
+      _checked={{
+        bg: 'teal.600',
+        color: 'white',
+        borderColor: 'teal.600',
+      }}
     >
       <input {...input} />
       {label}
@@ -92,7 +85,7 @@ const SceneOutlinePanel: VFC = () => {
 
   const { getRootProps, getRadioProps } = useRadioGroup({
     name: 'selectedObject',
-    value: selected ?? undefined,
+    value: selected ?? '',
     onChange: (value) => void setSelected(value as string),
   });
 
