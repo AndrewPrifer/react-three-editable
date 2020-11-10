@@ -28,6 +28,7 @@ const RadioCard: VFC<RadioCardProps> = (props) => {
     <>
       <Tooltip label={props.label} hasArrow>
         <IconButton
+          cursor="pointer"
           aria-label={props.label}
           size="sm"
           icon={props.icon}
