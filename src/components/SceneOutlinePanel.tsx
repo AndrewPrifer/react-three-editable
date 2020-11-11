@@ -3,6 +3,7 @@ import {
   Box,
   VStack,
   Button,
+  Heading,
   useRadioGroup,
   UseRadioProps,
   useRadio,
@@ -100,7 +101,10 @@ const SceneOutlinePanel: VFC = () => {
       bg="white"
       borderRightWidth={1}
     >
-      <VStack {...group}>
+      <VStack {...group} align="start">
+        <Heading as="h3" size="lg" mb={3} ml={3}>
+          Outline
+        </Heading>
         {Object.entries(editables).map(
           ([name, editable]) =>
             editable.type !== 'nil' && (

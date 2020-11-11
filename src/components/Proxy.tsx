@@ -4,6 +4,7 @@ import {
   DirectionalLightHelper,
   Group,
   Material,
+  Matrix4,
   Mesh,
   MeshBasicMaterial,
   MeshPhongMaterial,
@@ -11,7 +12,13 @@ import {
   PointLightHelper,
   SpotLightHelper,
 } from 'three';
-import React, { useLayoutEffect, useRef, useState, VFC } from 'react';
+import React, {
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+  VFC,
+} from 'react';
 import { OrbitControls, useHelper, Sphere } from '@react-three/drei';
 import TransformControls from './TransformControls';
 import { Editable, useEditorStore } from '../store';
@@ -34,6 +41,7 @@ const Proxy: VFC<ProxyProps> = ({
   selected,
   orbitControlsRef,
 }) => {
+  const isBeingEdited = useRef(false);
   const proxyParentRef = useRef<Group>();
   const [proxy, setProxy] = useState<Object3D>();
   // this is only for the helper
@@ -205,6 +213,25 @@ const Proxy: VFC<ProxyProps> = ({
     });
   }, [viewportShading, proxy, renderMaterials]);
 
+  useEffect(() => {
+    const unsub = useEditorStore.subscribe(
+      (transform) => {
+        if (!proxy || isBeingEdited.current) {
+          return;
+        }
+
+        (transform as Matrix4).decompose(
+          proxy.position,
+          proxy.quaternion,
+          proxy.scale
+        );
+      },
+      (state) => state.editables[editableName].transform
+    );
+
+    return () => void unsub();
+  }, [editableName, proxy]);
+
   return proxy ? (
     <>
       <group ref={proxyParentRef} onClick={onClick}>
@@ -235,6 +262,7 @@ const Proxy: VFC<ProxyProps> = ({
           onObjectChange={() => {
             setEditableTransform(editableName, proxy.matrix.clone());
           }}
+          onDraggingChange={(event) => (isBeingEdited.current = event.value)}
         />
       )}
     </>

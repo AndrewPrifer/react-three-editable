@@ -8,10 +8,10 @@ import { saveAs } from 'file-saver';
 import TransformControlsSpaceRadio from './TransformControlsSpaceRadio';
 import ViewportShadingRadio from './ViewportShadingRadio';
 import SceneOutlinePanel from './SceneOutlinePanel';
+import PropertiesPanel from './PropertiesPanel';
 
 const UI: VFC = () => {
   const [
-    editables,
     transformControlsMode,
     transformControlsSpace,
     viewportShading,
@@ -21,7 +21,6 @@ const UI: VFC = () => {
     setEditorOpen,
   ] = useEditorStore(
     (state) => [
-      state.editables,
       state.transformControlsMode,
       state.transformControlsSpace,
       state.viewportShading,
@@ -69,7 +68,7 @@ const UI: VFC = () => {
                 />
               </Box>
             </HStack>
-            <ReferenceWindow height={200} />
+            <ReferenceWindow height={120} />
           </Flex>
 
           {/* Bottom-left corner*/}
@@ -95,12 +94,14 @@ const UI: VFC = () => {
                   JSON.stringify(
                     {
                       editables: Object.fromEntries(
-                        Object.entries(editables).map(([name, editable]) => [
-                          name,
-                          {
-                            transform: editable.transform.toArray(),
-                          },
-                        ])
+                        Object.entries(useEditorStore.getState().editables).map(
+                          ([name, editable]) => [
+                            name,
+                            {
+                              transform: editable.transform.toArray(),
+                            },
+                          ]
+                        )
                       ),
                     },
                     null,
@@ -114,6 +115,9 @@ const UI: VFC = () => {
           >
             Export
           </Button>
+        </Box>
+        <Box width="min-content" pointerEvents="all">
+          <PropertiesPanel />
         </Box>
       </Flex>
     </Box>

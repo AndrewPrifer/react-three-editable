@@ -16,6 +16,7 @@ export interface TransformControlsProps extends R3fTransformControls {
   object: Object3D;
   orbitControlsRef?: React.MutableRefObject<OrbitControls | undefined>;
   onObjectChange?: (event: Event) => void;
+  onDraggingChange?: (event: Event) => void;
 }
 
 const TransformControls = forwardRef(
@@ -25,6 +26,7 @@ const TransformControls = forwardRef(
       object,
       orbitControlsRef,
       onObjectChange,
+      onDraggingChange,
       ...props
     }: TransformControlsProps,
     ref
@@ -73,6 +75,18 @@ const TransformControls = forwardRef(
         }
       };
     }, [onObjectChange, controls]);
+
+    useEffect(() => {
+      if (onDraggingChange) {
+        controls.addEventListener('dragging-changed', onDraggingChange);
+      }
+
+      return () => {
+        if (onDraggingChange) {
+          controls.removeEventListener('dragging-changed', onDraggingChange);
+        }
+      };
+    }, [controls, onDraggingChange]);
 
     return <primitive dispose={null} object={controls} ref={ref} {...props} />;
   }

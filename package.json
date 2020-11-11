@@ -85,6 +85,7 @@
     "emotion-server": "^10.0.27",
     "file-saver": "^2.0.2",
     "framer-motion": "^2.9.4",
+    "react-hook-form": "^6.11.0",
     "react-icons": "^3.11.0",
     "react-merge-refs": "^1.1.0",
     "react-shadow": "^18.4.2",

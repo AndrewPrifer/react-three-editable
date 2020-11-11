@@ -22,16 +22,14 @@ import StaticSceneProxy from './StaticSceneProxy';
 
 const EditorScene = () => {
   const orbitControlsRef = useRef<OrbitControls>();
+  const editablesRef = useRef(useEditorStore.getState().editables);
 
-  const [scene, editables, selected, setSelected] = useEditorStore(
-    (state) => [
-      state.scene,
-      state.editables,
-      state.selected,
-      state.setSelected,
-    ],
+  const [scene, selected, setSelected] = useEditorStore(
+    (state) => [state.scene, state.selected, state.setSelected],
     shallow
   );
+
+  const editables = editablesRef.current;
 
   return (
     <>
