@@ -15,7 +15,7 @@ import shallow from 'zustand/shallow';
 import { useFrame } from 'react-three-fiber';
 import { useProxy } from '../hooks';
 
-export interface ProxyProps {
+export interface EditableProxyProps {
   editableName: string;
   editable: Exclude<Editable, { type: 'nil' }>;
   onClick?: () => void;
@@ -24,7 +24,7 @@ export interface ProxyProps {
   orbitControlsRef: React.MutableRefObject<OrbitControls | undefined>;
 }
 
-const Proxy: VFC<ProxyProps> = ({
+const EditableProxy: VFC<EditableProxyProps> = ({
   editableName,
   editable,
   onClick,
@@ -163,4 +163,4 @@ const Proxy: VFC<ProxyProps> = ({
   ) : null;
 };
 
-export default Proxy;
+export default EditableProxy;

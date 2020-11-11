@@ -16,7 +16,7 @@ import {
   Code,
 } from '@chakra-ui/core';
 import theme from '../theme';
-import Proxy from './Proxy';
+import EditableProxy from './EditableProxy';
 import UI from './UI';
 import StaticSceneProxy from './StaticSceneProxy';
 
@@ -43,7 +43,7 @@ const EditorScene = () => {
       {Object.entries(editables).map(
         ([name, editable]) =>
           editable.type !== 'nil' && (
-            <Proxy
+            <EditableProxy
               editableName={name}
               editable={editable}
               selected={selected === name}
