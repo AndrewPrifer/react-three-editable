@@ -3,27 +3,17 @@ import {
   CameraHelper,
   DirectionalLightHelper,
   Group,
-  Material,
   Matrix4,
-  Mesh,
-  MeshBasicMaterial,
-  MeshPhongMaterial,
-  Object3D,
   PointLightHelper,
   SpotLightHelper,
 } from 'three';
-import React, {
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-  VFC,
-} from 'react';
+import React, { useEffect, useRef, VFC } from 'react';
 import { OrbitControls, useHelper, Sphere } from '@react-three/drei';
 import TransformControls from './TransformControls';
 import { Editable, useEditorStore } from '../store';
 import shallow from 'zustand/shallow';
 import { useFrame } from 'react-three-fiber';
+import { useProxy } from '../hooks';
 
 export interface ProxyProps {
   editableName: string;
@@ -43,33 +33,8 @@ const Proxy: VFC<ProxyProps> = ({
 }) => {
   const isBeingEdited = useRef(false);
   const proxyParentRef = useRef<Group>();
-  const [proxy, setProxy] = useState<Object3D>();
-  // this is only for the helper
-  const proxyRef = useRef<Object3D>();
-  const [renderMaterials, setRenderMaterials] = useState<{
-    [id: string]: Material | Material[];
-  }>({});
 
-  // prepare proxy object
-  useLayoutEffect(() => {
-    const proxy = editable.original.clone();
-
-    const remove: Object3D[] = [];
-
-    // could also just reimplement .clone to accept a filter function
-    proxy.traverse((object) => {
-      if (object.userData.editable) {
-        remove.push(object);
-      }
-    });
-
-    remove.forEach((object) => {
-      object.parent?.remove(object);
-    });
-
-    proxyRef.current = proxy;
-    setProxy(proxy);
-  }, [editable.original]);
+  const [proxy, proxyRef] = useProxy(editable.original);
 
   // set up helper
   let Helper:
@@ -122,13 +87,11 @@ const Proxy: VFC<ProxyProps> = ({
   const [
     transformControlsMode,
     transformControlsSpace,
-    viewportShading,
     setEditableTransform,
   ] = useEditorStore(
     (state) => [
       state.transformControlsMode,
       state.transformControlsSpace,
-      state.viewportShading,
       state.setEditableTransform,
     ],
     shallow
@@ -143,75 +106,6 @@ const Proxy: VFC<ProxyProps> = ({
       proxyParent.scale
     );
   });
-
-  // save original materials
-  useLayoutEffect(() => {
-    if (!proxy) {
-      return;
-    }
-
-    const renderMaterials: {
-      [id: string]: Material | Material[];
-    } = {};
-
-    proxy.traverse((object) => {
-      const mesh = object as Mesh;
-      if (mesh.isMesh && !mesh.userData.helper) {
-        renderMaterials[mesh.id] = mesh.material;
-      }
-    });
-
-    setRenderMaterials(renderMaterials);
-
-    return () => {
-      Object.entries(renderMaterials).forEach(([id, material]) => {
-        (proxy.getObjectById(Number.parseInt(id)) as Mesh).material = material;
-      });
-    };
-  }, [proxy]);
-
-  useLayoutEffect(() => {
-    if (!proxy) {
-      return;
-    }
-
-    proxy.traverse((object) => {
-      const mesh = object as Mesh;
-      if (mesh.isMesh && !mesh.userData.helper) {
-        let material;
-        switch (viewportShading) {
-          case 'wireframe':
-            mesh.material = new MeshBasicMaterial({
-              wireframe: true,
-              color: 'black',
-            });
-            break;
-          case 'flat':
-            material = new MeshBasicMaterial();
-            if (renderMaterials[mesh.id].hasOwnProperty('color')) {
-              material.color = (renderMaterials[mesh.id] as any).color;
-            }
-            if (renderMaterials[mesh.id].hasOwnProperty('map')) {
-              material.map = (renderMaterials[mesh.id] as any).map;
-            }
-            mesh.material = material;
-            break;
-          case 'solid':
-            material = new MeshPhongMaterial();
-            if (renderMaterials[mesh.id].hasOwnProperty('color')) {
-              material.color = (renderMaterials[mesh.id] as any).color;
-            }
-            if (renderMaterials[mesh.id].hasOwnProperty('map')) {
-              material.map = (renderMaterials[mesh.id] as any).map;
-            }
-            mesh.material = material;
-            break;
-          case 'rendered':
-            mesh.material = renderMaterials[mesh.id];
-        }
-      }
-    });
-  }, [viewportShading, proxy, renderMaterials]);
 
   useEffect(() => {
     const unsub = useEditorStore.subscribe(
