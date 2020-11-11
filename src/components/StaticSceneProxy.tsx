@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useRef, useState, VFC } from 'react';
+import React, { useLayoutEffect, useState, VFC } from 'react';
 import {
   Material,
   Mesh,
@@ -14,7 +14,7 @@ export interface StaticSceneProxyProps {
 }
 
 const StaticSceneProxy: VFC<StaticSceneProxyProps> = ({ scene }) => {
-  const renderMaterials = useRef<{
+  const [renderMaterials, setRenderMaterials] = useState<{
     [id: string]: Material | Material[];
   }>({});
 
@@ -46,19 +46,21 @@ const StaticSceneProxy: VFC<StaticSceneProxyProps> = ({ scene }) => {
       return;
     }
 
-    Object.keys(renderMaterials).forEach((key) => {
-      delete renderMaterials.current[key];
-    });
+    const renderMaterials: {
+      [id: string]: Material | Material[];
+    } = {};
 
     staticSceneProxy.traverse((object) => {
       const mesh = object as Mesh;
       if (mesh.isMesh && !mesh.userData.helper) {
-        renderMaterials.current[mesh.id] = mesh.material;
+        renderMaterials[mesh.id] = mesh.material;
       }
     });
 
+    setRenderMaterials(renderMaterials);
+
     return () => {
-      Object.entries(renderMaterials.current).forEach(([id, material]) => {
+      Object.entries(renderMaterials).forEach(([id, material]) => {
         (staticSceneProxy.getObjectById(
           Number.parseInt(id)
         ) as Mesh).material = material;
@@ -84,30 +86,30 @@ const StaticSceneProxy: VFC<StaticSceneProxyProps> = ({ scene }) => {
             break;
           case 'flat':
             material = new MeshBasicMaterial();
-            if (renderMaterials.current[mesh.id].hasOwnProperty('color')) {
-              material.color = (renderMaterials.current[mesh.id] as any).color;
+            if (renderMaterials[mesh.id].hasOwnProperty('color')) {
+              material.color = (renderMaterials[mesh.id] as any).color;
             }
-            if (renderMaterials.current[mesh.id].hasOwnProperty('map')) {
-              material.map = (renderMaterials.current[mesh.id] as any).map;
+            if (renderMaterials[mesh.id].hasOwnProperty('map')) {
+              material.map = (renderMaterials[mesh.id] as any).map;
             }
             mesh.material = material;
             break;
           case 'solid':
             material = new MeshPhongMaterial();
-            if (renderMaterials.current[mesh.id].hasOwnProperty('color')) {
-              material.color = (renderMaterials.current[mesh.id] as any).color;
+            if (renderMaterials[mesh.id].hasOwnProperty('color')) {
+              material.color = (renderMaterials[mesh.id] as any).color;
             }
-            if (renderMaterials.current[mesh.id].hasOwnProperty('map')) {
-              material.map = (renderMaterials.current[mesh.id] as any).map;
+            if (renderMaterials[mesh.id].hasOwnProperty('map')) {
+              material.map = (renderMaterials[mesh.id] as any).map;
             }
             mesh.material = material;
             break;
           case 'rendered':
-            mesh.material = renderMaterials.current[mesh.id];
+            mesh.material = renderMaterials[mesh.id];
         }
       }
     });
-  }, [viewportShading, staticSceneProxy]);
+  }, [viewportShading, staticSceneProxy, renderMaterials]);
 
   return staticSceneProxy ? <primitive object={staticSceneProxy} /> : null;
 };
