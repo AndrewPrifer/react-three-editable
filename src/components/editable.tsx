@@ -81,7 +81,7 @@ const useEditable = <T extends Exclude<EditableType, 'nil'>>(
     return () => {
       removeEditable(uniqueName);
     };
-  }, [addEditable, removeEditable]);
+  }, [addEditable, removeEditable, type, uniqueName]);
 
   useLayoutEffect(() => {
     const object = objectRef.current!;
@@ -112,7 +112,7 @@ const useEditable = <T extends Exclude<EditableType, 'nil'>>(
     return () => {
       unsub();
     };
-  }, []);
+  }, [uniqueName]);
 
   return objectRef;
 };
