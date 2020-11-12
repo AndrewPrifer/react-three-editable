@@ -98,6 +98,7 @@ const UI: VFC = () => {
                           ([name, editable]) => [
                             name,
                             {
+                              type: editable.type,
                               transform: editable.transform.toArray(),
                             },
                           ]

@@ -10,14 +10,14 @@ import {
 import React, { useEffect, useRef, VFC } from 'react';
 import { OrbitControls, useHelper, Sphere } from '@react-three/drei';
 import TransformControls from './TransformControls';
-import { Editable, useEditorStore } from '../store';
+import { ActiveEditable, useEditorStore } from '../store';
 import shallow from 'zustand/shallow';
 import { useFrame } from 'react-three-fiber';
 import { useProxy } from '../hooks';
 
 export interface EditableProxyProps {
   editableName: string;
-  editable: Exclude<Editable, { type: 'nil' }>;
+  editable: ActiveEditable;
   onClick?: () => void;
   onChange?: () => void;
   selected?: boolean;

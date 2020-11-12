@@ -1,7 +1,6 @@
 import create from 'zustand';
 import { Matrix4, Object3D, Scene, WebGLRenderer } from 'three';
 
-// nil is an object that has either been removed, or yet has to be added
 export type EditableType =
   | 'group'
   | 'mesh'
@@ -9,8 +8,7 @@ export type EditableType =
   | 'directionalLight'
   | 'pointLight'
   | 'perspectiveCamera'
-  | 'orthographicCamera'
-  | 'nil';
+  | 'orthographicCamera';
 export type TransformControlsMode = 'translate' | 'rotate' | 'scale';
 export type TransformControlsSpace = 'world' | 'local';
 export type ViewportShading = 'wireframe' | 'flat' | 'solid' | 'rendered';
@@ -18,20 +16,25 @@ export type ViewportShading = 'wireframe' | 'flat' | 'solid' | 'rendered';
 export interface State {
   editables: {
     [key: string]: {
+      type: EditableType;
       transform: number[];
     };
   };
 }
 
+export type ActiveEditable = {
+  type: EditableType;
+  original: Object3D;
+  transform: Matrix4;
+  removed: false;
+};
+
 export type Editable =
+  | ActiveEditable
   | {
-      type: Exclude<EditableType, 'nil'>;
-      original: Object3D;
+      type: EditableType;
       transform: Matrix4;
-    }
-  | {
-      type: 'nil';
-      transform: Matrix4;
+      removed: true;
     };
 
 export type EditorStore = {
@@ -46,7 +49,7 @@ export type EditorStore = {
 
   init: (scene: Scene, gl: WebGLRenderer, initialState?: State) => void;
   addEditable: (
-    type: Exclude<EditableType, 'nil'>,
+    type: EditableType,
     original: Object3D,
     uniqueName: string
   ) => void;
@@ -75,8 +78,9 @@ export const useEditorStore = create<EditorStore>((set) => ({
           Object.entries(initialState.editables).map(([name, editable]) => [
             name,
             {
-              type: 'nil',
+              type: editable.type,
               transform: new Matrix4().fromArray(editable.transform),
+              removed: true,
             },
           ])
         )
@@ -88,7 +92,12 @@ export const useEditorStore = create<EditorStore>((set) => ({
     set((state) => {
       let transform = new Matrix4();
       if (state.editables[uniqueName]) {
-        if (state.editables[uniqueName].type !== 'nil') {
+        if (state.editables[uniqueName].type !== type) {
+          console.warn(`There is a mismatch between the serialized type of ${uniqueName} and the one set when adding it to the scene.
+Serialized: ${state.editables[uniqueName].type}.
+Current: ${type}.`);
+        }
+        if (!state.editables[uniqueName].removed) {
           console.warn(`Editor already has an object named ${uniqueName}.`);
         } else {
           transform = state.editables[uniqueName].transform;
@@ -102,6 +111,7 @@ export const useEditorStore = create<EditorStore>((set) => ({
             type,
             original,
             transform,
+            removed: false,
           },
         },
       };
@@ -112,7 +122,7 @@ export const useEditorStore = create<EditorStore>((set) => ({
       return {
         editables: {
           ...rest,
-          [name]: { type: 'nil', transform: removed.transform },
+          [name]: { ...removed, original: undefined, removed: true },
         },
       };
     }),

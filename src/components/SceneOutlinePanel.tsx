@@ -22,7 +22,7 @@ import {
 
 interface ObjectRadioButtonProps extends UseRadioProps {
   label: string;
-  editableType: Exclude<EditableType, 'nil'>;
+  editableType: EditableType;
 }
 
 const ObjectRadioButton: VFC<ObjectRadioButtonProps> = ({
@@ -107,7 +107,7 @@ const SceneOutlinePanel: VFC = () => {
         </Heading>
         {Object.entries(editables).map(
           ([name, editable]) =>
-            editable.type !== 'nil' && (
+            !editable.removed && (
               <ObjectRadioButton
                 key={name}
                 label={name}

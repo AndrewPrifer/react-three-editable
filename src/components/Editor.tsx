@@ -42,7 +42,7 @@ const EditorScene = () => {
 
       {Object.entries(editables).map(
         ([name, editable]) =>
-          editable.type !== 'nil' && (
+          !editable.removed && (
             <EditableProxy
               editableName={name}
               editable={editable}

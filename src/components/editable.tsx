@@ -23,7 +23,7 @@ import shallow from 'zustand/shallow';
 import mergeRefs from 'react-merge-refs';
 
 type EditableComponents = {
-  [K in Exclude<EditableType, 'nil'>]: ForwardRefExoticComponent<
+  [K in EditableType]: ForwardRefExoticComponent<
     ComponentProps<K> & {
       uniqueName: string;
       // you need a ref to this if you want to apply transforms programmatically or want to re-parent the object
@@ -33,7 +33,7 @@ type EditableComponents = {
 } & {
   <
     T extends JSXElementConstructor<V>,
-    U extends Exclude<EditableType, 'nil'>,
+    U extends EditableType,
     V extends ComponentProps<U>
   >(
     Component: T,
@@ -60,10 +60,7 @@ interface Elements {
   pointLight: PointLight;
 }
 
-const useEditable = <T extends Exclude<EditableType, 'nil'>>(
-  uniqueName: string,
-  type: T
-) => {
+const useEditable = <T extends EditableType>(uniqueName: string, type: T) => {
   const objectRef = useRef<Elements[T]>();
 
   const [addEditable, removeEditable] = useEditorStore(
