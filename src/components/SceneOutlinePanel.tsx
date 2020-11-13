@@ -1,6 +1,7 @@
 import React, { ReactElement, VFC } from 'react';
 import {
   Box,
+  Flex,
   VStack,
   Button,
   Heading,
@@ -79,8 +80,18 @@ const ObjectRadioButton: VFC<ObjectRadioButtonProps> = ({
 };
 
 const SceneOutlinePanel: VFC = () => {
-  const [editablesSnapshot, selected, setSelected] = useEditorStore(
-    (state) => [state.editablesSnapshot, state.selected, state.setSelected],
+  const [
+    editablesSnapshot,
+    selected,
+    setSelected,
+    createSnapshot,
+  ] = useEditorStore(
+    (state) => [
+      state.editablesSnapshot,
+      state.selected,
+      state.setSelected,
+      state.createSnapshot,
+    ],
     shallow
   );
 
@@ -97,15 +108,16 @@ const SceneOutlinePanel: VFC = () => {
   }
 
   return (
-    <Box
+    <Flex
       overflow="scroll"
       width="300px"
       height="100%"
       p={5}
       bg="white"
       borderRightWidth={1}
+      direction="column"
     >
-      <VStack {...group} align="start">
+      <VStack {...group} align="start" flex="1">
         <Heading as="h3" size="lg" mb={3} ml={3}>
           Outline
         </Heading>
@@ -121,7 +133,17 @@ const SceneOutlinePanel: VFC = () => {
             )
         )}
       </VStack>
-    </Box>
+      <Box flex="0 0" mt={3}>
+        <Button
+          width="100%"
+          onClick={() => {
+            createSnapshot();
+          }}
+        >
+          Sync editor
+        </Button>
+      </Box>
+    </Flex>
   );
 };
 
