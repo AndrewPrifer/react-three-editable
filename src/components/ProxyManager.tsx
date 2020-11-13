@@ -157,6 +157,10 @@ const ProxyManager: VFC<ProxyManagerProps> = ({ orbitControlsRef }) => {
             });
             break;
           case 'flat':
+            // it is possible that renderMaterials hasn't updated yet
+            if (!renderMaterials[mesh.id]) {
+              return;
+            }
             material = new MeshBasicMaterial();
             if (renderMaterials[mesh.id].hasOwnProperty('color')) {
               material.color = (renderMaterials[mesh.id] as any).color;
@@ -167,6 +171,10 @@ const ProxyManager: VFC<ProxyManagerProps> = ({ orbitControlsRef }) => {
             mesh.material = material;
             break;
           case 'solid':
+            // it is possible that renderMaterials hasn't updated yet
+            if (!renderMaterials[mesh.id]) {
+              return;
+            }
             material = new MeshPhongMaterial();
             if (renderMaterials[mesh.id].hasOwnProperty('color')) {
               material.color = (renderMaterials[mesh.id] as any).color;
