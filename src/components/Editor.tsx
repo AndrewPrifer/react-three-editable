@@ -16,54 +16,37 @@ import {
   Code,
 } from '@chakra-ui/core';
 import theme from '../theme';
-import EditableProxy from './EditableProxy';
 import UI from './UI';
-import StaticSceneProxy from './StaticSceneProxy';
+import ProxyManager from './ProxyManager';
 
 const EditorScene = () => {
   const orbitControlsRef = useRef<OrbitControls>();
-  const editablesRef = useRef(useEditorStore.getState().editables);
-
-  const [scene, selected, setSelected] = useEditorStore(
-    (state) => [state.scene, state.selected, state.setSelected],
-    shallow
-  );
-
-  const editables = editablesRef.current;
 
   return (
     <>
-      {scene && <StaticSceneProxy scene={scene} />}
-
       <directionalLight position={[10, 20, 15]} />
       <gridHelper args={[30, 30, 30]} />
       <axesHelper />
       <OrbitControls ref={orbitControlsRef} />
-
-      {Object.entries(editables).map(
-        ([name, editable]) =>
-          !editable.removed && (
-            <EditableProxy
-              editableName={name}
-              editable={editable}
-              selected={selected === name}
-              onClick={() => setSelected(name)}
-              orbitControlsRef={orbitControlsRef}
-              key={name}
-            />
-          )
-      )}
+      <ProxyManager orbitControlsRef={orbitControlsRef} />
     </>
   );
 };
 
 const Editor = () => {
-  const [scene, editorOpen, setEditorOpen, setSelected] = useEditorStore(
+  const [
+    scene,
+    editorOpen,
+    setEditorOpen,
+    setSelected,
+    createSnapshot,
+  ] = useEditorStore(
     (state) => [
       state.scene,
       state.editorOpen,
       state.setEditorOpen,
       state.setSelected,
+      state.createSnapshot,
     ],
     shallow
   );
@@ -74,57 +57,68 @@ const Editor = () => {
         <Box id="react-three-editable-editor-root">
           <PortalManager>
             <Box pos="relative" zIndex={1000}>
-              {editorOpen ? (
-                <Box pos="fixed" top={0} bottom={0} left={0} right={0}>
-                  {scene ? (
-                    <>
-                      <Canvas
-                        colorManagement
-                        camera={{ position: [5, 5, 5] }}
-                        onCreated={({ gl }) => {
-                          gl.setClearColor('white');
-                        }}
-                        shadowMap
-                        pixelRatio={window.devicePixelRatio}
-                        onPointerMissed={() => setSelected(null)}
+              <Box
+                pos="fixed"
+                d={editorOpen ? 'block' : 'none'}
+                top={0}
+                bottom={0}
+                left={0}
+                right={0}
+              >
+                {scene ? (
+                  <>
+                    <Canvas
+                      colorManagement
+                      camera={{ position: [5, 5, 5] }}
+                      onCreated={({ gl }) => {
+                        gl.setClearColor('white');
+                      }}
+                      shadowMap
+                      pixelRatio={window.devicePixelRatio}
+                      onPointerMissed={() => setSelected(null)}
+                    >
+                      <EditorScene />
+                    </Canvas>
+                    <UI />
+                  </>
+                ) : (
+                  <Center bg="white" height="100vh">
+                    <VStack spacing={5}>
+                      <Heading mb={4} colorScheme="red">
+                        No canvas has been connected
+                      </Heading>
+                      <Text>
+                        Please use <Code>{'<EditableManager />'}</Code> to
+                        connect a canvas to React Three Editable.
+                      </Text>
+                      <Code width="300px" p={3}>
+                        <pre>
+                          {
+                            '<Canvas>\n  <EditableManager /> {/* !!! */}\n</Canvas>'
+                          }
+                        </pre>
+                      </Code>
+                      <Button
+                        onClick={() => setEditorOpen(false)}
+                        colorScheme="teal"
                       >
-                        <EditorScene />
-                      </Canvas>
-                      <UI />
-                    </>
-                  ) : (
-                    <Center bg="white" height="100vh">
-                      <VStack spacing={5}>
-                        <Heading mb={4} colorScheme="red">
-                          No canvas has been connected
-                        </Heading>
-                        <Text>
-                          Please use <Code>{'<EditableManager />'}</Code> to
-                          connect a canvas to React Three Editable.
-                        </Text>
-                        <Code width="300px" p={3}>
-                          <pre>
-                            {
-                              '<Canvas>\n  <EditableManager /> {/* !!! */}\n</Canvas>'
-                            }
-                          </pre>
-                        </Code>
-                        <Button
-                          onClick={() => setEditorOpen(false)}
-                          colorScheme="teal"
-                        >
-                          Close
-                        </Button>
-                      </VStack>
-                    </Center>
-                  )}
-                </Box>
-              ) : (
+                        Close
+                      </Button>
+                    </VStack>
+                  </Center>
+                )}
+              </Box>
+              {editorOpen || (
                 <Button
                   pos="fixed"
                   bottom="20px"
                   left="20px"
-                  onClick={() => setEditorOpen(true)}
+                  onClick={() => {
+                    if (!useEditorStore.getState().sceneSnapshot) {
+                      createSnapshot();
+                    }
+                    setEditorOpen(true);
+                  }}
                 >
                   Editor
                 </Button>

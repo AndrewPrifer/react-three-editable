@@ -50,6 +50,9 @@ const SetupScene = () => {
       >
         <meshStandardMaterial />
       </Plane>
+      <Box castShadow receiveShadow position={[-3, 3, -3]}>
+        <meshStandardMaterial color="red" />
+      </Box>
       <group position={[0, -1, 0]}>
         <e.group uniqueName="monkey" position={[0, 3, 0]}>
           <Suspense fallback={null}>

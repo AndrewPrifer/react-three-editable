@@ -127,7 +127,11 @@ const editable: EditableComponents = (Component, type) =>
       return (
         <group
           ref={editableRootRef}
-          userData={{ editable: true }}
+          userData={{
+            __editable: true,
+            __editableName: uniqueName,
+            __editableType: type,
+          }}
           position={position}
           rotation={rotation}
           scale={scale}
@@ -149,7 +153,11 @@ editable.group = forwardRef(
     return (
       <group
         ref={editableRootRef}
-        userData={{ editable: true }}
+        userData={{
+          __editable: true,
+          __editableName: uniqueName,
+          __editableType: 'group',
+        }}
         position={position}
         rotation={rotation}
         scale={scale}
@@ -170,7 +178,11 @@ editable.mesh = forwardRef(
     return (
       <group
         ref={editableRootRef}
-        userData={{ editable: true }}
+        userData={{
+          __editable: true,
+          __editableName: uniqueName,
+          __editableType: 'mesh',
+        }}
         position={position}
         rotation={rotation}
         scale={scale}
@@ -190,7 +202,11 @@ editable.spotLight = forwardRef(
     return (
       <group
         ref={editableRootRef}
-        userData={{ editable: true }}
+        userData={{
+          __editable: true,
+          __editableName: uniqueName,
+          __editableType: 'spotLight',
+        }}
         position={position}
         rotation={rotation}
         scale={scale}
@@ -210,7 +226,11 @@ editable.directionalLight = forwardRef(
     return (
       <group
         ref={editableRootRef}
-        userData={{ editable: true }}
+        userData={{
+          __editable: true,
+          __editableName: uniqueName,
+          __editableType: 'directionalLight',
+        }}
         position={position}
         rotation={rotation}
         scale={scale}
@@ -230,7 +250,11 @@ editable.pointLight = forwardRef(
     return (
       <group
         ref={editableRootRef}
-        userData={{ editable: true }}
+        userData={{
+          __editable: true,
+          __editableName: uniqueName,
+          __editableType: 'pointLight',
+        }}
         position={position}
         rotation={rotation}
         scale={scale}
@@ -250,7 +274,11 @@ editable.perspectiveCamera = forwardRef(
     return (
       <group
         ref={editableRootRef}
-        userData={{ editable: true }}
+        userData={{
+          __editable: true,
+          __editableName: uniqueName,
+          __editableType: 'perspectiveCamera',
+        }}
         position={position}
         rotation={rotation}
         scale={scale}
@@ -270,7 +298,11 @@ editable.orthographicCamera = forwardRef(
     return (
       <group
         ref={editableRootRef}
-        userData={{ editable: true }}
+        userData={{
+          __editable: true,
+          __editableName: uniqueName,
+          __editableType: 'orthographicCamera',
+        }}
         position={position}
         rotation={rotation}
         scale={scale}

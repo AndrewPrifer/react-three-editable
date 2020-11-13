@@ -79,8 +79,8 @@ const ObjectRadioButton: VFC<ObjectRadioButtonProps> = ({
 };
 
 const SceneOutlinePanel: VFC = () => {
-  const [editables, selected, setSelected] = useEditorStore(
-    (state) => [state.editables, state.selected, state.setSelected],
+  const [editablesSnapshot, selected, setSelected] = useEditorStore(
+    (state) => [state.editablesSnapshot, state.selected, state.setSelected],
     shallow
   );
 
@@ -91,6 +91,10 @@ const SceneOutlinePanel: VFC = () => {
   });
 
   const group = getRootProps();
+
+  if (editablesSnapshot === null) {
+    return null;
+  }
 
   return (
     <Box
@@ -105,9 +109,9 @@ const SceneOutlinePanel: VFC = () => {
         <Heading as="h3" size="lg" mb={3} ml={3}>
           Outline
         </Heading>
-        {Object.entries(editables).map(
+        {Object.entries(editablesSnapshot).map(
           ([name, editable]) =>
-            !editable.removed && (
+            editable.role === 'active' && (
               <ObjectRadioButton
                 key={name}
                 label={name}

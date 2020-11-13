@@ -24,18 +24,19 @@ export interface State {
 
 export type ActiveEditable = {
   type: EditableType;
+  role: 'active';
   original: Object3D;
   transform: Matrix4;
-  removed: false;
 };
 
-export type Editable =
-  | ActiveEditable
-  | {
-      type: EditableType;
-      transform: Matrix4;
-      removed: true;
-    };
+export type RemovedEditable = {
+  type: EditableType;
+  role: 'removed';
+  original?: null;
+  transform: Matrix4;
+};
+
+export type Editable = ActiveEditable | RemovedEditable;
 
 export type EditorStore = {
   scene: Scene | null;
@@ -46,6 +47,8 @@ export type EditorStore = {
   transformControlsSpace: TransformControlsSpace;
   viewportShading: ViewportShading;
   editorOpen: boolean;
+  sceneSnapshot: Scene | null;
+  editablesSnapshot: Record<string, Editable> | null;
 
   init: (scene: Scene, gl: WebGLRenderer, initialState?: State) => void;
   addEditable: (
@@ -60,6 +63,7 @@ export type EditorStore = {
   setTransformControlsSpace: (mode: TransformControlsSpace) => void;
   setViewportShading: (mode: ViewportShading) => void;
   setEditorOpen: (open: boolean) => void;
+  createSnapshot: () => void;
 };
 
 export const useEditorStore = create<EditorStore>((set) => ({
@@ -71,6 +75,8 @@ export const useEditorStore = create<EditorStore>((set) => ({
   transformControlsSpace: 'world',
   viewportShading: 'rendered',
   editorOpen: false,
+  sceneSnapshot: null,
+  editablesSnapshot: null,
 
   init: (scene, gl, initialState) => {
     const editables: Record<string, Editable> = initialState
@@ -79,8 +85,8 @@ export const useEditorStore = create<EditorStore>((set) => ({
             name,
             {
               type: editable.type,
+              role: 'removed',
               transform: new Matrix4().fromArray(editable.transform),
-              removed: true,
             },
           ])
         )
@@ -97,7 +103,7 @@ export const useEditorStore = create<EditorStore>((set) => ({
 Serialized: ${state.editables[uniqueName].type}.
 Current: ${type}.`);
         }
-        if (!state.editables[uniqueName].removed) {
+        if (state.editables[uniqueName].role === 'active') {
           console.warn(`Editor already has an object named ${uniqueName}.`);
         } else {
           transform = state.editables[uniqueName].transform;
@@ -109,9 +115,9 @@ Current: ${type}.`);
           ...state.editables,
           [uniqueName]: {
             type,
+            role: 'active',
             original,
             transform,
-            removed: false,
           },
         },
       };
@@ -122,7 +128,7 @@ Current: ${type}.`);
       return {
         editables: {
           ...rest,
-          [name]: { ...removed, original: undefined, removed: true },
+          [name]: { ...removed, original: undefined, role: 'removed' },
         },
       };
     }),
@@ -148,5 +154,11 @@ Current: ${type}.`);
   },
   setEditorOpen: (open) => {
     set({ editorOpen: open });
+  },
+  createSnapshot: () => {
+    set((state) => ({
+      sceneSnapshot: state.scene?.clone(),
+      editablesSnapshot: state.editables,
+    }));
   },
 }));

@@ -2,39 +2,31 @@ import {
   BoxHelper,
   CameraHelper,
   DirectionalLightHelper,
-  Group,
-  Matrix4,
+  Object3D,
   PointLightHelper,
   SpotLightHelper,
 } from 'three';
-import React, { useEffect, useRef, VFC } from 'react';
-import { OrbitControls, useHelper, Sphere } from '@react-three/drei';
-import TransformControls from './TransformControls';
-import { ActiveEditable, useEditorStore } from '../store';
+import React, { useLayoutEffect, useRef, VFC } from 'react';
+import { useHelper, Sphere } from '@react-three/drei';
+import { EditableType, useEditorStore } from '../store';
 import shallow from 'zustand/shallow';
-import { useFrame } from 'react-three-fiber';
-import { useProxy } from '../hooks';
 
 export interface EditableProxyProps {
   editableName: string;
-  editable: ActiveEditable;
-  onClick?: () => void;
+  editableType: EditableType;
+  object: Object3D;
   onChange?: () => void;
-  selected?: boolean;
-  orbitControlsRef: React.MutableRefObject<OrbitControls | undefined>;
 }
 
 const EditableProxy: VFC<EditableProxyProps> = ({
   editableName,
-  editable,
-  onClick,
-  selected,
-  orbitControlsRef,
+  editableType,
+  object,
 }) => {
-  const isBeingEdited = useRef(false);
-  const proxyParentRef = useRef<Group>();
-
-  const [proxy, proxyRef] = useProxy(editable.original);
+  const [selected, setSelected] = useEditorStore(
+    (state) => [state.selected, state.setSelected],
+    shallow
+  );
 
   // set up helper
   let Helper:
@@ -44,7 +36,7 @@ const EditableProxy: VFC<EditableProxyProps> = ({
     | typeof BoxHelper
     | typeof CameraHelper;
 
-  switch (editable.type) {
+  switch (editableType) {
     case 'spotLight':
       Helper = SpotLightHelper;
       break;
@@ -65,9 +57,9 @@ const EditableProxy: VFC<EditableProxyProps> = ({
 
   let helperArgs: [string] | [number, string] | [];
   const size = 1;
-  const color = selected ? 'darkred' : 'darkblue';
+  const color = selected === editableName ? 'darkred' : 'darkblue';
 
-  switch (editable.type) {
+  switch (editableType) {
     case 'directionalLight':
     case 'pointLight':
       helperArgs = [size, color];
@@ -82,64 +74,35 @@ const EditableProxy: VFC<EditableProxyProps> = ({
       helperArgs = [];
   }
 
-  useHelper(proxyRef, Helper, ...helperArgs);
+  const objectRef = useRef(object);
 
-  const [
-    transformControlsMode,
-    transformControlsSpace,
-    setEditableTransform,
-  ] = useEditorStore(
-    (state) => [
-      state.transformControlsMode,
-      state.transformControlsSpace,
-      state.setEditableTransform,
-    ],
-    shallow
-  );
+  useLayoutEffect(() => {
+    objectRef.current = object;
+  }, [object]);
 
-  // update the parent every frame
-  useFrame(() => {
-    const proxyParent = proxyParentRef.current!;
-    editable.original.parent!.matrixWorld.decompose(
-      proxyParent.position,
-      proxyParent.quaternion,
-      proxyParent.scale
-    );
-  });
+  useHelper(objectRef, Helper, ...helperArgs);
 
-  useEffect(() => {
-    const unsub = useEditorStore.subscribe(
-      (transform) => {
-        if (!proxy || isBeingEdited.current) {
-          return;
-        }
-
-        (transform as Matrix4).decompose(
-          proxy.position,
-          proxy.quaternion,
-          proxy.scale
-        );
-      },
-      (state) => state.editables[editableName].transform
-    );
-
-    return () => void unsub();
-  }, [editableName, proxy]);
-
-  return proxy ? (
+  return (
     <>
-      <group ref={proxyParentRef} onClick={onClick}>
-        <primitive object={proxy}>
+      <group
+        onClick={(e) => {
+          e.stopPropagation();
+          setSelected(editableName);
+        }}
+      >
+        <primitive object={object}>
           {[
             'spotLight',
             'pointLight',
             'directionalLight',
             'perspectiveCamera',
             'orthographicCamera',
-          ].includes(editable.type) && (
+          ].includes(editableType) && (
             <Sphere
               args={[2, 4, 2]}
-              onClick={onClick}
+              onClick={() => {
+                setSelected(editableName);
+              }}
               userData={{ helper: true }}
             >
               <meshBasicMaterial visible={false} />
@@ -147,20 +110,8 @@ const EditableProxy: VFC<EditableProxyProps> = ({
           )}
         </primitive>
       </group>
-      {selected && (
-        <TransformControls
-          mode={transformControlsMode}
-          space={transformControlsSpace}
-          orbitControlsRef={orbitControlsRef}
-          object={proxy}
-          onObjectChange={() => {
-            setEditableTransform(editableName, proxy.matrix.clone());
-          }}
-          onDraggingChange={(event) => (isBeingEdited.current = event.value)}
-        />
-      )}
     </>
-  ) : null;
+  );
 };
 
 export default EditableProxy;

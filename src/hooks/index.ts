@@ -1,6 +1,12 @@
 import { State, useEditorStore } from '../store';
 import { useThree } from 'react-three-fiber';
-import { MutableRefObject, useLayoutEffect, useRef, useState } from 'react';
+import {
+  MutableRefObject,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import {
   Material,
   Mesh,
@@ -20,30 +26,38 @@ export const useEditableManager = (state?: State) => {
 };
 
 export const useProxy = (
-  scene: Object3D
-): [Object3D | undefined, MutableRefObject<Object3D | undefined>] => {
-  const [proxy, setProxy] = useState<Object3D>();
-  const proxyRef = useRef<Object3D>();
+  object: Object3D
+): [Object3D, MutableRefObject<Object3D>, string[]] => {
+  const proxy = useMemo(() => object.clone(), [object]);
+  const proxyRef = useRef<Object3D>(proxy);
+  // this depends on proxy, which is reactive already, so we can safely use a ref
+  const [childEditableNames, setChildEditableNames] = useState<string[]>([]);
 
   useLayoutEffect(() => {
-    const proxy = scene.clone();
-
-    const remove: Object3D[] = [];
+    const editableChildren: Object3D[] = [];
 
     // could also just reimplement .clone to accept a filter function
     proxy.traverse((object) => {
-      if (object.userData.editable) {
-        remove.push(object);
+      // userData editable properties are not set on the editable object itself, but on its parent, so we don't really need this
+      // other than for potentially saving myself from some future headaches
+      if (object === proxy) {
+        return;
+      }
+
+      if (object.userData.__editable) {
+        editableChildren.push(object);
       }
     });
 
-    remove.forEach((object) => {
+    const childEditableNames: string[] = [];
+    editableChildren.forEach((object) => {
+      childEditableNames.push(object.userData.__editableName);
       object.parent?.remove(object);
     });
 
+    setChildEditableNames(childEditableNames);
     proxyRef.current = proxy;
-    setProxy(proxy);
-  }, [scene]);
+  }, [proxy, setChildEditableNames]);
 
   const [renderMaterials, setRenderMaterials] = useState<{
     [id: string]: Material | Material[];
@@ -119,5 +133,5 @@ export const useProxy = (
     });
   }, [viewportShading, proxy, renderMaterials]);
 
-  return [proxy, proxyRef];
+  return [proxy, proxyRef, childEditableNames];
 };
