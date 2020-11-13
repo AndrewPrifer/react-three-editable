@@ -74,7 +74,7 @@ const ProxyManager: VFC<ProxyManagerProps> = ({ orbitControlsRef }) => {
             />,
             object
           ),
-          object,
+          object: object.children[0],
         };
       }
     });
