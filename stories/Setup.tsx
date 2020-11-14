@@ -23,6 +23,7 @@ const Suzanne = () => {
 };
 
 const EditableCamera = e(PerspectiveCamera, 'perspectiveCamera');
+const EditablePlane = e(Plane, 'mesh');
 
 const SetupScene = () => {
   // const material = useResource<Material>();
@@ -41,14 +42,15 @@ const SetupScene = () => {
         uniqueName="SpotLight1"
       />
       <pointLight position={[-10, 30, 30]} />
-      <Plane
+      <EditablePlane
         rotation={[-Math.PI / 2, 0, 0]}
         scale={[10, 10, 10]}
         material={material.current}
         receiveShadow
+        uniqueName="ground"
       >
         <meshStandardMaterial />
-      </Plane>
+      </EditablePlane>
       <Box castShadow receiveShadow position={[-3, 3, -3]}>
         <meshStandardMaterial color="red" />
       </Box>

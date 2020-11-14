@@ -86,8 +86,10 @@ const EditableProxy: VFC<EditableProxyProps> = ({
     <>
       <group
         onClick={(e) => {
-          e.stopPropagation();
-          setSelected(editableName);
+          if (e.delta < 2) {
+            e.stopPropagation();
+            setSelected(editableName);
+          }
         }}
       >
         <primitive object={object}>
@@ -100,8 +102,11 @@ const EditableProxy: VFC<EditableProxyProps> = ({
           ].includes(editableType) && (
             <Sphere
               args={[2, 4, 2]}
-              onClick={() => {
-                setSelected(editableName);
+              onClick={(e) => {
+                if (e.delta < 2) {
+                  e.stopPropagation();
+                  setSelected(editableName);
+                }
               }}
               userData={{ helper: true }}
             >
