@@ -24,7 +24,6 @@ const EditorScene = () => {
 
   return (
     <>
-      <directionalLight position={[10, 20, 15]} />
       <gridHelper args={[30, 30, 30]} />
       <axesHelper />
       <OrbitControls ref={orbitControlsRef} />
