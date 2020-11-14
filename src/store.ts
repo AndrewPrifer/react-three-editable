@@ -92,7 +92,12 @@ export const useEditorStore = create<EditorStore>((set) => ({
         )
       : {};
 
-    set({ scene, gl, editables });
+    set((state) => ({
+      scene,
+      gl,
+      // in case for some reason EditableManager was initialized after the editables in the scene
+      editables: { ...state.editables, ...editables },
+    }));
   },
   addEditable: (type, original, uniqueName) =>
     set((state) => {
