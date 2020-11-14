@@ -16,6 +16,8 @@ const ReferenceWindow: VFC<ReferenceWindowProps> = ({ height }) => {
   useEffect(() => {
     let animationHandle: number;
     const draw = (gl: WebGLRenderer) => () => {
+      animationHandle = requestAnimationFrame(draw(gl));
+
       if (!gl.domElement) {
         return;
       }
@@ -30,7 +32,6 @@ const ReferenceWindow: VFC<ReferenceWindowProps> = ({ height }) => {
       ctx.fillStyle = 'white';
       ctx.fillRect(0, 0, width, height);
       ctx.drawImage(gl.domElement, 0, 0, width, height);
-      animationHandle = requestAnimationFrame(draw(gl));
     };
 
     if (gl) {

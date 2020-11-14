@@ -1,5 +1,5 @@
-import React, { ReactNode, VFC, Suspense } from 'react';
-import { Canvas, useResource } from 'react-three-fiber';
+import React, { ReactNode, VFC, Suspense, useRef } from 'react';
+import { Canvas } from 'react-three-fiber';
 
 import {
   Box,
@@ -9,7 +9,6 @@ import {
   PerspectiveCamera,
 } from '@react-three/drei';
 import e from '../src/components/editable';
-import { Material } from 'three';
 
 interface SetupProps {
   children?: ReactNode;
@@ -26,11 +25,11 @@ const Suzanne = () => {
 const EditableCamera = e(PerspectiveCamera, 'perspectiveCamera');
 
 const SetupScene = () => {
-  const material = useResource<Material>();
-
+  // const material = useResource<Material>();
+  const material = useRef();
   return (
     <>
-      <EditableCamera makeDefault uniqueName="Camera1" position={[0, 3, 15]} />
+      {/*<EditableCamera makeDefault uniqueName="Camera1" position={[0, 3, 15]} />*/}
       <ambientLight intensity={0.2} />
       <e.spotLight
         position={[5, 5, 5]}
@@ -84,9 +83,19 @@ const SetupScene = () => {
   );
 };
 
+const EBox = e(Box, 'mesh');
+
+const SmallScene = () => {
+  return (
+    <EBox castShadow receiveShadow uniqueName="Box">
+      <meshBasicMaterial color="hotpink" />
+    </EBox>
+  );
+};
+
 const Setup: VFC<SetupProps> = ({
   children,
-  cameraPosition = [5, 5, 5] as [number, number, number],
+  cameraPosition = [-5, 5, 5] as [number, number, number],
 }) => {
   return (
     <div
