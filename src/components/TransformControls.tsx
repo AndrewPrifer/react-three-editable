@@ -62,7 +62,7 @@ const TransformControls = forwardRef(
       return () => {
         controls.removeEventListener!('dragging-changed', callback);
       };
-    });
+    }, [controls, orbitControlsRef]);
 
     useEffect(() => {
       if (onObjectChange) {
