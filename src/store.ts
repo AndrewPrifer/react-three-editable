@@ -112,9 +112,11 @@ export const useEditorStore = create<EditorStore>((set) => ({
       let transform = new Matrix4();
       if (state.editables[uniqueName]) {
         if (state.editables[uniqueName].type !== type) {
-          console.warn(`There is a mismatch between the serialized type of ${uniqueName} and the one set when adding it to the scene.
+          console.error(`Warning: There is a mismatch between the serialized type of ${uniqueName} and the one set when adding it to the scene.
 Serialized: ${state.editables[uniqueName].type}.
-Current: ${type}.`);
+Current: ${type}.
+
+This might have happened either because you changed the type of an object, in which case a re-export will solve the issue, or because you re-used the uniqueName for an object of a different type, which is an error.`);
         }
         if (
           state.editables[uniqueName].role === 'active' &&
