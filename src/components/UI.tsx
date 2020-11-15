@@ -1,5 +1,5 @@
 import React, { VFC } from 'react';
-import { Box, Flex, HStack, Button } from '@chakra-ui/core';
+import { Box, Flex, HStack, Button, IconButton } from '@chakra-ui/core';
 import TransformControlsModeRadio from './TransformControlsModeRadio';
 import { useEditorStore } from '../store';
 import shallow from 'zustand/shallow';
@@ -9,6 +9,8 @@ import TransformControlsSpaceRadio from './TransformControlsSpaceRadio';
 import ViewportShadingRadio from './ViewportShadingRadio';
 import SceneOutlinePanel from './SceneOutlinePanel';
 import PropertiesPanel from './PropertiesPanel';
+import { RiFocus3Line } from 'react-icons/all';
+import { Vector3 } from 'three';
 
 const UI: VFC = () => {
   const [
@@ -65,6 +67,31 @@ const UI: VFC = () => {
                 <ViewportShadingRadio
                   value={viewportShading}
                   onChange={setViewportShading}
+                />
+              </Box>
+              <Box pointerEvents="all">
+                <IconButton
+                  aria-label="Focus"
+                  size="sm"
+                  icon={<RiFocus3Line />}
+                  onClick={() => {
+                    const editorCamera = useEditorStore.getState()
+                      .orbitControlsRef?.current;
+                    const selected = useEditorStore.getState().selected;
+                    let focusObject;
+
+                    if (selected) {
+                      focusObject = useEditorStore.getState().editables[
+                        selected
+                      ].original;
+                    }
+
+                    if (editorCamera && focusObject) {
+                      focusObject.getWorldPosition(
+                        editorCamera.target as Vector3
+                      );
+                    }
+                  }}
                 />
               </Box>
             </HStack>

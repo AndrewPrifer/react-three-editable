@@ -1,5 +1,5 @@
-import React, { useRef } from 'react';
-import { Canvas } from 'react-three-fiber';
+import React, { useEffect, useRef } from 'react';
+import { Canvas, useThree } from 'react-three-fiber';
 import { useEditorStore } from '../store';
 import { OrbitControls } from '@react-three/drei';
 import shallow from 'zustand/shallow';
@@ -21,6 +21,15 @@ import ProxyManager from './ProxyManager';
 
 const EditorScene = () => {
   const orbitControlsRef = useRef<OrbitControls>();
+  const { camera } = useThree();
+
+  const setOrbitControlsRef = useEditorStore(
+    (state) => state.setOrbitControlsRef
+  );
+
+  useEffect(() => {
+    setOrbitControlsRef(orbitControlsRef);
+  }, [camera, setOrbitControlsRef]);
 
   return (
     <>

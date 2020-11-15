@@ -1,5 +1,7 @@
 import create from 'zustand';
 import { Matrix4, Object3D, Scene, WebGLRenderer } from 'three';
+import { MutableRefObject } from 'react';
+import { OrbitControls } from '@react-three/drei';
 
 export type EditableType =
   | 'group'
@@ -42,6 +44,7 @@ export type EditorStore = {
   scene: Scene | null;
   gl: WebGLRenderer | null;
   allowImplicitInstancing: boolean;
+  orbitControlsRef: MutableRefObject<OrbitControls | undefined> | null;
   editables: Record<string, Editable>;
   selected: string | null;
   transformControlsMode: TransformControlsMode;
@@ -56,6 +59,9 @@ export type EditorStore = {
     gl: WebGLRenderer,
     allowImplicitInstancing: boolean,
     initialState?: State
+  ) => void;
+  setOrbitControlsRef: (
+    orbitControlsRef: MutableRefObject<OrbitControls | undefined>
   ) => void;
   addEditable: (
     type: EditableType,
@@ -76,6 +82,7 @@ export const useEditorStore = create<EditorStore>((set) => ({
   scene: null,
   gl: null,
   allowImplicitInstancing: false,
+  orbitControlsRef: null,
   editables: {},
   selected: null,
   transformControlsMode: 'translate',
@@ -143,6 +150,9 @@ If this is intentional, please set the allowImplicitInstancing prop of EditableM
         },
       };
     }),
+  setOrbitControlsRef: (camera) => {
+    set({ orbitControlsRef: camera });
+  },
   removeEditable: (name) =>
     set((state) => {
       const { [name]: removed, ...rest } = state.editables;
