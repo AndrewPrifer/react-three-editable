@@ -65,17 +65,22 @@ const ProxyManager: VFC<ProxyManagerProps> = ({ orbitControlsRef }) => {
 
     sceneProxy.traverse((object) => {
       if (object.userData.__editable) {
-        editableProxies[object.userData.__editableName] = {
-          portal: createPortal(
-            <EditableProxy
-              editableName={object.userData.__editableName}
-              editableType={object.userData.__editableType}
-              object={object.children[0]}
-            />,
-            object
-          ),
-          object: object.children[0],
-        };
+        // there are duplicate uniqueNames in the scene, only display one instance in the editor
+        if (editableProxies[object.userData.__editableName]) {
+          object.parent!.remove(object);
+        } else {
+          editableProxies[object.userData.__editableName] = {
+            portal: createPortal(
+              <EditableProxy
+                editableName={object.userData.__editableName}
+                editableType={object.userData.__editableType}
+                object={object.children[0]}
+              />,
+              object
+            ),
+            object: object.children[0],
+          };
+        }
       }
     });
 

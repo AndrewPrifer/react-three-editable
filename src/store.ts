@@ -41,6 +41,7 @@ export type Editable = ActiveEditable | RemovedEditable;
 export type EditorStore = {
   scene: Scene | null;
   gl: WebGLRenderer | null;
+  allowImplicitInstancing: boolean;
   editables: Record<string, Editable>;
   selected: string | null;
   transformControlsMode: TransformControlsMode;
@@ -50,7 +51,12 @@ export type EditorStore = {
   sceneSnapshot: Scene | null;
   editablesSnapshot: Record<string, Editable> | null;
 
-  init: (scene: Scene, gl: WebGLRenderer, initialState?: State) => void;
+  init: (
+    scene: Scene,
+    gl: WebGLRenderer,
+    allowImplicitInstancing: boolean,
+    initialState?: State
+  ) => void;
   addEditable: (
     type: EditableType,
     original: Object3D,
@@ -69,6 +75,7 @@ export type EditorStore = {
 export const useEditorStore = create<EditorStore>((set) => ({
   scene: null,
   gl: null,
+  allowImplicitInstancing: false,
   editables: {},
   selected: null,
   transformControlsMode: 'translate',
@@ -78,7 +85,7 @@ export const useEditorStore = create<EditorStore>((set) => ({
   sceneSnapshot: null,
   editablesSnapshot: null,
 
-  init: (scene, gl, initialState) => {
+  init: (scene, gl, allowImplicitInstancing, initialState) => {
     const editables: Record<string, Editable> = initialState
       ? Object.fromEntries(
           Object.entries(initialState.editables).map(([name, editable]) => [
@@ -95,6 +102,7 @@ export const useEditorStore = create<EditorStore>((set) => ({
     set((state) => ({
       scene,
       gl,
+      allowImplicitInstancing,
       // in case for some reason EditableManager was initialized after the editables in the scene
       editables: { ...state.editables, ...editables },
     }));
@@ -108,8 +116,14 @@ export const useEditorStore = create<EditorStore>((set) => ({
 Serialized: ${state.editables[uniqueName].type}.
 Current: ${type}.`);
         }
-        if (state.editables[uniqueName].role === 'active') {
-          console.warn(`Editor already has an object named ${uniqueName}.`);
+        if (
+          state.editables[uniqueName].role === 'active' &&
+          !state.allowImplicitInstancing
+        ) {
+          throw Error(
+            `Scene already has an editable object named ${uniqueName}.
+If this is intentional, please set the allowImplicitInstancing prop of EditableManager to true.`
+          );
         } else {
           transform = state.editables[uniqueName].transform;
         }

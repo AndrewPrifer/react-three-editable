@@ -1,15 +1,19 @@
-import { State, useEditorStore } from '../store';
+import { useEditorStore } from '../store';
 import { useThree } from 'react-three-fiber';
 import { useLayoutEffect, useRef, useState } from 'react';
+import { EditableManagerProps } from '..';
 
-export const useEditableManager = (state?: State) => {
+export const useEditableManager = ({
+  allowImplicitInstancing,
+  state,
+}: EditableManagerProps) => {
   const init = useEditorStore((state) => state.init);
   const { scene, gl } = useThree();
   const initialStateRef = useRef(state);
 
   useLayoutEffect(() => {
-    init(scene, gl, initialStateRef.current);
-  }, [init, scene, gl]);
+    init(scene, gl, allowImplicitInstancing ?? false, initialStateRef.current);
+  }, [init, scene, gl, allowImplicitInstancing]);
 
   // For some reason the reference window stays blank on the first Canvas render, even though everything seems to be the same
   // on both renders, specifically the domElement that we are copying from, but everything else too for that matter.
