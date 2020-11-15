@@ -2,6 +2,17 @@
   "version": "0.5.2",
   "license": "MIT",
   "description": "Tweak your react-three-fiber scene with a visual editor!",
+  "keywords": [
+    "3d",
+    "editor",
+    "react",
+    "react-three-fiber",
+    "r3f",
+    "three",
+    "threejs",
+    "webgl",
+    "webgl2"
+  ],
   "repository": "AndrewPrifer/react-three-editable",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
