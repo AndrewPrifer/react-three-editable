@@ -1,7 +1,7 @@
 {
   "version": "0.5.2",
   "license": "MIT",
-  "description": "Tweak your react-three-fiber scene with a visual editor!",
+  "description": "️Edit your react-three-fiber scene with a visual editor without giving up control over your code.",
   "keywords": [
     "3d",
     "editor",
