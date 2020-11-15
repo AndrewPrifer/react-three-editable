@@ -1,5 +1,12 @@
 import React, { VFC } from 'react';
-import { Box, Flex, HStack, Button, IconButton } from '@chakra-ui/core';
+import {
+  Box,
+  Flex,
+  HStack,
+  Button,
+  IconButton,
+  Tooltip,
+} from '@chakra-ui/core';
 import TransformControlsModeRadio from './TransformControlsModeRadio';
 import { useEditorStore } from '../store';
 import shallow from 'zustand/shallow';
@@ -70,29 +77,31 @@ const UI: VFC = () => {
                 />
               </Box>
               <Box pointerEvents="all">
-                <IconButton
-                  aria-label="Focus"
-                  size="sm"
-                  icon={<RiFocus3Line />}
-                  onClick={() => {
-                    const editorCamera = useEditorStore.getState()
-                      .orbitControlsRef?.current;
-                    const selected = useEditorStore.getState().selected;
-                    let focusObject;
+                <Tooltip label="Focus on selected" hasArrow>
+                  <IconButton
+                    aria-label="Focus on selected"
+                    size="sm"
+                    icon={<RiFocus3Line />}
+                    onClick={() => {
+                      const editorCamera = useEditorStore.getState()
+                        .orbitControlsRef?.current;
+                      const selected = useEditorStore.getState().selected;
+                      let focusObject;
 
-                    if (selected) {
-                      focusObject = useEditorStore.getState().editables[
-                        selected
-                      ].original;
-                    }
+                      if (selected) {
+                        focusObject = useEditorStore.getState().editables[
+                          selected
+                        ].original;
+                      }
 
-                    if (editorCamera && focusObject) {
-                      focusObject.getWorldPosition(
-                        editorCamera.target as Vector3
-                      );
-                    }
-                  }}
-                />
+                      if (editorCamera && focusObject) {
+                        focusObject.getWorldPosition(
+                          editorCamera.target as Vector3
+                        );
+                      }
+                    }}
+                  />
+                </Tooltip>
               </Box>
             </HStack>
             <ReferenceWindow height={120} />
