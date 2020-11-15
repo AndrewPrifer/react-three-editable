@@ -62,11 +62,17 @@ In production, you can freely remove the `<Editor />` component, leaving you wit
 
 The component responsible for displaying the editor. This is rendered in HTML, so don't place it inside `<Canvas>`.
 
-### `<EditableManager />`
+### `<EditableManager>`
 
-By placing it inside your r3f `<Canvas>`, you connect it to React Three Editable. You can pass a previously exported state to it through the `state` property.
+By placing it inside your r3f `<Canvas>`, you connect it to React Three Editable.
 
-For now you can only connect a single canvas, however multi-canvas support is planned before `1.0.0`.
+#### Props
+
+`state`: A previously exported state.
+
+`allowImplicitInstancing`: allows implicit instancing of editable objects through reusing `uniqueName`s. These objects will share all editable properties. It is discouraged since you'll miss out on warnings if you accidentally reuse a `uniqueName`, and will be superseded by prefabs in the future.
+
+For now you can only connect a single canvas, however multi-canvas support is planned.
 
 ### `editable`
 
