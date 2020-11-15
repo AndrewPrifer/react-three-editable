@@ -68,7 +68,7 @@ By placing it inside your r3f `<Canvas>`, you connect it to React Three Editable
 
 #### Props
 
-`state`: A previously exported state.
+`state`: a previously exported state.
 
 `allowImplicitInstancing`: allows implicit instancing of editable objects through reusing `uniqueName`s. These objects will share all editable properties. It is discouraged since you'll miss out on warnings if you accidentally reuse a `uniqueName`, and will be superseded by prefabs in the future.
 
