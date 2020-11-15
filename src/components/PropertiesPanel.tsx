@@ -129,7 +129,7 @@ const PropertiesPanel: VFC = () => {
 
   return selected ? (
     <Box
-      overflow="scroll"
+      overflowY="auto"
       width="300px"
       height="100%"
       p={5}
