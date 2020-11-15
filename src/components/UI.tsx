@@ -77,9 +77,9 @@ const UI: VFC = () => {
                 />
               </Box>
               <Box pointerEvents="all">
-                <Tooltip label="Focus selected" hasArrow>
+                <Tooltip label="Focus on selected" hasArrow>
                   <IconButton
-                    aria-label="Focus selected"
+                    aria-label="Focus on selected"
                     size="sm"
                     icon={<RiFocus3Line />}
                     onClick={() => {
