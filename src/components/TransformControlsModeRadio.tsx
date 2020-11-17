@@ -8,7 +8,7 @@ import {
   UseRadioProps,
   Tooltip,
 } from '@chakra-ui/core';
-import { GiClockwiseRotation, GiMove, GiResize } from 'react-icons/gi';
+import { GiClockwiseRotation, GiMove, GiResize } from 'react-icons/all';
 import { IconType } from 'react-icons';
 import { TransformControlsMode } from '../store';
 

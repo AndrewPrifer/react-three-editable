@@ -10,7 +10,7 @@ import {
 } from '@chakra-ui/core';
 import { IconType } from 'react-icons';
 import { TransformControlsSpace } from '../store';
-import { BiCube, BiGlobe } from 'react-icons/bi';
+import { BiCube, BiGlobe } from 'react-icons/all';
 
 interface RadioCardProps extends UseRadioProps {
   label: string;
