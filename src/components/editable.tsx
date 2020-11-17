@@ -3,8 +3,7 @@ import React, {
   forwardRef,
   ForwardRefExoticComponent,
   JSXElementConstructor,
-  ReactNode,
-  RefObject,
+  RefAttributes,
   useLayoutEffect,
   useRef,
 } from 'react';
@@ -28,25 +27,17 @@ type EditableComponents = {
       uniqueName: string;
       // you need a ref to this if you want to apply transforms programmatically or want to re-parent the object
       editableRootRef?: React.Ref<Group>;
-    }
+    } & RefAttributes<Elements[K]>
   >;
 } & {
-  <
-    T extends JSXElementConstructor<V>,
-    U extends EditableType,
-    V extends ComponentProps<U>
-  >(
+  <T extends JSXElementConstructor<any> | EditableType, U extends EditableType>(
     Component: T,
     type: U
   ): ForwardRefExoticComponent<
     ComponentProps<T> & {
       uniqueName: string;
-      editableRootRef?:
-        | ((instance: ReactNode) => void)
-        | RefObject<ReactNode>
-        | null
-        | undefined;
-    }
+      editableRootRef?: React.Ref<Group>;
+    } & RefAttributes<Elements[U]>
   >;
 };
 
@@ -114,7 +105,6 @@ const useEditable = <T extends EditableType>(uniqueName: string, type: T) => {
   return objectRef;
 };
 
-// How to type this?
 // @ts-ignore
 const editable: EditableComponents = (Component, type) =>
   forwardRef(
@@ -136,181 +126,28 @@ const editable: EditableComponents = (Component, type) =>
           rotation={rotation}
           scale={scale}
         >
-          {/* @ts-ignore */}
+          {/* @ts-ignore* */}
           <Component ref={mergeRefs([objectRef, ref])} {...props} />
         </group>
       );
     }
   );
 
-editable.group = forwardRef(
-  (
-    { uniqueName, editableRootRef, position, rotation, scale, ...props },
-    ref
-  ) => {
-    const objectRef = useEditable(uniqueName, 'group');
+const createEditable = (type: EditableType) => editable(type, type);
 
-    return (
-      <group
-        ref={editableRootRef}
-        userData={{
-          __editable: true,
-          __editableName: uniqueName,
-          __editableType: 'group',
-        }}
-        position={position}
-        rotation={rotation}
-        scale={scale}
-      >
-        <group ref={mergeRefs([objectRef, ref])} {...props} />
-      </group>
-    );
-  }
-);
-
-editable.mesh = forwardRef(
-  (
-    { uniqueName, editableRootRef, position, rotation, scale, ...props },
-    ref
-  ) => {
-    const objectRef = useEditable(uniqueName, 'mesh');
-
-    return (
-      <group
-        ref={editableRootRef}
-        userData={{
-          __editable: true,
-          __editableName: uniqueName,
-          __editableType: 'mesh',
-        }}
-        position={position}
-        rotation={rotation}
-        scale={scale}
-      >
-        <mesh ref={mergeRefs([objectRef, ref])} {...props} />
-      </group>
-    );
-  }
-);
-editable.spotLight = forwardRef(
-  (
-    { uniqueName, editableRootRef, position, rotation, scale, ...props },
-    ref
-  ) => {
-    const objectRef = useEditable(uniqueName, 'spotLight');
-
-    return (
-      <group
-        ref={editableRootRef}
-        userData={{
-          __editable: true,
-          __editableName: uniqueName,
-          __editableType: 'spotLight',
-        }}
-        position={position}
-        rotation={rotation}
-        scale={scale}
-      >
-        <spotLight ref={mergeRefs([objectRef, ref])} {...props} />
-      </group>
-    );
-  }
-);
-editable.directionalLight = forwardRef(
-  (
-    { uniqueName, editableRootRef, position, rotation, scale, ...props },
-    ref
-  ) => {
-    const objectRef = useEditable(uniqueName, 'directionalLight');
-
-    return (
-      <group
-        ref={editableRootRef}
-        userData={{
-          __editable: true,
-          __editableName: uniqueName,
-          __editableType: 'directionalLight',
-        }}
-        position={position}
-        rotation={rotation}
-        scale={scale}
-      >
-        <directionalLight ref={mergeRefs([objectRef, ref])} {...props} />
-      </group>
-    );
-  }
-);
-editable.pointLight = forwardRef(
-  (
-    { uniqueName, editableRootRef, position, rotation, scale, ...props },
-    ref
-  ) => {
-    const objectRef = useEditable(uniqueName, 'pointLight');
-
-    return (
-      <group
-        ref={editableRootRef}
-        userData={{
-          __editable: true,
-          __editableName: uniqueName,
-          __editableType: 'pointLight',
-        }}
-        position={position}
-        rotation={rotation}
-        scale={scale}
-      >
-        <pointLight ref={mergeRefs([objectRef, ref])} {...props} />
-      </group>
-    );
-  }
-);
-editable.perspectiveCamera = forwardRef(
-  (
-    { uniqueName, editableRootRef, position, rotation, scale, ...props },
-    ref
-  ) => {
-    const objectRef = useEditable(uniqueName, 'perspectiveCamera');
-
-    return (
-      <group
-        ref={editableRootRef}
-        userData={{
-          __editable: true,
-          __editableName: uniqueName,
-          __editableType: 'perspectiveCamera',
-        }}
-        position={position}
-        rotation={rotation}
-        scale={scale}
-      >
-        <perspectiveCamera ref={mergeRefs([objectRef, ref])} {...props} />
-      </group>
-    );
-  }
-);
-editable.orthographicCamera = forwardRef(
-  (
-    { uniqueName, editableRootRef, position, rotation, scale, ...props },
-    ref
-  ) => {
-    const objectRef = useEditable(uniqueName, 'orthographicCamera');
-
-    return (
-      <group
-        ref={editableRootRef}
-        userData={{
-          __editable: true,
-          __editableName: uniqueName,
-          __editableType: 'orthographicCamera',
-        }}
-        position={position}
-        rotation={rotation}
-        scale={scale}
-      >
-        <orthographicCamera ref={mergeRefs([objectRef, ref])} {...props} />
-      </group>
-    );
-  }
-);
+// @ts-ignore
+editable.group = createEditable('group');
+// @ts-ignore
+editable.mesh = createEditable('mesh');
+// @ts-ignore
+editable.spotLight = createEditable('spotLight');
+// @ts-ignore
+editable.directionalLight = createEditable('directionalLight');
+// @ts-ignore
+editable.pointLight = createEditable('pointLight');
+// @ts-ignore
+editable.perspectiveCamera = createEditable('perspectiveCamera');
+// @ts-ignore
+editable.orthographicCamera = createEditable('orthographicCamera');
 
 export default editable;
