@@ -76,7 +76,7 @@ For now you can only connect a single canvas, however multi-canvas support is pl
 
 ### `editable`
 
-Use it to make objects editable. The properties on `editable` mirror the intrinsic elements of react-three-fiber, however there's no full parity yet. E.g. if you want to create an editable `<mesh>`, you do it by using `<editable.mesh>` instead. These elements have the same interface as the normal ones, with the addition of a single `uniqueName` property, which is used to identify the object in the editor.
+Use it to make objects editable. The properties on `editable` mirror the intrinsic elements of react-three-fiber, however there's no full parity yet. E.g. if you want to create an editable `<mesh>`, you do it by using `<editable.mesh>` instead. These elements have the same interface as the normal ones, with the addition of the below props.
 
 `editable` is also a function, which allows you to make your custom components editable. Your component does have to be compatible with the interface of the editable object type it is meant to represent. You need to pass it the component you want to wrap, and the object type it represents (see object types).
 
@@ -86,6 +86,12 @@ import { PerspectiveCamera } from '@react-three/drei';
 
 const EditableCamera = editable(PerspectiveCamera, 'perspectiveCamera');
 ```
+
+#### Props
+
+`uniqueName`: a unique name used to identify the object in the editor.
+
+`editableRootRef`: pass a ref to this prop to be able to imperatively apply transforms on top of editor transforms, or to imperatively re-parent the object.
 
 ## Object types
 
