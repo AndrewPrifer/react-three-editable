@@ -1,10 +1,10 @@
 import { useEditableManager } from '../hooks';
-import { State } from '../store';
+import { EditableState } from '../store';
 import { VFC } from 'react';
 
 export interface EditableManagerProps {
   allowImplicitInstancing?: boolean;
-  state?: State;
+  state?: EditableState;
 }
 
 const EditableManager: VFC<EditableManagerProps> = (props) => {

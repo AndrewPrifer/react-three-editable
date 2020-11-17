@@ -15,7 +15,7 @@ export type TransformControlsMode = 'translate' | 'rotate' | 'scale';
 export type TransformControlsSpace = 'world' | 'local';
 export type ViewportShading = 'wireframe' | 'flat' | 'solid' | 'rendered';
 
-export interface State {
+export interface EditableState {
   editables: {
     [key: string]: {
       type: EditableType;
@@ -58,7 +58,7 @@ export type EditorStore = {
     scene: Scene,
     gl: WebGLRenderer,
     allowImplicitInstancing: boolean,
-    initialState?: State
+    initialState?: EditableState
   ) => void;
   setOrbitControlsRef: (
     orbitControlsRef: MutableRefObject<OrbitControls | undefined>

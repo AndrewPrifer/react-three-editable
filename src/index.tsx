@@ -5,3 +5,4 @@ export {
 } from './components/EditableManager';
 export { useEditableManager } from './hooks';
 export { default as editable } from './components/editable';
+export { EditableState } from './store';
