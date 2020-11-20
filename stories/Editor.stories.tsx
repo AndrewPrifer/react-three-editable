@@ -1,10 +1,12 @@
 import React from 'react';
 import { Meta, Story } from '@storybook/react';
-import Editor from '../src/components/Editor';
+import { Editor, configure } from '../src';
 // @ts-ignore
 import Setup from './Setup';
 import { EditableManager } from '../src';
 import editableState from './editableState.json';
+
+configure({ localStorageNamespace: 'Storybook' });
 
 const meta: Meta = {
   title: 'Editor',

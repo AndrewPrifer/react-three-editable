@@ -1,7 +1,8 @@
-import create from 'zustand';
+import create, { StateCreator } from 'zustand';
 import { Matrix4, Object3D, Scene, WebGLRenderer } from 'three';
 import { MutableRefObject } from 'react';
 import { OrbitControls } from '@react-three/drei';
+import deepEqual from 'fast-deep-equal';
 
 export type EditableType =
   | 'group'
@@ -46,6 +47,9 @@ export type EditorStore = {
   allowImplicitInstancing: boolean;
   orbitControlsRef: MutableRefObject<OrbitControls | undefined> | null;
   editables: Record<string, Editable>;
+  // this will come in handy when we start supporting multiple canvases
+  canvasName: string;
+  initialState: EditableState | null;
   selected: string | null;
   transformControlsMode: TransformControlsMode;
   transformControlsSpace: TransformControlsSpace;
@@ -76,14 +80,25 @@ export type EditorStore = {
   setViewportShading: (mode: ViewportShading) => void;
   setEditorOpen: (open: boolean) => void;
   createSnapshot: () => void;
+  serialize: () => EditableState;
+  isPersistedStateDifferentThanInitial: () => boolean;
+  applyPersistedState: () => void;
 };
 
-export const useEditorStore = create<EditorStore>((set) => ({
+interface PersistedState {
+  canvases: {
+    [name: string]: EditableState;
+  };
+}
+
+const config: StateCreator<EditorStore> = (set, get) => ({
   scene: null,
   gl: null,
   allowImplicitInstancing: false,
   orbitControlsRef: null,
   editables: {},
+  canvasName: 'default',
+  initialState: null,
   selected: null,
   transformControlsMode: 'translate',
   transformControlsSpace: 'world',
@@ -93,26 +108,38 @@ export const useEditorStore = create<EditorStore>((set) => ({
   editablesSnapshot: null,
 
   init: (scene, gl, allowImplicitInstancing, initialState) => {
-    const editables: Record<string, Editable> = initialState
-      ? Object.fromEntries(
-          Object.entries(initialState.editables).map(([name, editable]) => [
-            name,
-            {
-              type: editable.type,
-              role: 'removed',
-              transform: new Matrix4().fromArray(editable.transform),
-            },
-          ])
-        )
-      : {};
+    const editables = get().editables;
 
-    set((state) => ({
+    const newEditables: Record<string, Editable> = initialState
+      ? Object.fromEntries(
+          Object.entries(initialState.editables).map(([name, editable]) => {
+            const originalEditable = editables[name];
+            return [
+              name,
+              originalEditable?.role === 'active'
+                ? {
+                    type: editable.type,
+                    role: 'active',
+                    original: originalEditable.original,
+                    transform: new Matrix4().fromArray(editable.transform),
+                  }
+                : {
+                    type: editable.type,
+                    role: 'removed',
+                    transform: new Matrix4().fromArray(editable.transform),
+                  },
+            ];
+          })
+        )
+      : editables;
+
+    set({
       scene,
       gl,
       allowImplicitInstancing,
-      // in case for some reason EditableManager was initialized after the editables in the scene
-      editables: { ...state.editables, ...editables },
-    }));
+      editables: newEditables,
+      initialState,
+    });
   },
   addEditable: (type, original, uniqueName) =>
     set((state) => {
@@ -192,4 +219,111 @@ If this is intentional, please set the allowImplicitInstancing prop of EditableM
       editablesSnapshot: state.editables,
     }));
   },
-}));
+
+  serialize: () => ({
+    editables: Object.fromEntries(
+      Object.entries(get().editables).map(([name, editable]) => [
+        name,
+        {
+          type: editable.type,
+          transform: editable.transform.toArray(),
+        },
+      ])
+    ),
+  }),
+  isPersistedStateDifferentThanInitial: () => {
+    const initialState = get().initialState;
+    const canvasName = get().canvasName!;
+
+    if (!initialState || !initialPersistedState) {
+      return false;
+    }
+
+    return !deepEqual(initialPersistedState.canvases[canvasName], initialState);
+  },
+  applyPersistedState: () => {
+    const editables = get().editables;
+    const canvasName = get().canvasName!;
+
+    if (!initialPersistedState) {
+      return;
+    }
+
+    const newEditables: Record<string, Editable> = Object.fromEntries(
+      Object.entries(initialPersistedState.canvases[canvasName].editables).map(
+        ([name, editable]) => {
+          const originalEditable = editables[name];
+          return [
+            name,
+            originalEditable?.role === 'active'
+              ? {
+                  type: editable.type,
+                  role: 'active',
+                  original: originalEditable.original,
+                  transform: new Matrix4().fromArray(editable.transform),
+                }
+              : {
+                  type: editable.type,
+                  role: 'removed',
+                  transform: new Matrix4().fromArray(editable.transform),
+                },
+          ];
+        }
+      )
+    );
+
+    set({
+      editables: newEditables,
+    });
+  },
+});
+
+export const useEditorStore = create<EditorStore>(config);
+
+const initPersistence = (key: string): [PersistedState | null, () => void] => {
+  let initialPersistedState: PersistedState | null = null;
+
+  try {
+    const rawPersistedState = localStorage.getItem(key);
+    if (rawPersistedState) {
+      initialPersistedState = JSON.parse(rawPersistedState);
+    }
+  } catch (e) {}
+
+  const unsub = useEditorStore.subscribe(
+    () => {
+      const canvasName = useEditorStore.getState().canvasName;
+      const serialize = useEditorStore.getState().serialize;
+      if (canvasName) {
+        const editables = serialize();
+        localStorage.setItem(
+          key,
+          JSON.stringify({
+            canvases: {
+              [canvasName]: editables,
+            },
+          })
+        );
+      }
+    },
+    (state) => state.editables
+  );
+
+  return [initialPersistedState, unsub];
+};
+
+let [initialPersistedState, unsub] = initPersistence('react-three-editable');
+
+export const configure = ({
+  localStorageNamespace,
+}: {
+  localStorageNamespace: string;
+}) => {
+  unsub();
+  const persistence = initPersistence(
+    `react-three-editable_${localStorageNamespace}`
+  );
+
+  initialPersistedState = persistence[0];
+  unsub = persistence[1];
+};

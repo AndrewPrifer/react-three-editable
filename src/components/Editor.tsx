@@ -1,4 +1,10 @@
-import React, { useEffect, useRef } from 'react';
+import React, {
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+  VFC,
+} from 'react';
 import { Canvas, useThree } from 'react-three-fiber';
 import { useEditorStore } from '../store';
 import { OrbitControls } from '@react-three/drei';
@@ -14,6 +20,12 @@ import {
   Heading,
   Text,
   Code,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
 } from '@chakra-ui/core';
 import theme from '../theme';
 import UI from './UI';
@@ -41,23 +53,39 @@ const EditorScene = () => {
   );
 };
 
-const Editor = () => {
+const Editor: VFC = () => {
   const [
     scene,
     editorOpen,
+    initialState,
     setEditorOpen,
     setSelected,
     createSnapshot,
+    isPersistedStateDifferentThanInitial,
+    applyPersistedState,
   ] = useEditorStore(
     (state) => [
       state.scene,
       state.editorOpen,
+      state.initialState,
       state.setEditorOpen,
       state.setSelected,
       state.createSnapshot,
+      state.isPersistedStateDifferentThanInitial,
+      state.applyPersistedState,
     ],
     shallow
   );
+
+  const [stateMismatch, setStateMismatch] = useState(false);
+
+  useLayoutEffect(() => {
+    if (initialState) {
+      setStateMismatch(isPersistedStateDifferentThanInitial());
+    } else {
+      applyPersistedState();
+    }
+  }, [applyPersistedState, initialState, isPersistedStateDifferentThanInitial]);
 
   return (
     <root.div>
@@ -132,6 +160,35 @@ const Editor = () => {
                 </Button>
               )}
             </Box>
+            <Modal isOpen={stateMismatch} onClose={() => {}}>
+              <ModalOverlay />
+              <ModalContent>
+                <ModalHeader>Saved state found</ModalHeader>
+                <ModalBody>
+                  Would you like to use initial state or saved state?
+                </ModalBody>
+                <ModalFooter>
+                  <Button
+                    onClick={() => {
+                      applyPersistedState();
+                      setStateMismatch(false);
+                    }}
+                    flex="1"
+                    mr={3}
+                  >
+                    Saved
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      setStateMismatch(false);
+                    }}
+                    flex="1"
+                  >
+                    Initial
+                  </Button>
+                </ModalFooter>
+              </ModalContent>
+            </Modal>
           </PortalManager>
         </Box>
       </ChakraProvider>

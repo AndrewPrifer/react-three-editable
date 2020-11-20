@@ -126,25 +126,7 @@ const UI: VFC = () => {
             pointerEvents="all"
             onClick={() => {
               const blob = new Blob(
-                [
-                  JSON.stringify(
-                    {
-                      editables: Object.fromEntries(
-                        Object.entries(useEditorStore.getState().editables).map(
-                          ([name, editable]) => [
-                            name,
-                            {
-                              type: editable.type,
-                              transform: editable.transform.toArray(),
-                            },
-                          ]
-                        )
-                      ),
-                    },
-                    null,
-                    2
-                  ),
-                ],
+                [JSON.stringify(useEditorStore.getState().serialize())],
                 { type: 'text/json;charset=utf-8' }
               );
               saveAs(blob, 'editableState.json');
