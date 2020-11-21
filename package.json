@@ -100,7 +100,7 @@
     "react-hook-form": "^6.11.0",
     "react-icons": "^3.11.0",
     "react-merge-refs": "^1.1.0",
-    "react-shadow": "^18.4.2",
+    "react-shadow": "18.5.1",
     "zustand": "^3.2.0"
   },
   "sideEffects": false

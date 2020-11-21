@@ -11867,10 +11867,10 @@ react-remove-scroll@2.4.0:
     use-callback-ref "^1.2.3"
     use-sidecar "^1.0.1"
 
-react-shadow@^18.4.2:
-  version "18.4.2"
-  resolved "https://registry.yarnpkg.com/react-shadow/-/react-shadow-18.4.2.tgz#df96f1ca80e1d450b778bd3fc11aa09bd47af692"
-  integrity sha512-morQkJH3+RRboxr0L4I19PeNwGEHBH/8vc52JAA07/QA1x1wEINRzZYntLEc96VDAbQlo/xrI7HKdyIJsUKzmQ==
+react-shadow@18.5.1:
+  version "18.5.1"
+  resolved "https://registry.yarnpkg.com/react-shadow/-/react-shadow-18.5.1.tgz#28507f35c90f8415c8d91f429f9a69099d2e7137"
+  integrity sha512-CHp0PNlm4EATHKdwAt89tikg5+JmTzAkUOS9qiz26U41XItH8AH1vQksZfQE8fwqhxJ6aJDLDL+s+QAxDnD1Dg==
   dependencies:
     humps "^2.0.1"
     react-use "^15.3.3"
