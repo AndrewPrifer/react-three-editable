@@ -145,7 +145,10 @@ const config: StateCreator<EditorStore> = (set, get) => ({
     set((state) => {
       let transform = new Matrix4();
       if (state.editables[uniqueName]) {
-        if (state.editables[uniqueName].type !== type) {
+        if (
+          state.editables[uniqueName].type !== type &&
+          process.env.NODE_ENV === 'development'
+        ) {
           console.error(`Warning: There is a mismatch between the serialized type of ${uniqueName} and the one set when adding it to the scene.
 Serialized: ${state.editables[uniqueName].type}.
 Current: ${type}.
@@ -280,34 +283,39 @@ If this is intentional, please set the allowImplicitInstancing prop of EditableM
 
 export const useEditorStore = create<EditorStore>(config);
 
-const initPersistence = (key: string): [PersistedState | null, () => void] => {
+const initPersistence = (
+  key: string
+): [PersistedState | null, (() => void) | undefined] => {
   let initialPersistedState: PersistedState | null = null;
+  let unsub;
 
-  try {
-    const rawPersistedState = localStorage.getItem(key);
-    if (rawPersistedState) {
-      initialPersistedState = JSON.parse(rawPersistedState);
-    }
-  } catch (e) {}
-
-  const unsub = useEditorStore.subscribe(
-    () => {
-      const canvasName = useEditorStore.getState().canvasName;
-      const serialize = useEditorStore.getState().serialize;
-      if (canvasName) {
-        const editables = serialize();
-        localStorage.setItem(
-          key,
-          JSON.stringify({
-            canvases: {
-              [canvasName]: editables,
-            },
-          })
-        );
+  if (process.env.NODE_ENV === 'development') {
+    try {
+      const rawPersistedState = localStorage.getItem(key);
+      if (rawPersistedState) {
+        initialPersistedState = JSON.parse(rawPersistedState);
       }
-    },
-    (state) => state.editables
-  );
+    } catch (e) {}
+
+    unsub = useEditorStore.subscribe(
+      () => {
+        const canvasName = useEditorStore.getState().canvasName;
+        const serialize = useEditorStore.getState().serialize;
+        if (canvasName) {
+          const editables = serialize();
+          localStorage.setItem(
+            key,
+            JSON.stringify({
+              canvases: {
+                [canvasName]: editables,
+              },
+            })
+          );
+        }
+      },
+      (state) => state.editables
+    );
+  }
 
   return [initialPersistedState, unsub];
 };
@@ -319,11 +327,13 @@ export const configure = ({
 }: {
   localStorageNamespace: string;
 }) => {
-  unsub();
-  const persistence = initPersistence(
-    `react-three-editable_${localStorageNamespace}`
-  );
+  if (unsub) {
+    unsub();
+    const persistence = initPersistence(
+      `react-three-editable_${localStorageNamespace}`
+    );
 
-  initialPersistedState = persistence[0];
-  unsub = persistence[1];
+    initialPersistedState = persistence[0];
+    unsub = persistence[1];
+  }
 };
