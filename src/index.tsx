@@ -1,5 +1,6 @@
 import React from 'react';
 import { render } from 'react-dom';
+import Editor from './components/Editor';
 export {
   default as EditableManager,
   EditableManagerProps,
@@ -9,8 +10,6 @@ export { default as editable } from './components/editable';
 export { EditableState, configure } from './store';
 
 if (process.env.NODE_ENV === 'development') {
-  const Editor = require('./components/Editor').default;
-
   const editorRoot = document.createElement('div');
   document.body.appendChild(editorRoot);
 
