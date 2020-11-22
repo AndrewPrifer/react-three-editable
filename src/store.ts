@@ -330,7 +330,7 @@ export const configure = (config: {
     unsub();
   }
 
-  if (config.enablePersistence) {
+  if (config.enablePersistence ?? true) {
     const persistence = initPersistence(
       `react-three-editable_${config.localStorageNamespace ?? ''}`
     );
