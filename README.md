@@ -1,6 +1,6 @@
 # React Three Editable
 
-React Three Editable is a library for React and react-three-fiber that lets you edit your scene in a visual editor while requiring minimal modifications to your r3f code. To get a quick idea of what it's all about, please take a look at this [codesandbox](https://codesandbox.io/s/react-three-editable-demo-udx2x).
+React Three Editable is a library for React and react-three-fiber that lets you edit your scene in a visual editor while requiring minimal modifications to your r3f code. To get a quick idea of what it's all about, please take a look at this [codesandbox](https://codesandbox.io/s/ide-cream-demo-hcgcd).
 
 ## Quick start
 
