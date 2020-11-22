@@ -7,7 +7,7 @@ import { EditableManager } from '../src';
 import editableState from './editableState.json';
 import Editor from '../src/components/Editor';
 
-configure({ localStorageNamespace: 'Storybook' });
+configure({ localStorageNamespace: 'Storybook', enablePersistence: true });
 
 const meta: Meta = {
   title: 'Editor',

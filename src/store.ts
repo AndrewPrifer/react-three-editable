@@ -320,20 +320,25 @@ const initPersistence = (
   return [initialPersistedState, unsub];
 };
 
-let [initialPersistedState, unsub] = initPersistence('react-three-editable');
+let [initialPersistedState, unsub] = initPersistence('react-three-editable_');
 
-export const configure = ({
-  localStorageNamespace,
-}: {
-  localStorageNamespace: string;
+export const configure = (config: {
+  localStorageNamespace?: string;
+  enablePersistence?: boolean;
 }) => {
   if (unsub) {
     unsub();
+  }
+
+  if (config.enablePersistence) {
     const persistence = initPersistence(
-      `react-three-editable_${localStorageNamespace}`
+      `react-three-editable_${config.localStorageNamespace ?? ''}`
     );
 
     initialPersistedState = persistence[0];
     unsub = persistence[1];
+  } else {
+    initialPersistedState = null;
+    unsub = undefined;
   }
 };
