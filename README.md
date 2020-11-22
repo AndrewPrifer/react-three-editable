@@ -48,7 +48,7 @@ When creating a 3D scene for react-three-fiber, you can choose two routes: you c
 
 The best middle ground so far has been gltfjsx, which generates JSX from your exported scene, however it still involves a lot of manual work if you want to split your scene into components, and any modifications you make will have to be reapplied if you make changes to the scene.
 
-React Three Editable aims to fill this gap by allowing you to set up your scene in JSX, giving you reactivity, while allowing you to tweak the properties of these objects in a visual editor, including their transforms, which you can then bake into a json file to be used by the runtime in production. An explicit goal of the project is to require as few modifications to the original code as possible, and to allow freely mixing and blending the static values applied in the editor with dynamic ones applied in code.
+React Three Editable aims to fill this gap by allowing you to set up your scene in JSX, giving you reactivity, while allowing you to tweak the properties of these objects in a visual editor, including their transforms, which you can then bake into a json file to be used by the runtime in production. An explicit goal of the project is to mirror regular react-three-fiber code as much as possible, and to allow freely mixing and blending the static values applied in the editor with dynamic ones applied in code. This lets you add it to an existing project with ease, take it out when you don't need it, and generally use it as little or as much as you want, without feeling locked in.
 
 ## API
 
