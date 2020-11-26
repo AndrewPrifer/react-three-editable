@@ -16,6 +16,7 @@ export const Modal: VFC<ModalProps> = ({ children, ...props }) => {
         // @ts-ignore
         {...dialog}
         className="flex flex-col my-14 max-w-md w-full bg-white rounded-md shadow-lg focus:outline-none"
+        aria-label="Dialog"
       >
         {children}
       </Dialog>
