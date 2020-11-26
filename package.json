@@ -32,7 +32,8 @@
     "size": "size-limit",
     "analyze": "size-limit --why",
     "storybook": "start-storybook -s ./stories/public -p 6006",
-    "build-storybook": "build-storybook"
+    "build-storybook": "build-storybook",
+    "np": "NODE_ENV=production np --any-branch"
   },
   "peerDependencies": {
     "react": ">=16",
