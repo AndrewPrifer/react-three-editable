@@ -55,7 +55,10 @@ const CompactModeSelect = <Option,>({
   options,
 }: CompactModeSelectProps<Option>) => {
   return (
-    <Group className="flex">
+    <Group
+      // @ts-ignore
+      className="flex"
+    >
       {options.map(({ label, icon, option }) => (
         <OptionButton
           value={value}

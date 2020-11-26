@@ -9,6 +9,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
 
   return (
     <InputImpl
+      // @ts-ignore
       ref={ref}
       {...props}
       id={props.id ?? id}

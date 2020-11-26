@@ -8,10 +8,12 @@ export const Modal: VFC<ModalProps> = ({ children, ...props }) => {
 
   return (
     <DialogBackdrop
+      // @ts-ignore
       {...dialog}
       className="fixed inset-0 bg-black bg-opacity-40 z-50 flex justify-center items-start"
     >
       <Dialog
+        // @ts-ignore
         {...dialog}
         className="flex flex-col my-14 max-w-md w-full bg-white rounded-md shadow-lg focus:outline-none"
       >

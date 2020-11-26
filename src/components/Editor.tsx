@@ -10,7 +10,7 @@ import { useEditorStore } from '../store';
 import { OrbitControls } from '@react-three/drei';
 import shallow from 'zustand/shallow';
 import root from 'react-shadow';
-import styles from '../tailwind.css';
+import styles from '../styles.css';
 import UI from './UI';
 import ProxyManager from './ProxyManager';
 import {

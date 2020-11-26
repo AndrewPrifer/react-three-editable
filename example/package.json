@@ -8,7 +8,9 @@
     "build": "parcel build index.html"
   },
   "dependencies": {
-    "react-app-polyfill": "^1.0.0"
+    "@react-three/drei": "^2.2.7",
+    "react-app-polyfill": "^1.0.0",
+    "react-three-fiber": "^5.3.3"
   },
   "alias": {
     "react": "../node_modules/react",

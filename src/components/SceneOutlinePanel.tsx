@@ -49,6 +49,7 @@ const ObjectButton: VFC<ObjectButtonProps> = ({
 
   return (
     <ButtonImpl
+      // @ts-ignore
       {...props}
       className={`inline-flex justify-start items-center rounded-md px-4 py-2 font-medium focus:outline-none focus:ring focus:ring-blue-300 ${
         objectName === selected
@@ -85,7 +86,10 @@ const SceneOutlinePanel: VFC = () => {
   return (
     <div className="flex flex-col overflow-y-auto w-80 h-full p-5 border-r bg-white">
       <Heading className="mb-5 ml-3">Outline</Heading>
-      <Group className="flex flex-col gap-3 flex-1">
+      <Group
+        // @ts-ignore
+        className="flex flex-col gap-3 flex-1"
+      >
         {Object.entries(editablesSnapshot).map(
           ([name, editable]) =>
             editable.role === 'active' && (
