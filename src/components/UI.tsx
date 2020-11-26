@@ -1,23 +1,16 @@
 import React, { VFC } from 'react';
-import {
-  Box,
-  Flex,
-  HStack,
-  Button,
-  IconButton,
-  Tooltip,
-} from '@chakra-ui/core';
-import TransformControlsModeRadio from './TransformControlsModeRadio';
+import TransformControlsModeSelect from './TransformControlsModeSelect';
 import { useEditorStore } from '../store';
 import shallow from 'zustand/shallow';
 import ReferenceWindow from './ReferenceWindow';
 import { saveAs } from 'file-saver';
-import TransformControlsSpaceRadio from './TransformControlsSpaceRadio';
-import ViewportShadingRadio from './ViewportShadingRadio';
+import TransformControlsSpaceSelect from './TransformControlsSpaceSelect';
+import ViewportShadingSelect from './ViewportShadingSelect';
 import SceneOutlinePanel from './SceneOutlinePanel';
 import PropertiesPanel from './PropertiesPanel';
 import { RiFocus3Line } from 'react-icons/all';
 import { Vector3 } from 'three';
+import { IconButton, Button } from './elements';
 
 const UI: VFC = () => {
   const [
@@ -42,77 +35,63 @@ const UI: VFC = () => {
   );
 
   return (
-    <Box
-      pos="absolute"
-      top={0}
-      bottom={0}
-      left={0}
-      right={0}
-      zIndex={1005}
-      pointerEvents="none"
-    >
-      <Flex height="100%">
-        <Box width="min-content" pointerEvents="all">
+    <div className="absolute inset-0 z-50 pointer-events-none">
+      <div className="flex h-full">
+        <div className="w-min pointer-events-auto">
           <SceneOutlinePanel />
-        </Box>
-        <Box pos="relative" flex="1" m={5}>
-          <Flex align="start" justify="space-between">
-            <HStack spacing={4}>
-              <Box pointerEvents="all">
-                <TransformControlsModeRadio
+        </div>
+        <div className="relative flex-1 m-5">
+          <div className="flex items-start justify-between">
+            <div className="flex gap-4">
+              <div className="pointer-events-auto">
+                <TransformControlsModeSelect
                   value={transformControlsMode}
                   onChange={(value) => setTransformControlsMode(value)}
                 />
-              </Box>
-              <Box pointerEvents="all">
-                <TransformControlsSpaceRadio
+              </div>
+              <div className="pointer-events-auto">
+                <TransformControlsSpaceSelect
                   value={transformControlsSpace}
                   onChange={setTransformControlsSpace}
                 />
-              </Box>
-              <Box pointerEvents="all">
-                <ViewportShadingRadio
+              </div>
+              <div className="pointer-events-auto">
+                <ViewportShadingSelect
                   value={viewportShading}
                   onChange={setViewportShading}
                 />
-              </Box>
-              <Box pointerEvents="all">
-                <Tooltip label="Focus on selected" hasArrow>
-                  <IconButton
-                    aria-label="Focus on selected"
-                    size="sm"
-                    icon={<RiFocus3Line />}
-                    onClick={() => {
-                      const editorCamera = useEditorStore.getState()
-                        .orbitControlsRef?.current;
-                      const selected = useEditorStore.getState().selected;
-                      let focusObject;
+              </div>
+              <div className="pointer-events-auto">
+                <IconButton
+                  label="Focus on selected"
+                  icon={<RiFocus3Line />}
+                  onClick={() => {
+                    const editorCamera = useEditorStore.getState()
+                      .orbitControlsRef?.current;
+                    const selected = useEditorStore.getState().selected;
+                    let focusObject;
 
-                      if (selected) {
-                        focusObject = useEditorStore.getState().editables[
-                          selected
-                        ].original;
-                      }
+                    if (selected) {
+                      focusObject = useEditorStore.getState().editables[
+                        selected
+                      ].original;
+                    }
 
-                      if (editorCamera && focusObject) {
-                        focusObject.getWorldPosition(
-                          editorCamera.target as Vector3
-                        );
-                      }
-                    }}
-                  />
-                </Tooltip>
-              </Box>
-            </HStack>
+                    if (editorCamera && focusObject) {
+                      focusObject.getWorldPosition(
+                        editorCamera.target as Vector3
+                      );
+                    }
+                  }}
+                />
+              </div>
+            </div>
             <ReferenceWindow height={120} />
-          </Flex>
+          </div>
 
           {/* Bottom-left corner*/}
           <Button
-            pos="absolute"
-            left={0}
-            bottom={0}
-            pointerEvents="all"
+            className="absolute left-0 bottom-0 pointer-events-auto"
             onClick={() => setEditorOpen(false)}
           >
             Close
@@ -120,10 +99,7 @@ const UI: VFC = () => {
 
           {/* Bottom-right corner */}
           <Button
-            pos="absolute"
-            right={0}
-            bottom={0}
-            pointerEvents="all"
+            className="absolute right-0 bottom-0 pointer-events-auto"
             onClick={() => {
               const blob = new Blob(
                 [JSON.stringify(useEditorStore.getState().serialize())],
@@ -134,12 +110,12 @@ const UI: VFC = () => {
           >
             Export
           </Button>
-        </Box>
-        <Box width="min-content" pointerEvents="all">
+        </div>
+        <div className="w-min pointer-events-auto">
           <PropertiesPanel />
-        </Box>
-      </Flex>
-    </Box>
+        </div>
+      </div>
+    </div>
   );
 };
 

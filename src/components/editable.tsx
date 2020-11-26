@@ -126,7 +126,7 @@ const editable: EditableComponents = (Component, type) =>
           rotation={rotation}
           scale={scale}
         >
-          {/* @ts-ignore* */}
+          {/* @ts-ignore */}
           <Component ref={mergeRefs([objectRef, ref])} {...props} />
         </group>
       );

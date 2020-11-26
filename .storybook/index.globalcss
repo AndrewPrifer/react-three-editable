@@ -12,7 +12,7 @@ body,
     -ms-user-select: none;
     user-select: none;
     overflow: hidden;
-    background-color: #121212;
+    background-color: white;
 }
 
 #root {

@@ -2,7 +2,6 @@ import React, { useEffect, useRef, VFC } from 'react';
 import { useEditorStore } from '../store';
 import shallow from 'zustand/shallow';
 import { WebGLRenderer } from 'three';
-import { Box } from '@chakra-ui/core';
 
 interface ReferenceWindowProps {
   height: number;
@@ -44,18 +43,13 @@ const ReferenceWindow: VFC<ReferenceWindowProps> = ({ height }) => {
   }, [gl, height]);
 
   return gl?.domElement ? (
-    <Box
-      display="inline-block"
-      borderRadius={5}
-      overflow="hidden"
-      boxShadow="0px 0px 50px 10px rgba(0,0,0,0.20)"
-    >
+    <div className="rounded overflow-hidden shadow-2xl">
       <canvas
         ref={canvasRef}
         width={(gl.domElement.width / gl.domElement.height) * height}
         height={height}
       />
-    </Box>
+    </div>
   ) : null;
 };
 

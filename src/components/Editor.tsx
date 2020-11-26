@@ -9,27 +9,21 @@ import { Canvas, useThree } from 'react-three-fiber';
 import { useEditorStore } from '../store';
 import { OrbitControls } from '@react-three/drei';
 import shallow from 'zustand/shallow';
-import root from 'react-shadow/emotion';
+import root from 'react-shadow';
+import styles from '../tailwind.css';
+import UI from './UI';
+import ProxyManager from './ProxyManager';
 import {
-  ChakraProvider,
-  PortalManager,
   Button,
-  Box,
-  Center,
-  VStack,
   Heading,
-  Text,
   Code,
+  PortalManager,
   Modal,
-  ModalOverlay,
-  ModalContent,
   ModalHeader,
   ModalFooter,
   ModalBody,
-} from '@chakra-ui/core';
-import theme from '../theme';
-import UI from './UI';
-import ProxyManager from './ProxyManager';
+  IdProvider,
+} from './elements';
 
 const EditorScene = () => {
   const orbitControlsRef = useRef<OrbitControls>();
@@ -89,109 +83,92 @@ const Editor: VFC = () => {
 
   return (
     <root.div>
-      <ChakraProvider theme={theme}>
-        <Box id="react-three-editable-editor-root">
-          <PortalManager>
-            <Box pos="relative" zIndex={1000}>
-              <Box
-                pos="fixed"
-                d={editorOpen ? 'block' : 'none'}
-                top={0}
-                bottom={0}
-                left={0}
-                right={0}
-              >
-                {scene ? (
-                  <>
-                    <Canvas
-                      colorManagement
-                      camera={{ position: [5, 5, 5] }}
-                      onCreated={({ gl }) => {
-                        gl.setClearColor('white');
+      <PortalManager>
+        <IdProvider>
+          <div className="relative z-50">
+            <div className={`fixed ${editorOpen ? 'block' : 'hidden'} inset-0`}>
+              {scene ? (
+                <>
+                  <Canvas
+                    colorManagement
+                    camera={{ position: [5, 5, 5] }}
+                    onCreated={({ gl }) => {
+                      gl.setClearColor('white');
+                    }}
+                    shadowMap
+                    pixelRatio={window.devicePixelRatio}
+                    onPointerMissed={() => setSelected(null)}
+                  >
+                    <EditorScene />
+                  </Canvas>
+                  <UI />
+                </>
+              ) : (
+                <div className="flex justify-center items-center bg-white h-screen">
+                  <div className="flex flex-col gap-5 items-center ">
+                    <Heading className="mb-4">No canvas connected</Heading>
+                    <p>
+                      Please use <Code>{'<EditableManager />'}</Code> to connect
+                      a canvas to React Three Editable.
+                    </p>
+                    <Code block>
+                      {'<Canvas>\n  <EditableManager /> {/* !!! */}\n</Canvas>'}
+                    </Code>
+                    <Button
+                      className=""
+                      onClick={() => {
+                        setEditorOpen(false);
                       }}
-                      shadowMap
-                      pixelRatio={window.devicePixelRatio}
-                      onPointerMissed={() => setSelected(null)}
                     >
-                      <EditorScene />
-                    </Canvas>
-                    <UI />
-                  </>
-                ) : (
-                  <Center bg="white" height="100vh">
-                    <VStack spacing={5}>
-                      <Heading mb={4} colorScheme="red">
-                        No canvas has been connected
-                      </Heading>
-                      <Text>
-                        Please use <Code>{'<EditableManager />'}</Code> to
-                        connect a canvas to React Three Editable.
-                      </Text>
-                      <Code width="300px" p={3}>
-                        <pre>
-                          {
-                            '<Canvas>\n  <EditableManager /> {/* !!! */}\n</Canvas>'
-                          }
-                        </pre>
-                      </Code>
-                      <Button
-                        onClick={() => setEditorOpen(false)}
-                        colorScheme="teal"
-                      >
-                        Close
-                      </Button>
-                    </VStack>
-                  </Center>
-                )}
-              </Box>
-              {editorOpen || (
-                <Button
-                  pos="fixed"
-                  bottom="20px"
-                  left="20px"
-                  onClick={() => {
-                    if (!useEditorStore.getState().sceneSnapshot) {
-                      createSnapshot();
-                    }
-                    setEditorOpen(true);
-                  }}
-                >
-                  Editor
-                </Button>
+                      Close
+                    </Button>
+                  </div>
+                </div>
               )}
-            </Box>
-            <Modal isOpen={stateMismatch} onClose={() => {}}>
-              <ModalOverlay />
-              <ModalContent>
-                <ModalHeader>Saved state found</ModalHeader>
-                <ModalBody>
-                  Would you like to use initial state or saved state?
-                </ModalBody>
-                <ModalFooter>
-                  <Button
-                    onClick={() => {
-                      applyPersistedState();
-                      setStateMismatch(false);
-                    }}
-                    flex="1"
-                    mr={3}
-                  >
-                    Saved
-                  </Button>
-                  <Button
-                    onClick={() => {
-                      setStateMismatch(false);
-                    }}
-                    flex="1"
-                  >
-                    Initial
-                  </Button>
-                </ModalFooter>
-              </ModalContent>
-            </Modal>
-          </PortalManager>
-        </Box>
-      </ChakraProvider>
+            </div>
+            {editorOpen || (
+              <Button
+                className="fixed bottom-5 left-5"
+                onClick={() => {
+                  if (!useEditorStore.getState().sceneSnapshot) {
+                    createSnapshot();
+                  }
+                  setEditorOpen(true);
+                }}
+              >
+                Editor
+              </Button>
+            )}
+          </div>
+          <Modal visible={stateMismatch}>
+            <ModalHeader>Saved state found</ModalHeader>
+            <ModalBody>
+              Would you like to use initial state or saved state?
+            </ModalBody>
+            <ModalFooter>
+              <Button
+                className="flex-1"
+                onClick={() => {
+                  applyPersistedState();
+                  setStateMismatch(false);
+                }}
+              >
+                Saved
+              </Button>
+              <Button
+                className="flex-1"
+                onClick={() => {
+                  setStateMismatch(false);
+                }}
+              >
+                Initial
+              </Button>
+            </ModalFooter>
+          </Modal>
+          <style type="text/css">{styles}</style>
+          <style>{'canvas { outline: none }'}</style>
+        </IdProvider>
+      </PortalManager>
     </root.div>
   );
 };

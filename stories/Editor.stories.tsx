@@ -1,9 +1,9 @@
 import React from 'react';
 import { Meta, Story } from '@storybook/react';
-import { configure } from '../src';
+import { configure } from '../src/store';
 // @ts-ignore
 import Setup from './Setup';
-import { EditableManager } from '../src';
+import EditableManager from '../src/components/EditableManager';
 import editableState from './editableState.json';
 import Editor from '../src/components/Editor';
 
@@ -22,7 +22,7 @@ export default meta;
 
 const Template: Story = (args) => (
   <>
-    {/*<Editor {...args} />*/}
+    <Editor />
     <Setup>
       <EditableManager state={args.editableState} />
     </Setup>

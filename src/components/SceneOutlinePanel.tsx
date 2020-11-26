@@ -1,14 +1,4 @@
 import React, { ReactElement, VFC } from 'react';
-import {
-  Box,
-  Flex,
-  VStack,
-  Button,
-  Heading,
-  useRadioGroup,
-  UseRadioProps,
-  useRadio,
-} from '@chakra-ui/core';
 import { EditableType, useEditorStore } from '../store';
 import { IconType } from 'react-icons';
 import shallow from 'zustand/shallow';
@@ -20,22 +10,21 @@ import {
   GiLightBulb,
   GiLightProjector,
 } from 'react-icons/all';
+import { Button as ButtonImpl, ButtonProps, Group } from 'reakit';
+import { Heading, Button } from './elements';
 
-interface ObjectRadioButtonProps extends UseRadioProps {
-  label: string;
+interface ObjectButtonProps extends ButtonProps {
+  objectName: string;
   editableType: EditableType;
+  selected: string | null;
 }
 
-const ObjectRadioButton: VFC<ObjectRadioButtonProps> = ({
-  label,
+const ObjectButton: VFC<ObjectButtonProps> = ({
+  objectName,
   editableType,
+  selected,
   ...props
 }) => {
-  const { getInputProps, getCheckboxProps } = useRadio({ ...props });
-
-  const input = getInputProps();
-  const checkbox = getCheckboxProps();
-
   let icon: ReactElement<IconType>;
   switch (editableType) {
     case 'group':
@@ -59,23 +48,17 @@ const ObjectRadioButton: VFC<ObjectRadioButtonProps> = ({
   }
 
   return (
-    <Button
-      as="label"
-      leftIcon={icon}
-      cursor="pointer"
-      width="full"
-      variant="ghost"
-      justifyContent="start"
-      {...checkbox}
-      _checked={{
-        bg: 'teal.600',
-        color: 'white',
-        borderColor: 'teal.600',
-      }}
+    <ButtonImpl
+      {...props}
+      className={`inline-flex justify-start items-center rounded-md px-4 py-2 font-medium focus:outline-none focus:ring focus:ring-blue-300 ${
+        objectName === selected
+          ? 'bg-green-800 hover:bg-green-900 text-white'
+          : 'text-gray-700 hover:bg-gray-200'
+      }`}
     >
-      <input {...input} />
-      {label}
-    </Button>
+      <span className="mr-2">{icon}</span>
+      {objectName}
+    </ButtonImpl>
   );
 };
 
@@ -95,55 +78,40 @@ const SceneOutlinePanel: VFC = () => {
     shallow
   );
 
-  const { getRootProps, getRadioProps } = useRadioGroup({
-    name: 'selectedObject',
-    value: selected ?? '',
-    onChange: (value) => void setSelected(value as string),
-  });
-
-  const group = getRootProps();
-
   if (editablesSnapshot === null) {
     return null;
   }
 
   return (
-    <Flex
-      overflowY="auto"
-      width="300px"
-      height="100%"
-      p={5}
-      bg="white"
-      borderRightWidth={1}
-      direction="column"
-    >
-      <VStack {...group} align="start" flex="1">
-        <Heading as="h3" size="lg" mb={3} ml={3}>
-          Outline
-        </Heading>
+    <div className="flex flex-col overflow-y-auto w-80 h-full p-5 border-r bg-white">
+      <Heading className="mb-5 ml-3">Outline</Heading>
+      <Group className="flex flex-col gap-3 flex-1">
         {Object.entries(editablesSnapshot).map(
           ([name, editable]) =>
             editable.role === 'active' && (
-              <ObjectRadioButton
+              <ObjectButton
                 key={name}
-                label={name}
+                objectName={name}
                 editableType={editable.type}
-                {...getRadioProps({ value: name })}
+                selected={selected}
+                onClick={() => {
+                  setSelected(name);
+                }}
               />
             )
         )}
-      </VStack>
-      <Box flex="0 0" mt={3}>
+      </Group>
+      <div className="flex-0 mt-3">
         <Button
-          width="100%"
+          className="w-full"
           onClick={() => {
             createSnapshot();
           }}
         >
           Sync editor
         </Button>
-      </Box>
-    </Flex>
+      </div>
+    </div>
   );
 };
 

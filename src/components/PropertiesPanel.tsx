@@ -1,18 +1,15 @@
 import React, { useCallback, useEffect, VFC } from 'react';
 import { useForm, UseFormMethods } from 'react-hook-form';
-import {
-  Input,
-  Box,
-  FormControl,
-  FormLabel,
-  HStack,
-  VisuallyHiddenInput,
-  VStack,
-  Heading,
-} from '@chakra-ui/core';
 import { useEditorStore } from '../store';
 import { Euler, Matrix4, Quaternion, Vector3 } from 'three';
 import shallow from 'zustand/shallow';
+import {
+  FormControl,
+  Heading,
+  Input,
+  Legend,
+  VisuallyHidden,
+} from './elements';
 
 interface Vector3InputProps {
   register: UseFormMethods['register'];
@@ -28,21 +25,20 @@ const Vector3Input: VFC<Vector3InputProps> = ({
   name,
 }) => {
   return (
-    <Box>
-      <FormLabel>{label}</FormLabel>
-      <HStack>
-        {/*<Input name={`${name}X`} ref={register} onBlur={onBlur} />*/}
+    <fieldset>
+      <Legend>{label}</Legend>
+      <div className="flex gap-3">
         <FormControl id={`${name}-x`}>
-          <Input name={`${name}X`} ref={register} onBlur={onBlur} size="sm" />
+          <Input name={`${name}X`} ref={register} onBlur={onBlur} />
         </FormControl>
         <FormControl id={`${name}-y`}>
-          <Input name={`${name}Y`} ref={register} onBlur={onBlur} size="sm" />
+          <Input name={`${name}Y`} ref={register} onBlur={onBlur} />
         </FormControl>
         <FormControl id={`${name}-z`}>
-          <Input name={`${name}Z`} ref={register} onBlur={onBlur} size="sm" />
+          <Input name={`${name}Z`} ref={register} onBlur={onBlur} />
         </FormControl>
-      </HStack>
-    </Box>
+      </div>
+    </fieldset>
   );
 };
 
@@ -128,14 +124,8 @@ const PropertiesPanel: VFC = () => {
   }, [getFormValuesFromEditable, selected, setValue]);
 
   return selected ? (
-    <Box
-      overflowY="auto"
-      width="300px"
-      height="100%"
-      p={5}
-      bg="white"
-      borderLeftWidth={1}
-    >
+    <div className="overflow-y-auto w-80 h-full p-5 border-l bg-white">
+      <Heading className="mb-5">Properties</Heading>
       <form
         onSubmit={handleSubmit((values) => {
           const position = new Vector3(
@@ -159,10 +149,7 @@ const PropertiesPanel: VFC = () => {
           setEditableTransform(selected, transform);
         })}
       >
-        <VStack align="left">
-          <Heading as="h3" size="lg" mb={3}>
-            Properties
-          </Heading>
+        <div className="flex flex-col gap-3">
           <Vector3Input
             register={register}
             onBlur={() => reset(getFormValuesFromEditable())}
@@ -181,11 +168,11 @@ const PropertiesPanel: VFC = () => {
             label="Scale"
             name="scale"
           />
-        </VStack>
+        </div>
         {/* so that submitting with enter works */}
-        <VisuallyHiddenInput type="submit" />
+        <VisuallyHidden as="input" type="submit" />
       </form>
-    </Box>
+    </div>
   ) : null;
 };
 
