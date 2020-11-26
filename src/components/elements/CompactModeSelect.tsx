@@ -49,7 +49,7 @@ const OptionButton = <Option,>({
   );
 };
 
-const CompactModeSelect = <Option,>({
+const CompactModeSelect = <Option extends string | number>({
   value,
   onChange,
   options,
@@ -61,6 +61,7 @@ const CompactModeSelect = <Option,>({
     >
       {options.map(({ label, icon, option }) => (
         <OptionButton
+          key={option}
           value={value}
           option={option}
           label={label}
