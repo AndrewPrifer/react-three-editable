@@ -58,7 +58,7 @@
     {
       "path": "dist/react-three-editable.cjs.production.min.js",
       "limit": "10 KB"
-    },
+    }
   ],
   "devDependencies": {
     "@babel/core": "^7.12.3",
