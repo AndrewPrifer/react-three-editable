@@ -25,7 +25,7 @@
   },
   "scripts": {
     "start": "tsdx watch",
-    "build": "NODE_ENV=production tsdx build",
+    "build": "NODE_ENV=production tsdx build --format cjs",
     "test": "tsdx test --passWithNoTests",
     "lint": "tsdx lint",
     "prepare": "NODE_ENV=production tsdx build",
@@ -54,16 +54,11 @@
   },
   "name": "react-three-editable",
   "author": "Andrew Prifer",
-  "module": "dist/react-three-editable.esm.js",
   "size-limit": [
     {
       "path": "dist/react-three-editable.cjs.production.min.js",
       "limit": "10 KB"
     },
-    {
-      "path": "dist/react-three-editable.esm.js",
-      "limit": "10 KB"
-    }
   ],
   "devDependencies": {
     "@babel/core": "^7.12.3",
@@ -108,7 +103,6 @@
     "reakit": "^1.3.0",
     "zustand": "^3.2.0"
   },
-  "sideEffects": false,
   "resolutions": {
     "postcss": "8.1.7",
     "**/typescript": "4.0.5",

@@ -7,6 +7,7 @@ module.exports = {
         inject: false,
       })
     );
+    config.treeshake.moduleSideEffects = false;
     return config;
   },
 };
