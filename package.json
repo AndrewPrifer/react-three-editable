@@ -37,6 +37,7 @@
   },
   "peerDependencies": {
     "react": ">=16",
+    "react-dom": ">=16",
     "react-three-fiber": "*",
     "three": "*"
   },
