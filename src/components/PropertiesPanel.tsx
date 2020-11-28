@@ -43,15 +43,15 @@ const Vector3Input: VFC<Vector3InputProps> = ({
 };
 
 type Inputs = {
-  positionX: number;
-  positionY: number;
-  positionZ: number;
-  rotationX: number;
-  rotationY: number;
-  rotationZ: number;
-  scaleX: number;
-  scaleY: number;
-  scaleZ: number;
+  positionX: string;
+  positionY: string;
+  positionZ: string;
+  rotationX: string;
+  rotationY: string;
+  rotationZ: string;
+  scaleX: string;
+  scaleY: string;
+  scaleZ: string;
 };
 
 const PropertiesPanel: VFC = () => {
@@ -77,15 +77,15 @@ const PropertiesPanel: VFC = () => {
     rotationEuler.setFromQuaternion(rotation);
 
     return {
-      positionX: position.x,
-      positionY: position.y,
-      positionZ: position.z,
-      rotationX: rotationEuler.x,
-      rotationY: rotationEuler.y,
-      rotationZ: rotationEuler.z,
-      scaleX: scale.x,
-      scaleY: scale.y,
-      scaleZ: scale.z,
+      positionX: position.x.toFixed(2),
+      positionY: position.y.toFixed(2),
+      positionZ: position.z.toFixed(2),
+      rotationX: rotationEuler.x.toFixed(2),
+      rotationY: rotationEuler.y.toFixed(2),
+      rotationZ: rotationEuler.z.toFixed(2),
+      scaleX: scale.x.toFixed(2),
+      scaleY: scale.y.toFixed(2),
+      scaleZ: scale.z.toFixed(2),
     };
   }, [selected]);
 
