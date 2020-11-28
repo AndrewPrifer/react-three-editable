@@ -71,8 +71,7 @@ const PropertiesPanel: VFC = () => {
 
     useEditorStore
       .getState()
-      // the ? is purely to accommodate hot reloading
-      .editables[selected]?.transform.decompose(position, rotation, scale);
+      .editables[selected].transform.decompose(position, rotation, scale);
 
     const rotationEuler = new Euler();
     rotationEuler.setFromQuaternion(rotation);
