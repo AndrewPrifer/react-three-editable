@@ -62,7 +62,7 @@ For now you can only connect a single canvas, however multi-canvas support is pl
 
 #### Props
 
-`state: EditableState = undefined`: a previously exported state. This can only be set once, and cannot be overridden with a prop change!
+`state?: EditableState`: a previously exported state. This can only be set once, and cannot be overridden with a prop change!
 
 `allowImplicitInstancing: boolean = false`: allows implicit instancing of editable objects through reusing `uniqueName`s. These objects will share all editable properties. It is discouraged since you'll miss out on warnings if you accidentally reuse a `uniqueName`, and will be superseded by prefabs in the future.
 
@@ -83,7 +83,7 @@ const EditableCamera = editable(PerspectiveCamera, 'perspectiveCamera');
 
 `uniqueName: string`: a unique name used to identify the object in the editor.
 
-`editableRootRef: React.Ref`: pass a ref to this prop to be able to imperatively apply transforms on top of editor transforms, or to imperatively re-parent the object.
+`editableRootRef?: React.Ref`: pass a ref to this prop to be able to imperatively apply transforms on top of editor transforms, or to imperatively re-parent the object.
 
 ### `configure(options)`
 
