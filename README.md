@@ -2,6 +2,8 @@
 
 React Three Editable is a library for React and react-three-fiber that lets you edit your scene in a visual editor while requiring minimal modifications to your r3f code. To get a quick idea of what it's all about, please take a look at this [codesandbox](https://codesandbox.io/s/ide-cream-demo-hcgcd).
 
+**Here be dragons! 🐉** React Three Editable is relatively stable, however being pre-1.0.0 software, the API and the internal logic can drastically change at any time, without warning.
+
 ## Quick start
 
 ```
@@ -46,7 +48,7 @@ export default function App() {
 
 When creating a 3D scene for react-three-fiber, you can choose two routes: you can either code it in r3f, which gives you reactivity, and the flexibility that comes with it, or you can use a 3D software like Blender and export it, but then if you want to dynamically modify that scene at runtime, you'll have to fall back to imperative code.
 
-The best middle ground so far has been gltfjsx, which generates JSX from your exported scene, however it still involves a lot of manual work if you want to split your scene into components, and any modifications you make will have to be reapplied if you make changes to the scene.
+The best middle ground so far has been *gltfjsx*, which generates JSX from your exported scene, however it still involves a lot of manual work if you want to split your scene into components, and any modifications you make will have to be reapplied if you make changes to the scene.
 
 React Three Editable aims to fill this gap by allowing you to set up your scene in JSX, giving you reactivity, while allowing you to tweak the properties of these objects in a visual editor, including their transforms, which you can then bake into a json file to be used by the runtime in production. An explicit goal of the project is to mirror regular react-three-fiber code as much as possible, and to allow freely mixing and blending the static values applied in the editor with dynamic ones applied in code. This lets you add it to an existing project with ease, take it out when you don't need it, and generally use it as little or as much as you want, without feeling locked in.
 
@@ -60,9 +62,9 @@ For now you can only connect a single canvas, however multi-canvas support is pl
 
 #### Props
 
-`state`: a previously exported state.
+`state: EditableState = undefined`: a previously exported state. This can only be set once, and cannot be overridden with a prop change!
 
-`allowImplicitInstancing`: allows implicit instancing of editable objects through reusing `uniqueName`s. These objects will share all editable properties. It is discouraged since you'll miss out on warnings if you accidentally reuse a `uniqueName`, and will be superseded by prefabs in the future.
+`allowImplicitInstancing: boolean = false`: allows implicit instancing of editable objects through reusing `uniqueName`s. These objects will share all editable properties. It is discouraged since you'll miss out on warnings if you accidentally reuse a `uniqueName`, and will be superseded by prefabs in the future.
 
 ### `editable`
 
@@ -79,9 +81,9 @@ const EditableCamera = editable(PerspectiveCamera, 'perspectiveCamera');
 
 #### Props
 
-`uniqueName`: a unique name used to identify the object in the editor.
+`uniqueName: string`: a unique name used to identify the object in the editor.
 
-`editableRootRef`: pass a ref to this prop to be able to imperatively apply transforms on top of editor transforms, or to imperatively re-parent the object.
+`editableRootRef: React.Ref`: pass a ref to this prop to be able to imperatively apply transforms on top of editor transforms, or to imperatively re-parent the object.
 
 ### `configure(options)`
 
@@ -91,7 +93,7 @@ Lets you configure the editor.
 
 `options.localStorageNamespace: string = ''`: allows you to namespace the key used for automatically persisting the editor state in development. Useful if you're working on multiple projects at the same time and you don't want one project overwriting the other.
 
-`options.enablePersistence: boolean = true`: sets whether to a enable persistence of not.
+`options.enablePersistence: boolean = true`: sets whether to enable persistence or not.
 
 ## Object types
 
@@ -111,7 +113,7 @@ These are available as properties of `editable`, and you need to pass them as th
 
 React Three Editable automatically displays the editor in development and removes it in production, similarly to how React has two different builds. To make use of this, you need to have your build system set up to handle `process.env.NODE_ENV` checks. If you are using CRA or Next.js, this is already done for you.
 
-In production, the bundle size of r3e should not exceed 3 KB (at least this is the goal for 1.0.0, see issue [#39](https://github.com/AndrewPrifer/react-three-editable/issues/39)).
+In production, the bundle size of r3e is [2.9 kB](https://bundlephobia.com/result?p=react-three-editable).
 
 ## Contributing
 
