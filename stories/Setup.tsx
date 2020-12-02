@@ -1,5 +1,6 @@
 import React, { ReactNode, VFC, Suspense, useRef } from 'react';
 import { Canvas } from 'react-three-fiber';
+import Suitcase from './Suitcase';
 
 import {
   Box,
@@ -7,6 +8,7 @@ import {
   Sphere,
   useGLTF,
   PerspectiveCamera,
+  Environment,
 } from '@react-three/drei';
 import e from '../src/components/editable';
 
@@ -31,6 +33,10 @@ const SetupScene = () => {
   return (
     <>
       {/*<EditableCamera makeDefault uniqueName="Camera1" position={[0, 3, 15]} />*/}
+      <Suspense fallback={null}>
+        {/* @ts-ignore */}
+        <Environment background files="equi.hdr" path={'/'} />
+      </Suspense>
       <ambientLight intensity={0.2} />
       <e.spotLight
         position={[5, 5, 5]}
@@ -58,6 +64,7 @@ const SetupScene = () => {
         <e.group uniqueName="monkey" position={[0, 3, 0]}>
           <Suspense fallback={null}>
             <Suzanne />
+            <Suitcase />
           </Suspense>
         </e.group>
         <group position={[0, 1, 0]} scale={[2, 1, 1]}>

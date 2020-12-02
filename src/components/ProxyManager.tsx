@@ -173,6 +173,11 @@ const ProxyManager: VFC<ProxyManagerProps> = ({ orbitControlsRef }) => {
             if (renderMaterials[mesh.id].hasOwnProperty('map')) {
               material.map = (renderMaterials[mesh.id] as any).map;
             }
+            if (renderMaterials[mesh.id].hasOwnProperty('vertexColors')) {
+              material.vertexColors = (renderMaterials[
+                mesh.id
+              ] as any).vertexColors;
+            }
             mesh.material = material;
             break;
           case 'solid':
@@ -186,6 +191,11 @@ const ProxyManager: VFC<ProxyManagerProps> = ({ orbitControlsRef }) => {
             }
             if (renderMaterials[mesh.id].hasOwnProperty('map')) {
               material.map = (renderMaterials[mesh.id] as any).map;
+            }
+            if (renderMaterials[mesh.id].hasOwnProperty('vertexColors')) {
+              material.vertexColors = (renderMaterials[
+                mesh.id
+              ] as any).vertexColors;
             }
             mesh.material = material;
             break;
