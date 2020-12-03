@@ -32,7 +32,7 @@ const SetupScene = () => {
   const material = useRef();
   return (
     <>
-      {/*<EditableCamera makeDefault uniqueName="Camera1" position={[0, 3, 15]} />*/}
+      <EditableCamera makeDefault uniqueName="Camera1" />
       <Suspense fallback={null}>
         {/* @ts-ignore */}
         <Environment background files="equi.hdr" path={'/'} />

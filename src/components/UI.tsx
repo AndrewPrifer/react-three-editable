@@ -8,7 +8,7 @@ import TransformControlsSpaceSelect from './TransformControlsSpaceSelect';
 import ViewportShadingSelect from './ViewportShadingSelect';
 import SceneOutlinePanel from './SceneOutlinePanel';
 import PropertiesPanel from './PropertiesPanel';
-import { RiFocus3Line } from 'react-icons/all';
+import { GiPocketBow, RiFocus3Line } from 'react-icons/all';
 import { Vector3 } from 'three';
 import { IconButton, Button } from './elements';
 
@@ -21,6 +21,7 @@ const UI: VFC = () => {
     setTransformControlsSpace,
     setViewportShading,
     setEditorOpen,
+    setEditableTransform,
   ] = useEditorStore(
     (state) => [
       state.transformControlsMode,
@@ -30,6 +31,7 @@ const UI: VFC = () => {
       state.setTransformControlsSpace,
       state.setViewportShading,
       state.setEditorOpen,
+      state.setEditableTransform,
     ],
     shallow
   );
@@ -80,6 +82,43 @@ const UI: VFC = () => {
                       focusObject.getWorldPosition(
                         orbitControls.target as Vector3
                       );
+                    }
+                  }}
+                />
+              </div>
+              <div className="pointer-events-auto">
+                <IconButton
+                  label="Align object to view"
+                  icon={<GiPocketBow />}
+                  onClick={() => {
+                    const camera = useEditorStore.getState().orbitControlsRef
+                      ?.current?.object;
+                    const selected = useEditorStore.getState().selected;
+
+                    let proxyObject;
+
+                    if (selected) {
+                      proxyObject = useEditorStore.getState()
+                        .editablesSnapshot![selected].proxyObject;
+
+                      if (proxyObject && camera) {
+                        const direction = new Vector3();
+                        const position = camera.position.clone();
+
+                        camera.getWorldDirection(direction);
+                        proxyObject.position.set(0, 0, 0);
+                        proxyObject.lookAt(direction);
+
+                        proxyObject.parent!.worldToLocal(position);
+                        proxyObject.position.copy(position);
+
+                        proxyObject.updateMatrix();
+
+                        setEditableTransform(
+                          selected,
+                          proxyObject.matrix.clone()
+                        );
+                      }
                     }
                   }}
                 />

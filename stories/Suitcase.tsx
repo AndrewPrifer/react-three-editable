@@ -38,7 +38,14 @@ export default function Model(props: JSX.IntrinsicElements['group']) {
 
   return (
     <>
-      <group ref={group} {...props} dispose={null} rotation={[0, Math.PI, 0]}>
+      <e.group
+        // @ts-ignore
+        ref={group}
+        {...props}
+        dispose={null}
+        rotation={[0, Math.PI, 0]}
+        uniqueName="Suitcase"
+      >
         <primitive object={nodes.static} />
         <e.mesh
           // @ts-ignore
@@ -67,7 +74,7 @@ export default function Model(props: JSX.IntrinsicElements['group']) {
         >
           <meshStandardMaterial color="hotpink" />
         </e.mesh>
-      </group>
+      </e.group>
     </>
   );
 }
