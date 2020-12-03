@@ -66,20 +66,19 @@ const UI: VFC = () => {
                   label="Focus on selected"
                   icon={<RiFocus3Line />}
                   onClick={() => {
-                    const editorCamera = useEditorStore.getState()
+                    const orbitControls = useEditorStore.getState()
                       .orbitControlsRef?.current;
                     const selected = useEditorStore.getState().selected;
                     let focusObject;
 
                     if (selected) {
-                      focusObject = useEditorStore.getState().editables[
-                        selected
-                      ].original;
+                      focusObject = useEditorStore.getState()
+                        .editablesSnapshot![selected].proxyObject;
                     }
 
-                    if (editorCamera && focusObject) {
+                    if (orbitControls && focusObject) {
                       focusObject.getWorldPosition(
-                        editorCamera.target as Vector3
+                        orbitControls.target as Vector3
                       );
                     }
                   }}

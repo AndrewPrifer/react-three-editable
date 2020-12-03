@@ -6,7 +6,7 @@ import {
   PointLightHelper,
   SpotLightHelper,
 } from 'three';
-import React, { useLayoutEffect, useRef, VFC } from 'react';
+import React, { useEffect, useLayoutEffect, useRef, VFC } from 'react';
 import { useHelper, Sphere } from '@react-three/drei';
 import { EditableType, useEditorStore } from '../store';
 import shallow from 'zustand/shallow';
@@ -23,10 +23,20 @@ const EditableProxy: VFC<EditableProxyProps> = ({
   editableType,
   object,
 }) => {
-  const [selected, setSelected] = useEditorStore(
-    (state) => [state.selected, state.setSelected],
+  const [selected, setSelected, setSnapshotProxyObject] = useEditorStore(
+    (state) => [
+      state.selected,
+      state.setSelected,
+      state.setSnapshotProxyObject,
+    ],
     shallow
   );
+
+  useEffect(() => {
+    setSnapshotProxyObject(object, editableName);
+
+    return () => setSnapshotProxyObject(null, editableName);
+  }, [editableName, object, setSnapshotProxyObject]);
 
   // set up helper
   let Helper:

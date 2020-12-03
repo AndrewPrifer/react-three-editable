@@ -25,21 +25,15 @@ export interface EditableState {
   };
 }
 
-export type ActiveEditable = {
+export type Editable = {
   type: EditableType;
-  role: 'active';
-  original: Object3D;
+  role: 'active' | 'removed';
   transform: Matrix4;
 };
 
-export type RemovedEditable = {
-  type: EditableType;
-  role: 'removed';
-  original?: null;
-  transform: Matrix4;
-};
-
-export type Editable = ActiveEditable | RemovedEditable;
+export interface EditableSnapshot extends Editable {
+  proxyObject?: Object3D | null;
+}
 
 export type EditorStore = {
   scene: Scene | null;
@@ -56,7 +50,7 @@ export type EditorStore = {
   viewportShading: ViewportShading;
   editorOpen: boolean;
   sceneSnapshot: Scene | null;
-  editablesSnapshot: Record<string, Editable> | null;
+  editablesSnapshot: Record<string, EditableSnapshot> | null;
 
   init: (
     scene: Scene,
@@ -67,11 +61,7 @@ export type EditorStore = {
   setOrbitControlsRef: (
     orbitControlsRef: MutableRefObject<OrbitControls | undefined>
   ) => void;
-  addEditable: (
-    type: EditableType,
-    original: Object3D,
-    uniqueName: string
-  ) => void;
+  addEditable: (type: EditableType, uniqueName: string) => void;
   removeEditable: (uniqueName: string) => void;
   setEditableTransform: (uniqueName: string, transform: Matrix4) => void;
   setSelected: (name: string | null) => void;
@@ -80,6 +70,10 @@ export type EditorStore = {
   setViewportShading: (mode: ViewportShading) => void;
   setEditorOpen: (open: boolean) => void;
   createSnapshot: () => void;
+  setSnapshotProxyObject: (
+    proxyObject: Object3D | null,
+    uniqueName: string
+  ) => void;
   serialize: () => EditableState;
   isPersistedStateDifferentThanInitial: () => boolean;
   applyPersistedState: () => void;
@@ -120,7 +114,6 @@ const config: StateCreator<EditorStore> = (set, get) => ({
                 ? {
                     type: editable.type,
                     role: 'active',
-                    original: originalEditable.original,
                     transform: new Matrix4().fromArray(editable.transform),
                   }
                 : {
@@ -141,7 +134,7 @@ const config: StateCreator<EditorStore> = (set, get) => ({
       initialState,
     });
   },
-  addEditable: (type, original, uniqueName) =>
+  addEditable: (type, uniqueName) =>
     set((state) => {
       let transform = new Matrix4();
       if (state.editables[uniqueName]) {
@@ -174,7 +167,6 @@ If this is intentional, please set the allowImplicitInstancing prop of EditableM
           [uniqueName]: {
             type,
             role: 'active',
-            original,
             transform,
           },
         },
@@ -189,7 +181,7 @@ If this is intentional, please set the allowImplicitInstancing prop of EditableM
       return {
         editables: {
           ...rest,
-          [name]: { ...removed, original: undefined, role: 'removed' },
+          [name]: { ...removed, role: 'removed' },
         },
       };
     }),
@@ -222,7 +214,14 @@ If this is intentional, please set the allowImplicitInstancing prop of EditableM
       editablesSnapshot: state.editables,
     }));
   },
-
+  setSnapshotProxyObject: (proxyObject, uniqueName) => {
+    set((state) => ({
+      editablesSnapshot: {
+        ...state.editablesSnapshot,
+        [uniqueName]: { ...state.editablesSnapshot![uniqueName], proxyObject },
+      },
+    }));
+  },
   serialize: () => ({
     editables: Object.fromEntries(
       Object.entries(get().editables).map(([name, editable]) => [
@@ -262,7 +261,6 @@ If this is intentional, please set the allowImplicitInstancing prop of EditableM
               ? {
                   type: editable.type,
                   role: 'active',
-                  original: originalEditable.original,
                   transform: new Matrix4().fromArray(editable.transform),
                 }
               : {

@@ -64,7 +64,7 @@ const useEditable = <T extends EditableType>(uniqueName: string, type: T) => {
   );
 
   useLayoutEffect(() => {
-    addEditable(type, objectRef.current!, uniqueName);
+    addEditable(type, uniqueName);
 
     return () => {
       removeEditable(uniqueName);
