@@ -1,7 +1,8 @@
-import React, { useEffect, useRef, VFC } from 'react';
+import React, { useEffect, useLayoutEffect, useRef, VFC } from 'react';
 import { useEditorStore } from '../store';
 import shallow from 'zustand/shallow';
 import { WebGLRenderer } from 'three';
+import useMeasure from 'react-use-measure';
 
 interface ReferenceWindowProps {
   height: number;
@@ -11,6 +12,13 @@ const ReferenceWindow: VFC<ReferenceWindowProps> = ({ height }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   const [gl] = useEditorStore((state) => [state.gl], shallow);
+  const [ref, bounds] = useMeasure();
+
+  useLayoutEffect(() => {
+    if (gl) {
+      ref(gl?.domElement);
+    }
+  }, [gl, ref]);
 
   useEffect(() => {
     let animationHandle: number;
@@ -46,7 +54,11 @@ const ReferenceWindow: VFC<ReferenceWindowProps> = ({ height }) => {
     <div className="rounded overflow-hidden shadow-2xl">
       <canvas
         ref={canvasRef}
-        width={(gl.domElement.width / gl.domElement.height) * height}
+        width={
+          ((bounds.width || gl.domElement.width) /
+            (bounds.height || gl.domElement.height)) *
+          height
+        }
         height={height}
       />
     </div>
