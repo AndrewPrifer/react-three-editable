@@ -1,6 +1,7 @@
 import React, { ComponentProps, forwardRef, VFC } from 'react';
 import { Dialog, DialogBackdrop, DialogProps, useDialogState } from 'reakit';
 
+// we are abstracting away stuff like baseId because we are not going to use DialogDisclosure
 export type ModalProps = Pick<DialogProps, 'children' | 'visible' | 'hide'>;
 
 export const Modal: VFC<ModalProps> = ({ children, ...props }) => {

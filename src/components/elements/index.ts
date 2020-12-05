@@ -15,3 +15,9 @@ export { FormControl, useFormControlContext } from './FormControl';
 export { default as FormLabel, FormLabelProps } from './FormLabel';
 export * from './IdProvider';
 export * from './VisuallyHidden';
+export {
+  Popover,
+  PopoverProps,
+  usePopoverState,
+  PopoverDisclosure,
+} from './Popover';

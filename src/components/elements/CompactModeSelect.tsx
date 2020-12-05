@@ -1,17 +1,15 @@
-import React, { ReactElement } from 'react';
+import React, { ReactElement, ReactNode, VFC } from 'react';
 import { IconType } from 'react-icons';
 import { Group, Button } from 'reakit';
-import { Tooltip, TooltipReference, useTooltipState } from '.';
-
-export interface CompactModeSelectProps<Option> {
-  value: Option;
-  onChange: (value: Option) => void;
-  options: {
-    option: Option;
-    label: string;
-    icon: ReactElement<IconType>;
-  }[];
-}
+import {
+  Tooltip,
+  TooltipReference,
+  usePopoverState,
+  useTooltipState,
+  PopoverDisclosure,
+  Popover,
+} from '.';
+import { FiChevronDown } from 'react-icons/all';
 
 interface OptionButtonProps<Option> {
   value: Option;
@@ -49,10 +47,53 @@ const OptionButton = <Option,>({
   );
 };
 
+interface SettingsProps {
+  children: ReactNode;
+}
+
+const Settings: VFC<SettingsProps> = ({ children }) => {
+  const tooltip = useTooltipState();
+  const popover = usePopoverState();
+
+  return (
+    <>
+      <TooltipReference {...tooltip} as={'div'} tabIndex={-1}>
+        <PopoverDisclosure
+          // @ts-ignore
+          {...popover}
+          className={`flex relative items-center justify-center align-middle w-auto text-sm font-semibold h-8 px-3 rounded-r-lg bg-gray-800 text-white hover:bg-gray-900 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-inset`}
+        >
+          <FiChevronDown />
+        </PopoverDisclosure>
+      </TooltipReference>
+      <Tooltip {...tooltip}>Settings</Tooltip>
+      <Popover
+        {...popover}
+        // this seems to be necessary to prevent the popup from forever being closed after the first opening
+        hideOnClickOutside={false}
+      >
+        {children}
+      </Popover>
+    </>
+  );
+};
+
+export interface CompactModeSelectProps<Option> {
+  value: Option;
+  onChange: (value: Option) => void;
+  options: {
+    option: Option;
+    label: string;
+    icon: ReactElement<IconType>;
+  }[];
+  settingsPanel?: ReactNode;
+}
+
 const CompactModeSelect = <Option extends string | number>({
   value,
   onChange,
   options,
+  settingsPanel,
 }: CompactModeSelectProps<Option>) => {
   return (
     <Group
@@ -69,6 +110,7 @@ const CompactModeSelect = <Option extends string | number>({
           onClick={() => onChange(option)}
         />
       ))}
+      {settingsPanel && <Settings>{settingsPanel}</Settings>}
     </Group>
   );
 };

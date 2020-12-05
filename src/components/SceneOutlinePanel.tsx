@@ -85,7 +85,7 @@ const SceneOutlinePanel: VFC = () => {
 
   return (
     <div className="flex flex-col overflow-y-auto w-80 h-full p-5 border-r bg-white">
-      <Heading className="mb-5 ml-3">Outline</Heading>
+      <Heading className="mb-5 ml-3 text-3xl">Outline</Heading>
       <Group
         // @ts-ignore
         className="flex flex-col gap-3 flex-1"

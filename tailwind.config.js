@@ -6,11 +6,17 @@ module.exports = {
       zIndex: {
         '-10': '-10',
       },
+      gridAutoRows: (theme) => theme('height'),
+      fontSize: {
+        xxs: ['0.5rem', '0.75rem'],
+      },
     },
   },
   variants: {
     extend: {
       borderRadius: ['first', 'last'],
+      ringWidth: ['hover'],
+      ringColor: ['hover'],
     },
   },
   plugins: [],

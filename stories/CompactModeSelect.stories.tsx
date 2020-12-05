@@ -37,4 +37,5 @@ Default.args = {
       icon: <BiAbacus />,
     },
   ],
+  settingsPanel: <div>Hi</div>,
 };

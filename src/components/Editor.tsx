@@ -4,10 +4,11 @@ import React, {
   useRef,
   useState,
   VFC,
+  Suspense,
 } from 'react';
 import { Canvas, useThree } from 'react-three-fiber';
 import { useEditorStore } from '../store';
-import { OrbitControls } from '@react-three/drei';
+import { OrbitControls, Environment } from '@react-three/drei';
 import shallow from 'zustand/shallow';
 import root from 'react-shadow';
 import styles from '../styles.css';
@@ -29,8 +30,9 @@ const EditorScene = () => {
   const orbitControlsRef = useRef<OrbitControls>();
   const { camera } = useThree();
 
-  const setOrbitControlsRef = useEditorStore(
-    (state) => state.setOrbitControlsRef
+  const [selectedHdr, setOrbitControlsRef] = useEditorStore(
+    (state) => [state.selectedHdr, state.setOrbitControlsRef],
+    shallow
   );
 
   useEffect(() => {
@@ -39,6 +41,16 @@ const EditorScene = () => {
 
   return (
     <>
+      <Suspense fallback={null}>
+        {selectedHdr && (
+          <Environment
+            // @ts-ignore
+            files={selectedHdr}
+            path=""
+            background={true}
+          />
+        )}
+      </Suspense>
       <gridHelper args={[30, 30, 30]} />
       <axesHelper />
       <OrbitControls ref={orbitControlsRef} />
@@ -171,7 +183,6 @@ const Editor: VFC = () => {
               </ModalFooter>
             </Modal>
             <style type="text/css">{styles}</style>
-            <style>{'canvas { outline: none }'}</style>
           </IdProvider>
         </PortalManager>
       </div>

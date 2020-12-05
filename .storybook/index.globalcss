@@ -2,6 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  canvas {
+    outline: none
+  }
+}
+
+
+
 html,
 body,
 #root {
