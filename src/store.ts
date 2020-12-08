@@ -22,23 +22,134 @@ export type TransformControlsMode = 'translate' | 'rotate' | 'scale';
 export type TransformControlsSpace = 'world' | 'local';
 export type ViewportShading = 'wireframe' | 'flat' | 'solid' | 'rendered';
 
-export interface EditableState {
-  editables: {
-    [key: string]: {
-      type: EditableType;
-      transform: number[];
-    };
+export interface AbstractEditable<T extends EditableType> {
+  type: T;
+  role: 'active' | 'removed';
+}
+
+// all these identical types are to prepare for a future in which different object types have different properties
+export interface EditableGroup extends AbstractEditable<'group'> {
+  properties: {
+    transform: Matrix4;
   };
 }
 
-export type Editable = {
-  type: EditableType;
-  role: 'active' | 'removed';
-  transform: Matrix4;
-};
+export interface EditableMesh extends AbstractEditable<'mesh'> {
+  properties: {
+    transform: Matrix4;
+  };
+}
 
-export interface EditableSnapshot extends Editable {
+export interface EditableSpotLight extends AbstractEditable<'spotLight'> {
+  properties: {
+    transform: Matrix4;
+  };
+}
+
+export interface EditableDirectionalLight
+  extends AbstractEditable<'directionalLight'> {
+  properties: {
+    transform: Matrix4;
+  };
+}
+
+export interface EditablePointLight extends AbstractEditable<'pointLight'> {
+  properties: {
+    transform: Matrix4;
+  };
+}
+
+export interface EditablePerspectiveCamera
+  extends AbstractEditable<'perspectiveCamera'> {
+  properties: {
+    transform: Matrix4;
+  };
+}
+
+export interface EditableOrthographicCamera
+  extends AbstractEditable<'orthographicCamera'> {
+  properties: {
+    transform: Matrix4;
+  };
+}
+
+export type Editable =
+  | EditableGroup
+  | EditableMesh
+  | EditableSpotLight
+  | EditableDirectionalLight
+  | EditablePointLight
+  | EditablePerspectiveCamera
+  | EditableOrthographicCamera;
+
+export type EditableSnapshot<T extends Editable = Editable> = {
   proxyObject?: Object3D | null;
+} & T;
+
+export interface AbstractSerializedEditable<T extends EditableType> {
+  type: T;
+}
+
+export interface SerializedEditableGroup
+  extends AbstractSerializedEditable<'group'> {
+  properties: {
+    transform: number[];
+  };
+}
+
+export interface SerializedEditableMesh
+  extends AbstractSerializedEditable<'mesh'> {
+  properties: {
+    transform: number[];
+  };
+}
+
+export interface SerializedEditableSpotLight
+  extends AbstractSerializedEditable<'spotLight'> {
+  properties: {
+    transform: number[];
+  };
+}
+
+export interface SerializedEditableDirectionalLight
+  extends AbstractSerializedEditable<'directionalLight'> {
+  properties: {
+    transform: number[];
+  };
+}
+
+export interface SerializedEditablePointLight
+  extends AbstractSerializedEditable<'pointLight'> {
+  properties: {
+    transform: number[];
+  };
+}
+
+export interface SerializedEditablePerspectiveCamera
+  extends AbstractSerializedEditable<'perspectiveCamera'> {
+  properties: {
+    transform: number[];
+  };
+}
+
+export interface SerializedEditableOrthographicCamera
+  extends AbstractSerializedEditable<'orthographicCamera'> {
+  properties: {
+    transform: number[];
+  };
+}
+
+export type SerializedEditable =
+  | SerializedEditableGroup
+  | SerializedEditableMesh
+  | SerializedEditableSpotLight
+  | SerializedEditableDirectionalLight
+  | SerializedEditablePointLight
+  | SerializedEditablePerspectiveCamera
+  | SerializedEditableOrthographicCamera;
+
+export interface EditableState {
+  editables: Record<string, SerializedEditable>;
 }
 
 export type EditorStore = {
@@ -69,7 +180,11 @@ export type EditorStore = {
   setOrbitControlsRef: (
     orbitControlsRef: MutableRefObject<OrbitControls | undefined>
   ) => void;
-  addEditable: (type: EditableType, uniqueName: string) => void;
+  addEditable: <T extends EditableType>(
+    type: T,
+    uniqueName: string,
+    initialProperties: Extract<Editable, { type: T }>['properties']
+  ) => void;
   removeEditable: (uniqueName: string) => void;
   setEditableTransform: (uniqueName: string, transform: Matrix4) => void;
   setSelected: (name: string | null) => void;
@@ -136,17 +251,15 @@ const config: StateCreator<EditorStore> = (set, get) => {
               const originalEditable = editables[name];
               return [
                 name,
-                originalEditable?.role === 'active'
-                  ? {
-                      type: editable.type,
-                      role: 'active',
-                      transform: new Matrix4().fromArray(editable.transform),
-                    }
-                  : {
-                      type: editable.type,
-                      role: 'removed',
-                      transform: new Matrix4().fromArray(editable.transform),
-                    },
+                {
+                  type: editable.type,
+                  role: originalEditable.role,
+                  properties: {
+                    transform: new Matrix4().fromArray(
+                      editable.properties.transform
+                    ),
+                  },
+                },
               ];
             })
           )
@@ -160,9 +273,9 @@ const config: StateCreator<EditorStore> = (set, get) => {
         initialState,
       });
     },
-    addEditable: (type, uniqueName) =>
+    addEditable: (type, uniqueName, initialProperties) =>
       set((state) => {
-        let transform = new Matrix4();
+        let properties = initialProperties;
         if (state.editables[uniqueName]) {
           if (
             state.editables[uniqueName].type !== type &&
@@ -183,7 +296,7 @@ const config: StateCreator<EditorStore> = (set, get) => {
   If this is intentional, please set the allowImplicitInstancing prop of EditableManager to true.`
             );
           } else {
-            transform = state.editables[uniqueName].transform;
+            properties = state.editables[uniqueName].properties;
           }
         }
 
@@ -191,9 +304,9 @@ const config: StateCreator<EditorStore> = (set, get) => {
           editables: {
             ...state.editables,
             [uniqueName]: {
-              type,
+              type: type as EditableType,
               role: 'active',
-              transform,
+              properties,
             },
           },
         };
@@ -215,7 +328,10 @@ const config: StateCreator<EditorStore> = (set, get) => {
       set((state) => ({
         editables: {
           ...state.editables,
-          [uniqueName]: { ...state.editables[uniqueName], transform },
+          [uniqueName]: {
+            ...state.editables[uniqueName],
+            properties: { transform },
+          },
         },
       }));
     },
@@ -260,7 +376,9 @@ const config: StateCreator<EditorStore> = (set, get) => {
           name,
           {
             type: editable.type,
-            transform: editable.transform.toArray(),
+            properties: {
+              transform: editable.properties.transform.toArray(),
+            },
           },
         ])
       ),
@@ -293,17 +411,15 @@ const config: StateCreator<EditorStore> = (set, get) => {
           const originalEditable = editables[name];
           return [
             name,
-            originalEditable?.role === 'active'
-              ? {
-                  type: editable.type,
-                  role: 'active',
-                  transform: new Matrix4().fromArray(editable.transform),
-                }
-              : {
-                  type: editable.type,
-                  role: 'removed',
-                  transform: new Matrix4().fromArray(editable.transform),
-                },
+            {
+              type: editable.type,
+              role: originalEditable?.role ?? 'removed',
+              properties: {
+                transform: new Matrix4().fromArray(
+                  editable.properties.transform
+                ),
+              },
+            },
           ];
         })
       );

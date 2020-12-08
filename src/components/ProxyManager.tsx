@@ -74,11 +74,11 @@ const ProxyManager: VFC<ProxyManagerProps> = ({ orbitControlsRef }) => {
               <EditableProxy
                 editableName={object.userData.__editableName}
                 editableType={object.userData.__editableType}
-                object={object.children[0]}
+                object={object}
               />,
-              object
+              object.parent
             ),
-            object: object.children[0],
+            object: object,
           };
         }
       }
@@ -107,7 +107,7 @@ const ProxyManager: VFC<ProxyManagerProps> = ({ orbitControlsRef }) => {
           object.scale
         );
       },
-      (state) => state.editables[selected].transform
+      (state) => state.editables[selected].properties.transform
     );
 
     return () => void unsub();
