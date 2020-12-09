@@ -21,3 +21,8 @@ export {
   usePopoverState,
   PopoverDisclosure,
 } from './Popover';
+export {
+  default as SettingsButton,
+  SettingsButtonProps,
+} from './SettingsButton';
+export { default as Checkbox, CheckboxProps } from './Checkbox';

@@ -170,6 +170,7 @@ export type EditorStore = {
   editablesSnapshot: Record<string, EditableSnapshot> | null;
   hdrPaths: string[];
   selectedHdr: string | null;
+  showOverlayIcons: boolean;
 
   init: (
     scene: Scene,
@@ -192,6 +193,7 @@ export type EditorStore = {
   setTransformControlsMode: (mode: TransformControlsMode) => void;
   setTransformControlsSpace: (mode: TransformControlsSpace) => void;
   setViewportShading: (mode: ViewportShading) => void;
+  setShowOverlayIcons: (show: boolean) => void;
   setEditorOpen: (open: boolean) => void;
   createSnapshot: () => void;
   setSnapshotProxyObject: (
@@ -241,6 +243,7 @@ const config: StateCreator<EditorStore> = (set, get) => {
     editablesSnapshot: null,
     hdrPaths: [],
     selectedHdr: null,
+    showOverlayIcons: false,
 
     init: (scene, gl, allowImplicitInstancing, initialState) => {
       const editables = get().editables;
@@ -349,6 +352,9 @@ const config: StateCreator<EditorStore> = (set, get) => {
     },
     setViewportShading: (mode) => {
       set({ viewportShading: mode });
+    },
+    setShowOverlayIcons: (show) => {
+      set({ showOverlayIcons: show });
     },
     setEditorOpen: (open) => {
       set({ editorOpen: open });

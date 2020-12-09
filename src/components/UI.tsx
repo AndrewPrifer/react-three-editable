@@ -8,9 +8,11 @@ import TransformControlsSpaceSelect from './TransformControlsSpaceSelect';
 import ViewportShadingSelect from './ViewportShadingSelect';
 import SceneOutlinePanel from './SceneOutlinePanel';
 import PropertiesPanel from './PropertiesPanel';
-import { GiPocketBow, RiFocus3Line } from 'react-icons/all';
+import { AiFillEye, GiPocketBow, RiFocus3Line } from 'react-icons/all';
 import { Vector3 } from 'three';
-import { IconButton, Button } from './elements';
+import { IconButton, Button, SettingsButton } from './elements';
+import { Checkbox } from 'reakit';
+import ViewportSettings from './ViewportSettings';
 
 const UI: VFC = () => {
   const [
@@ -122,6 +124,11 @@ const UI: VFC = () => {
                     }
                   }}
                 />
+              </div>
+              <div className="pointer-events-auto">
+                <SettingsButton icon={<AiFillEye />} label="Viewport settings">
+                  <ViewportSettings />
+                </SettingsButton>
               </div>
             </div>
             <div className="absolute right-0 top-0 -z-10">

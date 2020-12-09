@@ -39,9 +39,15 @@ const EditableProxy: VFC<EditableProxyProps> = ({
   editableType,
   object,
 }) => {
-  const [selected, setSelected, setSnapshotProxyObject] = useEditorStore(
+  const [
+    selected,
+    showOverlayIcons,
+    setSelected,
+    setSnapshotProxyObject,
+  ] = useEditorStore(
     (state) => [
       state.selected,
+      state.showOverlayIcons,
       state.setSelected,
       state.setSnapshotProxyObject,
     ],
@@ -165,12 +171,14 @@ const EditableProxy: VFC<EditableProxyProps> = ({
         }}
       >
         <primitive object={object}>
-          <Html
-            center
-            className="pointer-events-none p-1 rounded bg-white bg-opacity-70 shadow text-gray-700"
-          >
-            {icon}
-          </Html>
+          {showOverlayIcons && (
+            <Html
+              center
+              className="pointer-events-none p-1 rounded bg-white bg-opacity-70 shadow text-gray-700"
+            >
+              {icon}
+            </Html>
+          )}
           {dimensionless.includes(editableType) && (
             <Sphere
               args={[2, 4, 2]}
