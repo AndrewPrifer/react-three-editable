@@ -11,7 +11,6 @@ import PropertiesPanel from './PropertiesPanel';
 import { AiFillEye, GiPocketBow, RiFocus3Line } from 'react-icons/all';
 import { Vector3 } from 'three';
 import { IconButton, Button, SettingsButton } from './elements';
-import { Checkbox } from 'reakit';
 import ViewportSettings from './ViewportSettings';
 
 const UI: VFC = () => {
