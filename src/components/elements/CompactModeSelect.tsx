@@ -57,7 +57,12 @@ const Settings: VFC<SettingsProps> = ({ children }) => {
 
   return (
     <>
-      <TooltipReference {...tooltip} as={'div'} tabIndex={-1}>
+      <TooltipReference
+        {...tooltip}
+        as={'div'}
+        tabIndex={-1}
+        className="focus:outline-none"
+      >
         <PopoverDisclosure
           // @ts-ignore
           {...popover}
