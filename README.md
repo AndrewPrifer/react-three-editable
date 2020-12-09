@@ -98,7 +98,7 @@ Use it to bind a `Canvas` to React Three Editable: `<Canvas onCreated={bind(opti
 
 ```tsx
 <Canvas onCreated={({ gl, scene }) => {
-  bind(options)({ gl, scene })
+  bind(options)({ gl, scene });
 }}>
   // ...
 </Canvas>
