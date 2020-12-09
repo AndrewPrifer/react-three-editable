@@ -478,22 +478,22 @@ const initPersistence = (
 
 let [initialPersistedState, unsub] = initPersistence('react-three-editable_');
 
-export type BindFunction = (options: {
+export type BindFunction = (options?: {
   allowImplicitInstancing?: boolean;
   state?: EditableState;
 }) => (options: { gl: WebGLRenderer; scene: Scene }) => void;
 
-export const configure = (config: {
-  localStorageNamespace?: string;
-  enablePersistence?: boolean;
-}): BindFunction => {
+export const configure = ({
+  localStorageNamespace = '',
+  enablePersistence = true,
+} = {}): BindFunction => {
   if (unsub) {
     unsub();
   }
 
-  if (config.enablePersistence ?? true) {
+  if (enablePersistence) {
     const persistence = initPersistence(
-      `react-three-editable_${config.localStorageNamespace ?? ''}`
+      `react-three-editable_${localStorageNamespace}`
     );
 
     initialPersistedState = persistence[0];
@@ -503,10 +503,10 @@ export const configure = (config: {
     unsub = undefined;
   }
 
-  return ({ allowImplicitInstancing, state }) => {
+  return ({ allowImplicitInstancing = false, state } = {}) => {
     return ({ gl, scene }) => {
       const init = useEditorStore.getState().init;
-      init(scene, gl, allowImplicitInstancing ?? false, state);
+      init(scene, gl, allowImplicitInstancing, state);
     };
   };
 };
