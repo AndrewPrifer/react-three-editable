@@ -11,6 +11,7 @@ import React, {
   useEffect,
   useLayoutEffect,
   useRef,
+  useState,
   VFC,
 } from 'react';
 import { useHelper, Sphere, Html } from '@react-three/drei';
@@ -135,9 +136,11 @@ const EditableProxy: VFC<EditableProxyProps> = ({
     'orthographicCamera',
   ];
 
+  const [hovered, setHovered] = useState(false);
+
   useHelper(
     objectRef,
-    selected === editableName || dimensionless.includes(editableType)
+    selected === editableName || dimensionless.includes(editableType) || hovered
       ? Helper
       : null,
     ...helperArgs
@@ -151,6 +154,14 @@ const EditableProxy: VFC<EditableProxyProps> = ({
             e.stopPropagation();
             setSelected(editableName);
           }
+        }}
+        onPointerOver={(e) => {
+          e.stopPropagation();
+          setHovered(true);
+        }}
+        onPointerOut={(e) => {
+          e.stopPropagation();
+          setHovered(false);
         }}
       >
         <primitive object={object}>
