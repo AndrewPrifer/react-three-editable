@@ -55,13 +55,13 @@ When creating a 3D scene for react-three-fiber, you can choose two routes: you c
 
 The best middle ground so far has been *gltfjsx*, which generates JSX from your exported scene, however it still involves a lot of manual work if you want to split your scene into components, and any modifications you make will have to be reapplied if you make changes to the scene.
 
-React Three Editable aims to fill this gap by allowing you to set up your scene in JSX, giving you reactivity, while allowing you to tweak the properties of these objects in a visual editor, including their transforms, which you can then bake into a json file to be used by the runtime in production. An explicit goal of the project is to mirror regular react-three-fiber code as much as possible, and to allow freely mixing and blending the static values applied in the editor with dynamic ones applied in code. This lets you add it to an existing project with ease, take it out when you don't need it, and generally use it as little or as much as you want, without feeling locked in.
+React Three Editable aims to fill this gap by allowing you to set up your scene in JSX, giving you reactivity, while allowing you to tweak the properties of these objects in a visual editor, including their transforms, which you can then bake into a json file to be used by the runtime in production. An explicit goal of the project is to mirror regular react-three-fiber code as much as possible. This lets you add it to an existing project with ease, take it out when you don't need it, and generally use it as little or as much as you want, without feeling locked in.
 
 ## API
 
 ### `editable`
 
-Use it to make objects editable. The properties on `editable` mirror the intrinsic elements of react-three-fiber, however there's no full parity yet. E.g. if you want to create an editable `<mesh>`, you do it by using `<editable.mesh>` instead. These elements have the same interface as the normal ones, with the addition of the below props.
+Use it to make objects editable. The properties on `editable` mirror the intrinsic elements of react-three-fiber, however there's no full parity yet. E.g. if you want to create an editable `<mesh>`, you do it by using `<editable.mesh>` instead. These elements have the same interface as the normal ones, with the addition of the below props. Any editable property you set in the code (like `position`) will be used as an initial value/reset point in the editor.
 
 `editable` is also a function, which allows you to make your custom components editable. Your component does have to be compatible with the interface of the editable object type it is meant to represent. You need to pass it the component you want to wrap, and the object type it represents (see object types).
 
@@ -75,8 +75,6 @@ const EditableCamera = editable(PerspectiveCamera, 'perspectiveCamera');
 #### Props
 
 `uniqueName: string`: a unique name used to identify the object in the editor.
-
-`editableRootRef?: React.Ref`: pass a ref to this prop to be able to imperatively apply transforms on top of editor transforms, or to imperatively re-parent the object.
 
 ### `configure(options)`
 
