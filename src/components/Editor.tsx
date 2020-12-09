@@ -104,18 +104,21 @@ const Editor: VFC = () => {
               >
                 {scene ? (
                   <>
-                    <Canvas
-                      colorManagement
-                      camera={{ position: [5, 5, 5] }}
-                      onCreated={({ gl }) => {
-                        gl.setClearColor('white');
-                      }}
-                      shadowMap
-                      pixelRatio={window.devicePixelRatio}
-                      onPointerMissed={() => setSelected(null)}
-                    >
-                      <EditorScene />
-                    </Canvas>
+                    <div className="relative z-0 h-full">
+                      <Canvas
+                        colorManagement
+                        camera={{ position: [5, 5, 5] }}
+                        onCreated={({ gl }) => {
+                          gl.setClearColor('white');
+                        }}
+                        shadowMap
+                        pixelRatio={window.devicePixelRatio}
+                        onPointerMissed={() => setSelected(null)}
+                      >
+                        <EditorScene />
+                      </Canvas>
+                    </div>
+
                     <UI />
                   </>
                 ) : (

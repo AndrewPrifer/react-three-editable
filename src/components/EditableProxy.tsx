@@ -6,10 +6,25 @@ import {
   PointLightHelper,
   SpotLightHelper,
 } from 'three';
-import React, { useEffect, useLayoutEffect, useRef, VFC } from 'react';
-import { useHelper, Sphere } from '@react-three/drei';
+import React, {
+  ReactElement,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  VFC,
+} from 'react';
+import { useHelper, Sphere, Html } from '@react-three/drei';
 import { EditableType, useEditorStore } from '../store';
 import shallow from 'zustand/shallow';
+import {
+  BiSun,
+  BsCameraVideoFill,
+  BsFillCollectionFill,
+  GiCube,
+  GiLightBulb,
+  GiLightProjector,
+} from 'react-icons/all';
+import { IconType } from 'react-icons';
 
 export interface EditableProxyProps {
   editableName: string;
@@ -67,7 +82,7 @@ const EditableProxy: VFC<EditableProxyProps> = ({
 
   let helperArgs: [string] | [number, string] | [];
   const size = 1;
-  const color = selected === editableName ? 'darkred' : 'darkblue';
+  const color = 'darkblue';
 
   switch (editableType) {
     case 'directionalLight':
@@ -84,13 +99,49 @@ const EditableProxy: VFC<EditableProxyProps> = ({
       helperArgs = [];
   }
 
+  let icon: ReactElement<IconType>;
+  switch (editableType) {
+    case 'group':
+      icon = <BsFillCollectionFill />;
+      break;
+    case 'mesh':
+      icon = <GiCube />;
+      break;
+    case 'pointLight':
+      icon = <GiLightBulb />;
+      break;
+    case 'spotLight':
+      icon = <GiLightProjector />;
+      break;
+    case 'directionalLight':
+      icon = <BiSun />;
+      break;
+    case 'perspectiveCamera':
+    case 'orthographicCamera':
+      icon = <BsCameraVideoFill />;
+  }
+
   const objectRef = useRef(object);
 
   useLayoutEffect(() => {
     objectRef.current = object;
   }, [object]);
 
-  useHelper(objectRef, Helper, ...helperArgs);
+  const dimensionless = [
+    'spotLight',
+    'pointLight',
+    'directionalLight',
+    'perspectiveCamera',
+    'orthographicCamera',
+  ];
+
+  useHelper(
+    objectRef,
+    selected === editableName || dimensionless.includes(editableType)
+      ? Helper
+      : null,
+    ...helperArgs
+  );
 
   return (
     <>
@@ -103,13 +154,13 @@ const EditableProxy: VFC<EditableProxyProps> = ({
         }}
       >
         <primitive object={object}>
-          {[
-            'spotLight',
-            'pointLight',
-            'directionalLight',
-            'perspectiveCamera',
-            'orthographicCamera',
-          ].includes(editableType) && (
+          <Html
+            center
+            className="pointer-events-none p-1 rounded bg-white bg-opacity-70 shadow text-gray-700"
+          >
+            {icon}
+          </Html>
+          {dimensionless.includes(editableType) && (
             <Sphere
               args={[2, 4, 2]}
               onClick={(e) => {
