@@ -13,19 +13,24 @@ yarn add react-three-editable
 ```tsx
 import React from 'react';
 import { Canvas } from 'react-three-fiber';
-import { EditableManager, editable as e } from 'react-three-editable';
+import { editable as e, configure } from 'react-three-editable';
 
-// Import our previously exported state
+// Import your previously exported state
 import editableState from './editableState.json';
+
+const bind = configure({
+  // Enables persistence in development so your edits aren't discarded when you close the browser window
+  enablePersistence: true,
+  // Useful if you use r3e in multiple projects
+  localStorageNamespace: 'Example',
+});
 
 export default function App() {
   return (
-    <Canvas>
-      {/* EditableManager connnects this canvas to the editor. Here we can also pass our state. */}
-      <EditableManager state={editableState} />
+    <Canvas onCreated={bind({ state: editableState })}>
       <ambientLight intensity={0.5} />
       {/* Mark objects as editable. */}
-      {/* Transforms applied in the editor are added on top of transforms applied in code. */}
+      {/* Properties in the code are used as initial values and reset points in the editor. */}
       <e.spotLight
         position={[10, 10, 10]}
         angle={0.15}
@@ -53,18 +58,6 @@ The best middle ground so far has been *gltfjsx*, which generates JSX from your 
 React Three Editable aims to fill this gap by allowing you to set up your scene in JSX, giving you reactivity, while allowing you to tweak the properties of these objects in a visual editor, including their transforms, which you can then bake into a json file to be used by the runtime in production. An explicit goal of the project is to mirror regular react-three-fiber code as much as possible, and to allow freely mixing and blending the static values applied in the editor with dynamic ones applied in code. This lets you add it to an existing project with ease, take it out when you don't need it, and generally use it as little or as much as you want, without feeling locked in.
 
 ## API
-
-### `<EditableManager>`
-
-By placing it inside your r3f `<Canvas>`, you connect it to React Three Editable.
-
-For now you can only connect a single canvas, however multi-canvas support is planned.
-
-#### Props
-
-`state?: EditableState`: a previously exported state. This can only be set once, and cannot be overridden with a prop change!
-
-`allowImplicitInstancing: boolean = false`: allows implicit instancing of editable objects through reusing `uniqueName`s. These objects will share all editable properties. It is discouraged since you'll miss out on warnings if you accidentally reuse a `uniqueName`, and will be superseded by prefabs in the future.
 
 ### `editable`
 
@@ -94,6 +87,35 @@ Lets you configure the editor.
 `options.localStorageNamespace: string = ''`: allows you to namespace the key used for automatically persisting the editor state in development. Useful if you're working on multiple projects at the same time and you don't want one project overwriting the other.
 
 `options.enablePersistence: boolean = true`: sets whether to enable persistence or not.
+
+#### Returns
+
+`bind`: a function that you can use to connect canvases to React Three Editable, see below.
+
+### `bind(options)`
+
+Bind is a curried function that you call with `options` and returns another function that has to be called with `gl` and `scene`.
+
+Use it to bind a `Canvas` to React Three Editable: `<Canvas onCreated={bind(options)}>`. If you use `onCreated` for other things as well, you have to manually call the function returned by `bind()`:
+
+```tsx
+<Canvas onCreated={({ gl, scene }) => {
+  bind(options)({ gl, scene })
+}}>
+  // ...
+</Canvas>
+```
+
+❓ "The above snippet looks wrong...": `bind` is a curried function, so that you don't have to pass `gl` and `scene` manually in the average case when your `onCreated` is empty. The downside is that it looks like this when you have to manually call it with `gl` and `scene`.
+
+⚠️ For now, you can only connect a single canvas, however multi-canvas support is planned.
+
+#### Parameters
+
+`options.state?: EditableState`: a previously exported state.
+
+`options.allowImplicitInstancing: boolean = false`: allows implicit instancing of editable objects through reusing `uniqueName`s. These objects will share all editable properties. It is discouraged since you'll miss out on warnings if you accidentally reuse a `uniqueName`, and will be superseded by prefabs in the future.
+
 
 ## Object types
 
