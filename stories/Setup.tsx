@@ -1,5 +1,5 @@
 import React, { ReactNode, VFC, Suspense, useRef } from 'react';
-import { Canvas } from 'react-three-fiber';
+import { Canvas, ContainerProps } from 'react-three-fiber';
 import Suitcase from './Suitcase';
 
 import {
@@ -12,7 +12,7 @@ import {
 } from '@react-three/drei';
 import e from '../src/components/editable';
 
-interface SetupProps {
+interface SetupProps extends Omit<ContainerProps, 'children'> {
   children?: ReactNode;
   cameraPosition?: [number, number, number];
   controls?: boolean;
@@ -105,6 +105,7 @@ const SmallScene = () => {
 const Setup: VFC<SetupProps> = ({
   children,
   cameraPosition = [-5, 5, 5] as [number, number, number],
+  ...props
 }) => {
   return (
     <div
@@ -117,6 +118,7 @@ const Setup: VFC<SetupProps> = ({
         shadowMap
         camera={{ position: cameraPosition }}
         pixelRatio={window.devicePixelRatio}
+        {...props}
       >
         {children}
         <SetupScene />

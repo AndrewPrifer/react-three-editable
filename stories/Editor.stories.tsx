@@ -3,11 +3,13 @@ import { Meta, Story } from '@storybook/react';
 import { configure } from '../src/store';
 // @ts-ignore
 import Setup from './Setup';
-import EditableManager from '../src/components/EditableManager';
 import editableState from './editableState.json';
 import Editor from '../src/components/Editor';
 
-configure({ localStorageNamespace: 'Storybook', enablePersistence: true });
+const bind = configure({
+  localStorageNamespace: 'Storybook',
+  enablePersistence: true,
+});
 
 const meta: Meta = {
   title: 'Editor',
@@ -23,9 +25,7 @@ export default meta;
 const Template: Story = (args) => (
   <>
     <Editor />
-    <Setup>
-      <EditableManager state={args.editableState} />
-    </Setup>
+    <Setup onCreated={bind({ state: args.editableState })} />
   </>
 );
 
