@@ -136,14 +136,16 @@ const Editor: VFC = () => {
                 ) : (
                   <div className="flex justify-center items-center bg-white h-screen">
                     <div className="flex flex-col gap-5 items-center ">
-                      <Heading className="mb-4">No canvas connected</Heading>
+                      <Heading className="text-2xl mb-4">
+                        No canvas connected
+                      </Heading>
                       <p>
-                        Please use <Code>{'<EditableManager />'}</Code> to
-                        connect a canvas to React Three Editable.
+                        Please use <Code>{'bind(options)'}</Code> to connect a
+                        canvas to React Three Editable.
                       </p>
                       <Code block>
                         {
-                          '<Canvas>\n  <EditableManager /> {/* !!! */}\n</Canvas>'
+                          'const bind = configure(options);\n\n<Canvas onCreated={bind(options)}>\n{/* ... */}\n</Canvas>'
                         }
                       </Code>
                       <Button
