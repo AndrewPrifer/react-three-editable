@@ -73,7 +73,7 @@ const EditorScene = () => {
 
 const Editor: VFC = () => {
   const [
-    scene,
+    sceneSnapshot,
     editorOpen,
     initialState,
     setEditorOpen,
@@ -83,7 +83,7 @@ const Editor: VFC = () => {
     applyPersistedState,
   ] = useEditorStore(
     (state) => [
-      state.scene,
+      state.sceneSnapshot,
       state.editorOpen,
       state.initialState,
       state.setEditorOpen,
@@ -114,7 +114,7 @@ const Editor: VFC = () => {
               <div
                 className={`fixed ${editorOpen ? 'block' : 'hidden'} inset-0`}
               >
-                {scene ? (
+                {sceneSnapshot ? (
                   <>
                     <div className="relative z-0 h-full">
                       <Canvas
@@ -162,7 +162,7 @@ const Editor: VFC = () => {
                 <Button
                   className="fixed bottom-5 left-5"
                   onClick={() => {
-                    if (!useEditorStore.getState().sceneSnapshot) {
+                    if (!sceneSnapshot) {
                       createSnapshot();
                     }
                     setEditorOpen(true);
