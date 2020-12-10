@@ -10,6 +10,8 @@ import {
   Legend,
   VisuallyHidden,
 } from './elements';
+import { MdRestore } from 'react-icons/all';
+import { Button } from 'reakit';
 
 interface Vector3InputProps {
   register: UseFormMethods['register'];
@@ -153,6 +155,22 @@ const PropertiesPanel: VFC = () => {
         })}
       >
         <div className="flex flex-col gap-3">
+          <div className="flex justify-between items-center text-xl font-medium">
+            <div>Transforms</div>
+            <Button
+              // @ts-ignore
+              className="rounded-full focus:outline-none focus:ring transition-transform transform hover:scale-125"
+              onClick={() => {
+                const editable = useEditorStore.getState().editables[selected];
+                setEditableTransform(
+                  selected,
+                  editable.initialProperties.transform.clone()
+                );
+              }}
+            >
+              <MdRestore />
+            </Button>
+          </div>
           <Vector3Input
             register={register}
             onBlur={() => reset(getFormValuesFromEditable())}

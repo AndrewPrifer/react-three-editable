@@ -25,6 +25,8 @@ export type ViewportShading = 'wireframe' | 'flat' | 'solid' | 'rendered';
 export interface AbstractEditable<T extends EditableType> {
   type: T;
   role: 'active' | 'removed';
+  properties: {};
+  initialProperties: this['properties'];
 }
 
 // all these identical types are to prepare for a future in which different object types have different properties
@@ -265,11 +267,14 @@ const config: StateCreator<EditorStore> = (set, get) => {
                 name,
                 {
                   type: editable.type,
-                  role: originalEditable.role,
+                  role: originalEditable?.role ?? 'removed',
                   properties: {
                     transform: new Matrix4().fromArray(
                       editable.properties.transform
                     ),
+                  },
+                  initialProperties: originalEditable?.initialProperties ?? {
+                    transform: new Matrix4(),
                   },
                 },
               ];
@@ -319,6 +324,7 @@ const config: StateCreator<EditorStore> = (set, get) => {
               type: type as EditableType,
               role: 'active',
               properties,
+              initialProperties,
             },
           },
         };
@@ -442,6 +448,9 @@ const config: StateCreator<EditorStore> = (set, get) => {
                 transform: new Matrix4().fromArray(
                   editable.properties.transform
                 ),
+              },
+              initialProperties: originalEditable?.initialProperties ?? {
+                transform: new Matrix4(),
               },
             },
           ];
