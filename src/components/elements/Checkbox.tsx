@@ -16,7 +16,7 @@ const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
             {...props}
             id={props.id ?? id}
             ref={ref}
-            className="focus:ring h-4 w-4 text-green-800 border-gray-300 hover:border-gray-400 rounded"
+            className="focus:ring focus:ring-opacity-50 focus:ring-blue-500 focus:ring-offset-0 h-4 w-4 text-green-800 border-gray-300 hover:border-gray-400 rounded"
           />
         </div>
         <div className="ml-3 text-sm">
