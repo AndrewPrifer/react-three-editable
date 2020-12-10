@@ -4,13 +4,27 @@ import shallow from 'zustand/shallow';
 import { Checkbox, FormControl } from './elements';
 
 const ViewportShadingSettings: VFC = () => {
-  const [showOverlayIcons, setShowOverlayIcons] = useEditorStore(
-    (state) => [state.showOverlayIcons, state.setShowOverlayIcons],
+  const [
+    showOverlayIcons,
+    showGrid,
+    showAxes,
+    setShowOverlayIcons,
+    setShowGrid,
+    setShowAxes,
+  ] = useEditorStore(
+    (state) => [
+      state.showOverlayIcons,
+      state.showGrid,
+      state.showAxes,
+      state.setShowOverlayIcons,
+      state.setShowGrid,
+      state.setShowAxes,
+    ],
     shallow
   );
 
   return (
-    <div>
+    <div className="flex flex-col gap-3">
       <FormControl>
         <Checkbox
           // @ts-ignore
@@ -18,6 +32,24 @@ const ViewportShadingSettings: VFC = () => {
           onChange={() => setShowOverlayIcons(!showOverlayIcons)}
         >
           Show overlay icons
+        </Checkbox>
+      </FormControl>
+      <FormControl>
+        <Checkbox
+          // @ts-ignore
+          checked={showGrid}
+          onChange={() => setShowGrid(!showGrid)}
+        >
+          Show grid
+        </Checkbox>
+      </FormControl>
+      <FormControl>
+        <Checkbox
+          // @ts-ignore
+          checked={showAxes}
+          onChange={() => setShowAxes(!showAxes)}
+        >
+          Show axes
         </Checkbox>
       </FormControl>
     </div>

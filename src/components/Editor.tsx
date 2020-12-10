@@ -30,10 +30,18 @@ const EditorScene = () => {
   const orbitControlsRef = useRef<OrbitControls>();
   const { camera } = useThree();
 
-  const [selectedHdr, useHdrAsBackground, setOrbitControlsRef] = useEditorStore(
+  const [
+    selectedHdr,
+    useHdrAsBackground,
+    showGrid,
+    showAxes,
+    setOrbitControlsRef,
+  ] = useEditorStore(
     (state) => [
       state.selectedHdr,
       state.useHdrAsBackground,
+      state.showGrid,
+      state.showAxes,
       state.setOrbitControlsRef,
     ],
     shallow
@@ -55,8 +63,8 @@ const EditorScene = () => {
           />
         )}
       </Suspense>
-      <gridHelper args={[30, 30, 30]} />
-      <axesHelper />
+      {showGrid && <gridHelper args={[1000, 1000, 0x444444, 0x888888]} />}
+      {showAxes && <axesHelper args={[500]} />}
       <OrbitControls ref={orbitControlsRef} />
       <ProxyManager orbitControlsRef={orbitControlsRef} />
     </>
