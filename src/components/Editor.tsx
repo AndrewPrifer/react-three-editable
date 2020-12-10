@@ -119,7 +119,7 @@ const Editor: VFC = () => {
                     <div className="relative z-0 h-full">
                       <Canvas
                         colorManagement
-                        camera={{ position: [5, 5, 5] }}
+                        camera={{ position: [20, 20, 20] }}
                         onCreated={({ gl }) => {
                           gl.setClearColor('white');
                         }}
