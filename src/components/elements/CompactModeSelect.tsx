@@ -32,7 +32,7 @@ const OptionButton = <Option,>({
       <TooltipReference
         {...tooltip}
         as={Button}
-        className={`flex relative items-center justify-center align-middle w-auto text-sm font-semibold h-8 px-3 first:rounded-l-lg last:rounded-r-lg focus:outline-none focus:ring focus:ring-blue-300 focus:ring-inset ${
+        className={`flex relative items-center justify-center align-middle w-auto text-sm font-semibold h-7 px-2 first:rounded-l-lg last:rounded-r-lg focus:outline-none focus:ring focus:ring-blue-300 focus:ring-inset ${
           option === value
             ? 'bg-green-800 hover:bg-green-900 text-white'
             : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
@@ -66,7 +66,7 @@ const Settings: VFC<SettingsProps> = ({ children }) => {
         <PopoverDisclosure
           // @ts-ignore
           {...popover}
-          className={`flex relative items-center justify-center align-middle w-auto text-sm font-semibold h-8 px-3 rounded-r-lg bg-gray-800 text-white hover:bg-gray-900 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-inset`}
+          className={`flex relative items-center justify-center align-middle w-auto text-sm font-semibold h-7 px-1 rounded-r-lg bg-gray-800 text-white hover:bg-gray-900 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-inset`}
         >
           <FiChevronDown />
         </PopoverDisclosure>

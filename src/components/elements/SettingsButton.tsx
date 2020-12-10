@@ -35,7 +35,7 @@ const SettingsButton: VFC<SettingsButtonProps> = ({
         <PopoverDisclosure
           // @ts-ignore
           {...popover}
-          className={`flex gap-1 relative items-center justify-center align-middle w-auto text-sm font-semibold h-8 px-3 rounded bg-gray-100 text-gray-700 hover:bg-gray-200 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-inset`}
+          className={`flex gap-1 relative items-center justify-center align-middle w-auto text-sm font-semibold h-7 px-2 rounded bg-gray-100 text-gray-700 hover:bg-gray-200 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-inset`}
         >
           {icon}
           <FiChevronDown />
