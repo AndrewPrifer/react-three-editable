@@ -30,8 +30,12 @@ const EditorScene = () => {
   const orbitControlsRef = useRef<OrbitControls>();
   const { camera } = useThree();
 
-  const [selectedHdr, setOrbitControlsRef] = useEditorStore(
-    (state) => [state.selectedHdr, state.setOrbitControlsRef],
+  const [selectedHdr, useHdrAsBackground, setOrbitControlsRef] = useEditorStore(
+    (state) => [
+      state.selectedHdr,
+      state.useHdrAsBackground,
+      state.setOrbitControlsRef,
+    ],
     shallow
   );
 
@@ -47,7 +51,7 @@ const EditorScene = () => {
             // @ts-ignore
             files={selectedHdr}
             path=""
-            background={true}
+            background={useHdrAsBackground}
           />
         )}
       </Suspense>
