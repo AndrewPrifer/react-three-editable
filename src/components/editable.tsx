@@ -162,7 +162,8 @@ const editable = <
     }
   );
 
-const createEditable = (type: EditableType) => editable(type, type);
+const createEditable = <T extends EditableType>(type: T) =>
+  editable(type, type);
 
 editable.group = createEditable('group');
 editable.mesh = createEditable('mesh');

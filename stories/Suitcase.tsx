@@ -39,7 +39,6 @@ export default function Model(props: JSX.IntrinsicElements['group']) {
   return (
     <>
       <e.group
-        // @ts-ignore
         ref={group}
         {...props}
         dispose={null}
@@ -48,7 +47,6 @@ export default function Model(props: JSX.IntrinsicElements['group']) {
       >
         <primitive object={nodes.static} />
         <e.mesh
-          // @ts-ignore
           ref={lidRef}
           geometry={nodes.suitcase_top.geometry}
           material={nodes.suitcase_top.material}
