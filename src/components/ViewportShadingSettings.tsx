@@ -36,6 +36,7 @@ const ViewportShadingSettings: VFC = () => {
           />
           {hdrPaths.map((hdrPath) => (
             <EnvironmentPreview
+              key={hdrPath}
               url={hdrPath}
               selected={hdrPath === selectedHdr}
               onClick={() => {
