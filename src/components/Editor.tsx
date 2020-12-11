@@ -145,10 +145,35 @@ const Editor: VFC = () => {
                         Editable.
                       </div>
                       <Code block>
-                        {
-                          'const bind = configure(options);\n\n<Canvas onCreated={bind(options)}>\n{/* ... */}\n</Canvas>'
-                        }
+                        {`import React from 'react';
+import { Canvas } from 'react-three-fiber';
+import { configure, editable as e } from 'react-three-editable';
+
+const bind = configure({
+  localStorageNamespace: "MyProject"
+});
+
+const MyComponent = () => (
+  <Canvas onCreated={bind()}>
+    <e.mesh uniqueName="My First Editable Object">
+      <sphereBufferGeometry />
+      <meshStandardMaterial color="rebeccapurple" />
+    </e.mesh>
+  </Canvas>
+);`}
                       </Code>
+                      <div>
+                        For more details, please consult the{' '}
+                        <a
+                          className="rounded-md font-medium text-green-600 hover:text-green-500"
+                          href="https://github.com/AndrewPrifer/react-three-editable"
+                          rel="noreferrer"
+                          target="_blank"
+                        >
+                          documentation
+                        </a>
+                        .
+                      </div>
                       <Button
                         className=""
                         onClick={() => {
