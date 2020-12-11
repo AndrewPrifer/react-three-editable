@@ -139,10 +139,11 @@ const Editor: VFC = () => {
                       <Heading className="text-2xl mb-4">
                         No canvas connected
                       </Heading>
-                      <p>
-                        Please use <Code>{'bind(options)'}</Code> to connect a
-                        canvas to React Three Editable.
-                      </p>
+                      <div>
+                        Please use <Code>configure()</Code> and{' '}
+                        <Code>bind()</Code> to connect a canvas to React Three
+                        Editable.
+                      </div>
                       <Code block>
                         {
                           'const bind = configure(options);\n\n<Canvas onCreated={bind(options)}>\n{/* ... */}\n</Canvas>'
