@@ -46,6 +46,7 @@ const SettingsButton: VFC<SettingsButtonProps> = ({
         {...popover}
         // this seems to be necessary to prevent the popup from forever being closed after the first opening
         hideOnClickOutside={false}
+        aria-label={label}
       >
         {children}
       </Popover>

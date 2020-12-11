@@ -76,6 +76,7 @@ const Settings: VFC<SettingsProps> = ({ children }) => {
         {...popover}
         // this seems to be necessary to prevent the popup from forever being closed after the first opening
         hideOnClickOutside={false}
+        aria-label="More options"
       >
         {children}
       </Popover>
