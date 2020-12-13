@@ -1,7 +1,7 @@
 import React, {
   ComponentProps,
+  ComponentType,
   forwardRef,
-  JSXElementConstructor,
   RefAttributes,
   useLayoutEffect,
   useRef,
@@ -34,7 +34,7 @@ interface Elements {
 }
 
 const editable = <
-  T extends JSXElementConstructor<any> | EditableType,
+  T extends ComponentType<any> | EditableType,
   U extends EditableType
 >(
   Component: T,
