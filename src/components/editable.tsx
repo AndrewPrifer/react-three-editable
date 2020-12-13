@@ -75,13 +75,13 @@ const editable = <
       useLayoutEffect(() => {
         // calculate initial properties before adding the editable
         const pos: Vector3 = position
-          ? new Vector3(...position)
+          ? new Vector3(...(position as any))
           : new Vector3();
         const rot: Vector3 = rotation
-          ? new Vector3(...rotation)
+          ? new Vector3(...(rotation as any))
           : new Vector3();
         const scal: Vector3 = scale
-          ? new Vector3(...scale)
+          ? new Vector3(...(scale as any))
           : new Vector3(1, 1, 1);
 
         ['x', 'y', 'z'].forEach((axis, index) => {
