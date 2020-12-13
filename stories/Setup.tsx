@@ -87,6 +87,14 @@ const SetupScene = () => {
             </e.mesh>
           </e.mesh>
         </group>
+        <e.mesh
+          uniqueName="I'm only visible in the editor"
+          visible="editor"
+          position={[1.5, 2.7, 3.2]}
+        >
+          <boxBufferGeometry />
+          <meshStandardMaterial color="green" />
+        </e.mesh>
       </group>
     </>
   );

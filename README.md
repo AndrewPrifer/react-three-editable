@@ -76,6 +76,8 @@ const EditableCamera = editable(PerspectiveCamera, 'perspectiveCamera');
 
 `uniqueName: string`: a unique name used to identify the object in the editor.
 
+`visible: boolean | 'editor' = true`: controls whether the object is rendered. Same as the normal `visible` prop, but extended with an `'editor'` option that makes the object visible only in the editor.
+
 ### `configure(options)`
 
 Lets you configure the editor.

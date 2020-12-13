@@ -60,6 +60,19 @@ const EditableProxy: VFC<EditableProxyProps> = ({
     return () => setSnapshotProxyObject(null, editableName);
   }, [editableName, object, setSnapshotProxyObject]);
 
+  useLayoutEffect(() => {
+    const originalVisibility = object.visible;
+
+    if (object.userData.__visibleOnlyInEditor) {
+      object.visible = true;
+    }
+
+    return () => {
+      // this has absolutely no effect, __visibleOnlyInEditor of the snapshot never changes, I'm just doing it because it looks right 🤷‍️
+      object.visible = originalVisibility;
+    };
+  }, [object.userData.__visibleOnlyInEditor, object.visible]);
+
   // set up helper
   let Helper:
     | typeof SpotLightHelper

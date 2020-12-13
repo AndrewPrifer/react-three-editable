@@ -47,9 +47,11 @@ const editable = <
         position,
         rotation,
         scale,
+        visible,
         ...props
-      }: ComponentProps<T> & {
+      }: Omit<ComponentProps<T>, 'visible'> & {
         uniqueName: string;
+        visible?: boolean | 'editor';
       } & RefAttributes<Elements[U]>,
       ref
     ) => {
@@ -64,9 +66,9 @@ const editable = <
 
       ['x', 'y', 'z'].forEach((axis) => {
         transformDeps.push(
-          props[`position-${axis}`],
-          props[`rotation-${axis}`],
-          props[`scale-${axis}`]
+          props[`position-${axis}` as any],
+          props[`rotation-${axis}` as any],
+          props[`scale-${axis}` as any]
         );
       });
 
@@ -83,12 +85,12 @@ const editable = <
           : new Vector3(1, 1, 1);
 
         ['x', 'y', 'z'].forEach((axis, index) => {
-          if (props[`position-${axis}`])
-            pos.setComponent(index, props[`position-${axis}`]);
-          if (props[`rotation-${axis}`])
-            rot.setComponent(index, props[`rotation-${axis}`]);
-          if (props[`scale-${axis}`])
-            scal.setComponent(index, props[`scale-${axis}`]);
+          if (props[`position-${axis}` as any])
+            pos.setComponent(index, props[`position-${axis}` as any]);
+          if (props[`rotation-${axis}` as any])
+            rot.setComponent(index, props[`rotation-${axis}` as any]);
+          if (props[`scale-${axis}` as any])
+            scal.setComponent(index, props[`scale-${axis}` as any]);
         });
 
         const quaternion = new Quaternion().setFromEuler(
@@ -152,10 +154,12 @@ const editable = <
         <Component
           ref={mergeRefs([objectRef, ref])}
           {...props}
+          visible={visible !== 'editor' && visible}
           userData={{
             __editable: true,
             __editableName: uniqueName,
             __editableType: type,
+            __visibleOnlyInEditor: visible === 'editor',
           }}
         />
       );
