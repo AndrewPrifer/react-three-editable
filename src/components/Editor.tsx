@@ -6,7 +6,7 @@ import React, {
   VFC,
   Suspense,
 } from 'react';
-import { Canvas, useThree } from 'react-three-fiber';
+import { Canvas } from 'react-three-fiber';
 import { useEditorStore } from '../store';
 import { OrbitControls, Environment } from '@react-three/drei';
 import shallow from 'zustand/shallow';
@@ -28,7 +28,6 @@ import {
 
 const EditorScene = () => {
   const orbitControlsRef = useRef<OrbitControls>();
-  const { camera } = useThree();
 
   const [
     selectedHdr,
@@ -49,7 +48,7 @@ const EditorScene = () => {
 
   useEffect(() => {
     setOrbitControlsRef(orbitControlsRef);
-  }, [camera, setOrbitControlsRef]);
+  }, [setOrbitControlsRef]);
 
   return (
     <>
