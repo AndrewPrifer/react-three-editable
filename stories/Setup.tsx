@@ -1,5 +1,5 @@
 import React, { ReactNode, VFC, Suspense, useRef } from 'react';
-import { Canvas, ContainerProps } from 'react-three-fiber';
+import { Canvas, ContainerProps, useFrame } from 'react-three-fiber';
 import Suitcase from './Suitcase';
 
 import {
@@ -11,6 +11,8 @@ import {
   Environment,
 } from '@react-three/drei';
 import e from '../src/components/editable';
+import { Mesh } from 'three';
+import EditorHelper from '../src/components/EditorHelper';
 
 interface SetupProps extends Omit<ContainerProps, 'children'> {
   children?: ReactNode;
@@ -27,6 +29,23 @@ const Suzanne = () => {
 const EditableCamera = e(PerspectiveCamera, 'perspectiveCamera');
 const EditablePlane = e(Plane, 'mesh');
 
+const AnimatedCube = ({ animate = false }) => {
+  const meshRef = useRef<Mesh>();
+
+  useFrame(() => {
+    if (animate) {
+      meshRef.current!.rotation.x = meshRef.current!.rotation.y += 0.01;
+    }
+  });
+
+  return (
+    <mesh ref={meshRef}>
+      <boxBufferGeometry />
+      <meshBasicMaterial color="red" />
+    </mesh>
+  );
+};
+
 const SetupScene = () => {
   // const material = useResource<Material>();
   const material = useRef();
@@ -38,6 +57,7 @@ const SetupScene = () => {
         <Environment background files="equi.hdr" path={'/'} />
       </Suspense>
       <ambientLight intensity={0.2} />
+      <EditorHelper component={AnimatedCube} animate={true} />
       <e.spotLight
         position={[5, 5, 5]}
         penumbra={1}

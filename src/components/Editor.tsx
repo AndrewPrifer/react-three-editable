@@ -34,6 +34,7 @@ const EditorScene = () => {
     useHdrAsBackground,
     showGrid,
     showAxes,
+    helpersRoot,
     setOrbitControlsRef,
   ] = useEditorStore(
     (state) => [
@@ -41,6 +42,7 @@ const EditorScene = () => {
       state.useHdrAsBackground,
       state.showGrid,
       state.showAxes,
+      state.helpersRoot,
       state.setOrbitControlsRef,
     ],
     shallow
@@ -65,6 +67,7 @@ const EditorScene = () => {
       {showGrid && <gridHelper args={[1000, 1000, 0x444444, 0x888888]} />}
       {showAxes && <axesHelper args={[500]} />}
       <OrbitControls ref={orbitControlsRef} />
+      <primitive object={helpersRoot}></primitive>
       <ProxyManager orbitControlsRef={orbitControlsRef} />
     </>
   );

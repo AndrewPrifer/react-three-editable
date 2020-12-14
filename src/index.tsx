@@ -1,6 +1,10 @@
 import React from 'react';
 import { render } from 'react-dom';
 import Editor from './components/Editor';
+export {
+  default as EditorHelper,
+  EditorHelperProps,
+} from './components/EditorHelper';
 export { default as editable } from './components/editable';
 export { EditableState, configure, BindFunction } from './store';
 

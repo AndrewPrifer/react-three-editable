@@ -116,6 +116,17 @@ Use it to bind a `Canvas` to React Three Editable: `<Canvas onCreated={bind(opti
 
 `options.allowImplicitInstancing: boolean = false`: allows implicit instancing of editable objects through reusing `uniqueName`s. These objects will share all editable properties. It is discouraged since you'll miss out on warnings if you accidentally reuse a `uniqueName`, and will be superseded by prefabs in the future.
 
+### `<EditableHelper>`
+
+Use it as a portal into the editor to display helpers during development. Anything you render through `EditableHelper` will be rendered directly in the editor in real time, instead of in your scene. Helpers aren't rendered in production, in fact all `EditableHelper` does in production is return null, so they are safe to leave in your code.
+
+⚠️ `EditableHelper` transforms are interpreted in global space. Their place in your scene hierarchy has no effect, they are in fact not even part of your scene!
+
+#### Props
+
+`component: T extends ComponentType`: the component you'd like to render as a helper.
+
+`...rest: ComponentProps<T>`: you can pass any other prop, they'll be applied directly to `component`.
 
 ## Object types
 

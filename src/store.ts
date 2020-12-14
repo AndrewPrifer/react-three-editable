@@ -1,6 +1,7 @@
 import create, { StateCreator } from 'zustand';
 import {
   DefaultLoadingManager,
+  Group,
   Matrix4,
   Object3D,
   Scene,
@@ -159,6 +160,7 @@ export type EditorStore = {
   gl: WebGLRenderer | null;
   allowImplicitInstancing: boolean;
   orbitControlsRef: MutableRefObject<OrbitControls | undefined> | null;
+  helpersRoot: Group;
   editables: Record<string, Editable>;
   // this will come in handy when we start supporting multiple canvases
   canvasName: string;
@@ -239,6 +241,7 @@ const config: StateCreator<EditorStore> = (set, get) => {
     gl: null,
     allowImplicitInstancing: false,
     orbitControlsRef: null,
+    helpersRoot: new Group(),
     editables: {},
     canvasName: 'default',
     initialState: null,
