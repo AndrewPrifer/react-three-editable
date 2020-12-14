@@ -25,15 +25,15 @@
   },
   "scripts": {
     "start": "tsdx watch",
-    "build": "NODE_ENV=production tsdx build --format cjs",
+    "build": "cross-env NODE_ENV=production tsdx build --format cjs",
     "test": "tsdx test --passWithNoTests",
     "lint": "tsdx lint",
-    "prepare": "NODE_ENV=production tsdx build  --format cjs",
+    "prepare": "cross-env NODE_ENV=production tsdx build  --format cjs",
     "size": "size-limit",
     "analyze": "size-limit --why",
     "storybook": "start-storybook -s ./stories/public -p 6006",
     "build-storybook": "build-storybook",
-    "np": "NODE_ENV=production np --any-branch"
+    "np": "cross-env NODE_ENV=production np --any-branch"
   },
   "peerDependencies": {
     "react": ">=16",
@@ -75,6 +75,7 @@
     "@typescript-eslint/parser": "^4.8.2",
     "autoprefixer": "^10.0.2",
     "babel-loader": "^8.1.0",
+    "cross-env": "^7.0.3",
     "eslint-plugin-prettier": "^3.1.4",
     "husky": "^4.3.0",
     "postcss": "^8.1.10",
