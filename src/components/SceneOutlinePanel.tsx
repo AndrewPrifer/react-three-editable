@@ -51,14 +51,14 @@ const ObjectButton: VFC<ObjectButtonProps> = ({
     <ButtonImpl
       // @ts-ignore
       {...props}
-      className={`inline-flex justify-start items-center rounded-md px-4 py-2 font-medium focus:outline-none focus:ring focus:ring-blue-300 ${
+      className={`inline-flex justify-start items-center rounded-md px-4 py-2 font-medium focus:outline-none focus:ring focus:ring-blue-300  ${
         objectName === selected
           ? 'bg-green-800 hover:bg-green-900 text-white'
           : 'text-gray-700 hover:bg-gray-200'
       }`}
     >
       <span className="mr-2">{icon}</span>
-      {objectName}
+      <span className="truncate">{objectName}</span>
     </ButtonImpl>
   );
 };
@@ -84,7 +84,7 @@ const SceneOutlinePanel: VFC = () => {
   }
 
   return (
-    <div className="flex flex-col overflow-y-auto w-80 h-full p-5 border-r bg-white">
+    <div className="flex flex-col overflow-y-auto w-64 h-full p-5 border-r bg-white">
       <Heading className="mb-5 ml-3 text-3xl">Outline</Heading>
       <Group
         // @ts-ignore

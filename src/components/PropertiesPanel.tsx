@@ -129,7 +129,7 @@ const PropertiesPanel: VFC = () => {
   }, [getFormValuesFromEditable, selected, setValue]);
 
   return selected ? (
-    <div className="overflow-y-auto w-80 h-full p-5 border-l bg-white">
+    <div className="overflow-y-auto w-64 h-full p-5 border-l bg-white">
       <Heading className="mb-5 text-3xl">Properties</Heading>
       <form
         onSubmit={handleSubmit((values) => {
