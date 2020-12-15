@@ -44,9 +44,6 @@ const editable = <
     (
       {
         uniqueName,
-        position,
-        rotation,
-        scale,
         visible,
         ...props
       }: Omit<ComponentProps<T>, 'visible'> & {
@@ -74,14 +71,20 @@ const editable = <
 
       useLayoutEffect(() => {
         // calculate initial properties before adding the editable
-        const pos: Vector3 = position
-          ? new Vector3(...(position as any))
+        const pos: Vector3 = props.position
+          ? Array.isArray(props.position)
+            ? new Vector3(...(props.position as any))
+            : props.position
           : new Vector3();
-        const rot: Vector3 = rotation
-          ? new Vector3(...(rotation as any))
+        const rot: Vector3 = props.rotation
+          ? Array.isArray(props.rotation)
+            ? new Vector3(...(props.rotation as any))
+            : props.rotation
           : new Vector3();
-        const scal: Vector3 = scale
-          ? new Vector3(...(scale as any))
+        const scal: Vector3 = props.scale
+          ? Array.isArray(props.scale)
+            ? new Vector3(...(props.scale as any))
+            : props.scale
           : new Vector3(1, 1, 1);
 
         ['x', 'y', 'z'].forEach((axis, index) => {
@@ -107,11 +110,11 @@ const editable = <
         // eslint-disable-next-line react-hooks/exhaustive-deps
       }, [
         addEditable,
-        position,
         removeEditable,
-        rotation,
-        scale,
         uniqueName,
+        props.position,
+        props.rotation,
+        props.scale,
 
         // nasty
         // eslint-disable-next-line react-hooks/exhaustive-deps
