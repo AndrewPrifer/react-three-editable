@@ -72,6 +72,8 @@ import { PerspectiveCamera } from '@react-three/drei';
 const EditableCamera = editable(PerspectiveCamera, 'perspectiveCamera');
 ```
 
+⚠️ The `<e.primitive>` element is special in that it isn't tied to an object type, since it can be anything, just like in r3f. Because of this, it has an extra `editableType` prop that you need to set (see object types).
+
 #### Props
 
 `uniqueName: string`: a unique name used to identify the object in the editor.
@@ -140,7 +142,7 @@ React Three Editable currently supports the following object types:
 - perspectiveCamera
 - orthographicCamera
 
-These are available as properties of `editable`, and you need to pass them as the second parameter when wrapping custom components.
+These are available as properties of `editable`, and you need to pass them as the second parameter when wrapping custom components, or as the `editableType` prop when using `<e.primitive>`.
 
 ## Production/development build
 

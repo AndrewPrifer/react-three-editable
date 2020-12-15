@@ -34,22 +34,24 @@ interface Elements {
 }
 
 const editable = <
-  T extends ComponentType<any> | EditableType,
-  U extends EditableType
+  T extends ComponentType<any> | EditableType | 'primitive',
+  U extends T extends EditableType ? T : EditableType
 >(
   Component: T,
-  type: U
+  type: T extends 'primitive' ? null : U
 ) =>
   forwardRef(
     (
       {
         uniqueName,
         visible,
+        editableType,
         ...props
       }: Omit<ComponentProps<T>, 'visible'> & {
         uniqueName: string;
         visible?: boolean | 'editor';
-      } & RefAttributes<Elements[U]>,
+      } & (T extends 'primitive' ? { editableType: U } : {}) &
+        RefAttributes<Elements[U]>,
       ref
     ) => {
       const objectRef = useRef<Elements[U]>();
@@ -100,7 +102,7 @@ const editable = <
           new Euler().setFromVector3(rot)
         );
 
-        addEditable(type, uniqueName, {
+        addEditable(type ?? editableType, uniqueName, {
           transform: new Matrix4().compose(pos, quaternion, scal),
         });
 
@@ -161,7 +163,7 @@ const editable = <
           userData={{
             __editable: true,
             __editableName: uniqueName,
-            __editableType: type,
+            __editableType: type ?? editableType,
             __visibleOnlyInEditor: visible === 'editor',
           }}
         />
@@ -170,8 +172,10 @@ const editable = <
   );
 
 const createEditable = <T extends EditableType>(type: T) =>
+  // @ts-ignore
   editable(type, type);
 
+editable.primitive = editable('primitive', null);
 editable.group = createEditable('group');
 editable.mesh = createEditable('mesh');
 editable.spotLight = createEditable('spotLight');
