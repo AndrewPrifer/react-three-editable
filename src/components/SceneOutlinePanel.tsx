@@ -90,20 +90,22 @@ const SceneOutlinePanel: VFC = () => {
         // @ts-ignore
         className="flex flex-col gap-3 flex-1"
       >
-        {Object.entries(editablesSnapshot).map(
-          ([name, editable]) =>
-            editable.role === 'active' && (
-              <ObjectButton
-                key={name}
-                objectName={name}
-                editableType={editable.type}
-                selected={selected}
-                onClick={() => {
-                  setSelected(name);
-                }}
-              />
-            )
-        )}
+        {Object.entries(editablesSnapshot)
+          .sort()
+          .map(
+            ([name, editable]) =>
+              editable.role === 'active' && (
+                <ObjectButton
+                  key={name}
+                  objectName={name}
+                  editableType={editable.type}
+                  selected={selected}
+                  onClick={() => {
+                    setSelected(name);
+                  }}
+                />
+              )
+          )}
       </Group>
       <div className="flex-0 mt-3">
         <Button
