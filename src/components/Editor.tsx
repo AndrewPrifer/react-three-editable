@@ -78,6 +78,7 @@ const Editor: VFC = () => {
     sceneSnapshot,
     editorOpen,
     initialState,
+    initialEditorCamera,
     setEditorOpen,
     setSelected,
     createSnapshot,
@@ -88,6 +89,7 @@ const Editor: VFC = () => {
       state.sceneSnapshot,
       state.editorOpen,
       state.initialState,
+      state.initialEditorCamera,
       state.setEditorOpen,
       state.setSelected,
       state.createSnapshot,
@@ -121,7 +123,7 @@ const Editor: VFC = () => {
                     <div className="relative z-0 h-full">
                       <Canvas
                         colorManagement
-                        camera={{ position: [20, 20, 20] }}
+                        camera={initialEditorCamera}
                         onCreated={({ gl }) => {
                           gl.setClearColor('white');
                         }}

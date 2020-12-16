@@ -10,6 +10,7 @@ import {
 import { MutableRefObject } from 'react';
 import { OrbitControls } from '@react-three/drei';
 import deepEqual from 'fast-deep-equal';
+import { ContainerProps } from 'react-three-fiber';
 
 export type EditableType =
   | 'group'
@@ -179,11 +180,13 @@ export type EditorStore = {
   showGrid: boolean;
   showAxes: boolean;
   referenceWindowSize: number;
+  initialEditorCamera: ContainerProps['camera'];
 
   init: (
     scene: Scene,
     gl: WebGLRenderer,
     allowImplicitInstancing: boolean,
+    editorCamera: ContainerProps['camera'],
     initialState?: EditableState
   ) => void;
   setOrbitControlsRef: (
@@ -261,8 +264,9 @@ const config: StateCreator<EditorStore> = (set, get) => {
     showGrid: true,
     showAxes: true,
     referenceWindowSize: 120,
+    initialEditorCamera: {},
 
-    init: (scene, gl, allowImplicitInstancing, initialState) => {
+    init: (scene, gl, allowImplicitInstancing, editorCamera, initialState) => {
       const editables = get().editables;
 
       const newEditables: Record<string, Editable> = initialState
@@ -293,6 +297,7 @@ const config: StateCreator<EditorStore> = (set, get) => {
         gl,
         allowImplicitInstancing,
         editables: newEditables,
+        initialEditorCamera: editorCamera,
         initialState,
       });
     },
@@ -515,6 +520,7 @@ let [initialPersistedState, unsub] = initPersistence('react-three-editable_');
 export type BindFunction = (options?: {
   allowImplicitInstancing?: boolean;
   state?: EditableState;
+  editorCamera?: ContainerProps['camera'];
 }) => (options: { gl: WebGLRenderer; scene: Scene }) => void;
 
 export const configure = ({
@@ -537,10 +543,20 @@ export const configure = ({
     unsub = undefined;
   }
 
-  return ({ allowImplicitInstancing = false, state } = {}) => {
+  return ({
+    allowImplicitInstancing = false,
+    state,
+    editorCamera = {},
+  } = {}) => {
     return ({ gl, scene }) => {
       const init = useEditorStore.getState().init;
-      init(scene, gl, allowImplicitInstancing, state);
+      init(
+        scene,
+        gl,
+        allowImplicitInstancing,
+        { ...{ position: [20, 20, 20] }, ...editorCamera },
+        state
+      );
     };
   };
 };
