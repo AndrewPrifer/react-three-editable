@@ -178,6 +178,7 @@ export type EditorStore = {
   useHdrAsBackground: boolean;
   showGrid: boolean;
   showAxes: boolean;
+  referenceWindowSize: number;
 
   init: (
     scene: Scene,
@@ -204,6 +205,7 @@ export type EditorStore = {
   setUseHdrAsBackground: (use: boolean) => void;
   setShowGrid: (show: boolean) => void;
   setShowAxes: (show: boolean) => void;
+  setReferenceWindowSize: (size: number) => void;
   setEditorOpen: (open: boolean) => void;
   createSnapshot: () => void;
   setSnapshotProxyObject: (
@@ -258,6 +260,7 @@ const config: StateCreator<EditorStore> = (set, get) => {
     useHdrAsBackground: true,
     showGrid: true,
     showAxes: true,
+    referenceWindowSize: 120,
 
     init: (scene, gl, allowImplicitInstancing, initialState) => {
       const editables = get().editables;
@@ -383,6 +386,7 @@ const config: StateCreator<EditorStore> = (set, get) => {
     setShowAxes: (show) => {
       set({ showAxes: show });
     },
+    setReferenceWindowSize: (size) => set({ referenceWindowSize: size }),
     setEditorOpen: (open) => {
       set({ editorOpen: open });
     },

@@ -18,6 +18,7 @@ const UI: VFC = () => {
     transformControlsMode,
     transformControlsSpace,
     viewportShading,
+    referenceWindowSize,
     setTransformControlsMode,
     setTransformControlsSpace,
     setViewportShading,
@@ -28,6 +29,7 @@ const UI: VFC = () => {
       state.transformControlsMode,
       state.transformControlsSpace,
       state.viewportShading,
+      state.referenceWindowSize,
       state.setTransformControlsMode,
       state.setTransformControlsSpace,
       state.setViewportShading,
@@ -131,7 +133,7 @@ const UI: VFC = () => {
               </div>
             </div>
             <div className="absolute right-0 top-0 -z-10">
-              <ReferenceWindow height={120} />
+              <ReferenceWindow height={referenceWindowSize} />
             </div>
           </div>
 

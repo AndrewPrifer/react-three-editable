@@ -26,3 +26,4 @@ export {
   SettingsButtonProps,
 } from './SettingsButton';
 export { default as Checkbox, CheckboxProps } from './Checkbox';
+export { default as Slider, SliderProps } from './Slider';

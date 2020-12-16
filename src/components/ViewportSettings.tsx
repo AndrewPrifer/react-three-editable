@@ -1,24 +1,29 @@
 import React, { VFC } from 'react';
 import { useEditorStore } from '../store';
 import shallow from 'zustand/shallow';
-import { Checkbox, FormControl } from './elements';
+import { Checkbox, FormControl, Slider } from './elements';
+import UnstyledFormLabel from './elements/UnstyledFormLabel';
 
 const ViewportShadingSettings: VFC = () => {
   const [
     showOverlayIcons,
     showGrid,
     showAxes,
+    referenceWindowSize,
     setShowOverlayIcons,
     setShowGrid,
     setShowAxes,
+    setReferenceWindowSize,
   ] = useEditorStore(
     (state) => [
       state.showOverlayIcons,
       state.showGrid,
       state.showAxes,
+      state.referenceWindowSize,
       state.setShowOverlayIcons,
       state.setShowGrid,
       state.setShowAxes,
+      state.setReferenceWindowSize,
     ],
     shallow
   );
@@ -51,6 +56,25 @@ const ViewportShadingSettings: VFC = () => {
         >
           Show axes
         </Checkbox>
+      </FormControl>
+      <FormControl>
+        <div className="flex items-start">
+          <div className="text-sm">
+            <UnstyledFormLabel className="font-medium text-gray-700">
+              Preview size:
+            </UnstyledFormLabel>
+          </div>
+          <div className="ml-3 flex items-center h-5">
+            <Slider
+              value={referenceWindowSize}
+              min={120}
+              max={400}
+              onChange={(event) =>
+                setReferenceWindowSize(Number(event.target.value))
+              }
+            />
+          </div>
+        </div>
       </FormControl>
     </div>
   );
