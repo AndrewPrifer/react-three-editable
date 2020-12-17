@@ -235,7 +235,8 @@ const config: StateCreator<EditorStore> = (set, get) => {
         set((state) => {
           const newPaths = new Set(state.hdrPaths);
           newPaths.add(url);
-          return { hdrPaths: Array.from(newPaths) };
+          const selectedHdr = newPaths.size === 1 ? url : state.selectedHdr;
+          return { hdrPaths: Array.from(newPaths), selectedHdr };
         });
       }
     };
@@ -260,7 +261,7 @@ const config: StateCreator<EditorStore> = (set, get) => {
     hdrPaths: [],
     selectedHdr: null,
     showOverlayIcons: false,
-    useHdrAsBackground: true,
+    useHdrAsBackground: false,
     showGrid: true,
     showAxes: true,
     referenceWindowSize: 120,
