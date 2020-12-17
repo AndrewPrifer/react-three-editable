@@ -1845,10 +1845,10 @@
     "@react-spring/core" "9.0.0-rc.3"
     "@react-spring/shared" "9.0.0-rc.3"
 
-"@react-three/drei@^2.2.10":
-  version "2.2.10"
-  resolved "https://registry.yarnpkg.com/@react-three/drei/-/drei-2.2.10.tgz#cf2ab0603fa64510f99bd75bbbf585eff011444a"
-  integrity sha512-Nc+tk10LuYF1BS3MPUbC6174dPf9RCCpo8UqTRumLQkZbeDcFPXYPhh4q/ThR9qos5uhl1obrx13ka6qofJC5Q==
+"@react-three/drei@2.2.11":
+  version "2.2.11"
+  resolved "https://registry.yarnpkg.com/@react-three/drei/-/drei-2.2.11.tgz#9a71d1917f88f9e268d4600cf15fa82c8e328656"
+  integrity sha512-uXuwxuEdTNXk8utKebhQltlWPm6zmBeD6ZECtZQQIzT4eav2Tqb7+Q/A2XQfWl3fyXa3NRILhAPELzM68cEirw==
   dependencies:
     "@babel/runtime" "^7.11.2"
     "@react-spring/web" "^9.0.0-rc.3"
@@ -13725,10 +13725,10 @@ text-table@0.2.0, text-table@^0.2.0:
   resolved "https://registry.yarnpkg.com/text-table/-/text-table-0.2.0.tgz#7f5ee823ae805207c00af2df4a84ec3fcfa570b4"
   integrity sha1-f17oI66AUgfACvLfSoTsP8+lcLQ=
 
-three@^0.121.1:
-  version "0.121.1"
-  resolved "https://registry.yarnpkg.com/three/-/three-0.121.1.tgz#fda39cf4701d02be9c3be5c27ccea24b7a1ea59b"
-  integrity sha512-+rYhNpW5W1aBdLkPQDld/GA4Sj/uOKJJKVpCAZUbpk/HZEiYRUlPt8+s+9nmxRglWmRHdBa3ERvUwqg4nmoA5w==
+three@^0.123.0:
+  version "0.123.0"
+  resolved "https://registry.yarnpkg.com/three/-/three-0.123.0.tgz#3bb6d8f908a432eb7cd450f7eab6dd40fde53085"
+  integrity sha512-KNnx/IbilvoHRkxOtL0ouozoDoElyuvAXhFB21RK7F5IPWSmqyFelICK6x3hJerLNSlAdHxR0hkuvMMhH9pqXg==
 
 throat@^5.0.0:
   version "5.0.0"
