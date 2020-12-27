@@ -154,7 +154,7 @@ const UI: VFC = () => {
               saveAs(blob, 'editableState.json');
             }}
           >
-            Export
+            Save
           </Button>
         </div>
         <div className="w-min pointer-events-auto">
