@@ -1,4 +1,6 @@
 import React, { ReactElement, ReactNode, VFC } from 'react';
+import { FiChevronDown } from '@react-icons/all-files/fi/FiChevronDown';
+import { IconType } from '@react-icons/all-files';
 import {
   Popover,
   PopoverDisclosure,
@@ -7,8 +9,6 @@ import {
   usePopoverState,
   useTooltipState,
 } from './index';
-import { FiChevronDown } from 'react-icons/all';
-import { IconType } from 'react-icons';
 
 export interface SettingsButtonProps {
   icon: ReactElement<IconType>;

@@ -1,16 +1,14 @@
 import React, { ReactElement, VFC } from 'react';
 import { EditableType, useEditorStore } from '../store';
-import { IconType } from 'react-icons';
 import shallow from 'zustand/shallow';
-import {
-  BiSun,
-  BsCameraVideoFill,
-  BsFillCollectionFill,
-  GiCube,
-  GiLightBulb,
-  GiLightProjector,
-} from 'react-icons/all';
 import { Button as ButtonImpl, ButtonProps, Group } from 'reakit';
+import { IconType } from '@react-icons/all-files';
+import { BsFillCollectionFill } from '@react-icons/all-files/bs/BsFillCollectionFill';
+import { GiLightProjector } from '@react-icons/all-files/gi/GiLightProjector';
+import { BiSun } from '@react-icons/all-files/bi/BiSun';
+import { GiCube } from '@react-icons/all-files/gi/GiCube';
+import { GiLightBulb } from '@react-icons/all-files/gi/GiLightBulb';
+import { BsCameraVideoFill } from '@react-icons/all-files/bs/BsCameraVideoFill';
 import { Heading, Button } from './elements';
 
 interface ObjectButtonProps extends ButtonProps {

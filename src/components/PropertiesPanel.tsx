@@ -10,8 +10,8 @@ import {
   Legend,
   VisuallyHidden,
 } from './elements';
-import { MdRestore } from 'react-icons/all';
 import { Button } from 'reakit';
+import { MdRestore } from '@react-icons/all-files/md/MdRestore';
 
 interface Vector3InputProps {
   register: UseFormMethods['register'];

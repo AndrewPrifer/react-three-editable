@@ -1,7 +1,9 @@
 import React from 'react';
 import { Meta, Story } from '@storybook/react';
+import { BiAbacus } from '@react-icons/all-files/bi/BiAbacus';
+import { BiBullseye } from '@react-icons/all-files/bi/BiBullseye';
+import { BiCube } from '@react-icons/all-files/bi/BiCube';
 import { CompactModeSelect } from '../src/components/elements';
-import { BiAbacus, BiBullseye, BiCube } from 'react-icons/all';
 
 const meta: Meta = {
   title: 'CompactModeSelect',

@@ -1,5 +1,7 @@
 import React, { VFC } from 'react';
-import { GiClockwiseRotation, GiMove, GiResize } from 'react-icons/all';
+import { GiResize } from '@react-icons/all-files/gi/GiResize';
+import { GiMove } from '@react-icons/all-files/gi/GiMove';
+import { GiClockwiseRotation } from '@react-icons/all-files/gi/GiClockwiseRotation';
 import { TransformControlsMode } from '../store';
 import { CompactModeSelect } from './elements';
 

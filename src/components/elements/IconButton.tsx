@@ -1,6 +1,6 @@
 import React, { forwardRef, ReactElement } from 'react';
 import { Button, ButtonProps } from 'reakit';
-import { IconType } from 'react-icons';
+import { IconType } from '@react-icons/all-files';
 import { Tooltip, TooltipReference, useTooltipState } from './index';
 
 export interface IconButtonProps extends Exclude<ButtonProps, 'children'> {

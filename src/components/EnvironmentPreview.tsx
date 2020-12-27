@@ -2,7 +2,7 @@ import React, { VFC, Suspense } from 'react';
 import { Canvas } from 'react-three-fiber';
 import { Environment, OrbitControls, TorusKnot } from '@react-three/drei';
 import { Clickable, ClickableProps } from 'reakit';
-import { IoIosClose } from 'react-icons/all';
+import { IoIosClose } from '@react-icons/all-files/io/IoIosClose';
 
 export interface EnvironmentPreviewProps extends ClickableProps {
   url: string | null;

@@ -1,6 +1,7 @@
 import React, { ReactElement, ReactNode, VFC } from 'react';
-import { IconType } from 'react-icons';
 import { Group, Button } from 'reakit';
+import { FiChevronDown } from '@react-icons/all-files/fi/FiChevronDown';
+import { IconType } from '@react-icons/all-files';
 import {
   Tooltip,
   TooltipReference,
@@ -9,7 +10,6 @@ import {
   PopoverDisclosure,
   Popover,
 } from '.';
-import { FiChevronDown } from 'react-icons/all';
 
 interface OptionButtonProps<Option> {
   value: Option;

@@ -1,13 +1,7 @@
 import React from 'react';
 import { Meta, Story } from '@storybook/react';
+import { AiFillEye } from '@react-icons/all-files/ai/AiFillEye';
 import { SettingsButton } from '../src/components/elements';
-import {
-  AiFillEye,
-  AiFillSetting,
-  AiTwotoneSetting,
-  FaEye,
-  Gi3DHammer,
-} from 'react-icons/all';
 
 const meta: Meta = {
   title: 'SettingsButton',

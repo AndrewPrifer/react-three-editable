@@ -1,6 +1,9 @@
 import React, { VFC } from 'react';
+import { GiIceCube } from '@react-icons/all-files/gi/GiIceCube';
+import { BiCube } from '@react-icons/all-files/bi/BiCube';
+import { FaCube } from '@react-icons/all-files/fa/FaCube';
+import { GiCube } from '@react-icons/all-files/gi/GiCube';
 import { ViewportShading } from '../store';
-import { FaCube, GiCube, GiIceCube, BiCube } from 'react-icons/all';
 import { CompactModeSelect } from './elements';
 import ViewportShadingSettings from './ViewportShadingSettings';
 

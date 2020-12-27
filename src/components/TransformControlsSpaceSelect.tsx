@@ -1,7 +1,8 @@
 import React, { VFC } from 'react';
 import { TransformControlsSpace } from '../store';
-import { BiCube, BiGlobe } from 'react-icons/all';
 import { CompactModeSelect } from './elements';
+import { BiGlobe } from '@react-icons/all-files/bi/BiGlobe';
+import { BiCube } from '@react-icons/all-files/bi/BiCube';
 
 export interface TransformControlsSpaceSelectProps {
   value: TransformControlsSpace;

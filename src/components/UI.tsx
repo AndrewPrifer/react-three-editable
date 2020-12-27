@@ -4,12 +4,14 @@ import { useEditorStore } from '../store';
 import shallow from 'zustand/shallow';
 import ReferenceWindow from './ReferenceWindow';
 import { saveAs } from 'file-saver';
+import { Vector3 } from 'three';
+import { RiFocus3Line } from '@react-icons/all-files/ri/RiFocus3Line';
+import { GiPocketBow } from '@react-icons/all-files/gi/GiPocketBow';
+import { AiFillEye } from '@react-icons/all-files/ai/AiFillEye';
 import TransformControlsSpaceSelect from './TransformControlsSpaceSelect';
 import ViewportShadingSelect from './ViewportShadingSelect';
 import SceneOutlinePanel from './SceneOutlinePanel';
 import PropertiesPanel from './PropertiesPanel';
-import { AiFillEye, GiPocketBow, RiFocus3Line } from 'react-icons/all';
-import { Vector3 } from 'three';
 import { IconButton, Button, SettingsButton } from './elements';
 import ViewportSettings from './ViewportSettings';
 

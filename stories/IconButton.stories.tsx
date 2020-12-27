@@ -1,7 +1,7 @@
 import React from 'react';
 import { Meta, Story } from '@storybook/react';
+import { Gi3DHammer } from '@react-icons/all-files/gi/Gi3DHammer';
 import { IconButton } from '../src/components/elements';
-import { Gi3DHammer } from 'react-icons/all';
 
 const meta: Meta = {
   title: 'IconButton',
