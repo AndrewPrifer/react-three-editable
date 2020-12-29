@@ -139,7 +139,7 @@ const editable = <
                 );
             }
           },
-          (state) => state.editables[uniqueName].properties.transform
+          (state) => state.editables[uniqueName]?.properties?.transform
         );
 
         return () => {

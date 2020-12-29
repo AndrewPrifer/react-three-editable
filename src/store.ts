@@ -407,7 +407,7 @@ const config: StateCreator<EditorStore> = (set, get) => {
           {
             type: editable.type,
             properties: {
-              transform: editable.properties.transform.toArray(),
+              transform: editable.properties?.transform.toArray(),
             },
           },
         ])
