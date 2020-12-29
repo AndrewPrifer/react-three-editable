@@ -407,7 +407,24 @@ const config: StateCreator<EditorStore> = (set, get) => {
           {
             type: editable.type,
             properties: {
-              transform: editable.properties?.transform.toArray(),
+              transform: editable.properties?.transform.toArray() ?? [
+                1,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                1,
+              ],
             },
           },
         ])
