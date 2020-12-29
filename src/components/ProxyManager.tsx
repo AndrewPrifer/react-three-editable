@@ -213,7 +213,7 @@ const ProxyManager: VFC<ProxyManagerProps> = ({ orbitControlsRef }) => {
   return (
     <>
       <primitive object={sceneProxy} />
-      {selected && (
+      {selected && editableProxies[selected] && (
         <TransformControls
           mode={transformControlsMode}
           space={transformControlsSpace}
