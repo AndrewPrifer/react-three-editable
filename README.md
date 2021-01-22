@@ -135,6 +135,10 @@ React Three Editable automatically displays the editor in development and remove
 
 In production, the bundle size of r3e is [2.9 kB](https://bundlephobia.com/result?p=react-three-editable).
 
+### Overriding Production Removal
+
+To force usage in production, pass a `ENABLE_PROD_EDITOR=true` environment variable.
+
 ## Contributing
 
 **Any help is welcome!**
