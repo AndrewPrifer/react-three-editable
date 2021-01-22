@@ -4,7 +4,7 @@ import Editor from './components/Editor';
 export { default as editable } from './components/editable';
 export { EditableState, configure, BindFunction } from './store';
 
-if (process.env.NODE_ENV === 'development') {
+if (process.env.NODE_ENV === 'development' || process.env.ENABLE_PROD_EDITOR === 'true') {
   const editorRoot = document.createElement('div');
   document.body.appendChild(editorRoot);
 
