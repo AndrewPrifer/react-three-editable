@@ -2,6 +2,7 @@
   // see https://www.typescriptlang.org/tsconfig to better understand tsconfigs
   "include": ["src", "types"],
   "compilerOptions": {
+    "composite": true,
     "target": "ES5",
     "resolveJsonModule": true,
     "module": "esnext",
@@ -33,5 +34,6 @@
     "forceConsistentCasingInFileNames": true,
     // `tsdx build` ignores this option, but it is commonly used when type-checking separately with `tsc`
     "noEmit": true
-  }
+  },
+  "exclude": ["**/node_modules"]
 }

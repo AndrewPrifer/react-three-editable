@@ -1,14 +1,15 @@
 import React from 'react';
 import { Canvas } from 'react-three-fiber';
-import { EditableManager, editable as e, configure } from '../../';
+import { editable as e, configure } from 'react-three-editable';
 import { PerspectiveCamera } from '@react-three/drei';
 
 const ECamera = e(PerspectiveCamera, 'perspectiveCamera');
 
+const bind = configure({});
+
 function App() {
   return (
-    <Canvas shadowMap>
-      <EditableManager />
+    <Canvas shadowMap onCreated={bind({})}>
       <ECamera makeDefault uniqueName="Camera" />
       <e.spotLight
         uniqueName="Key Light"

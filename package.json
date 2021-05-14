@@ -1,6 +1,9 @@
 {
   "version": "0.8.1-5",
   "license": "MIT",
+  "workspaces": [
+    "./example"
+  ],
   "description": "️Edit your react-three-fiber scene with a visual editor without giving up control over your code.",
   "keywords": [
     "3d",
@@ -15,6 +18,7 @@
   ],
   "repository": "AndrewPrifer/react-three-editable",
   "main": "dist/index.js",
+  "module": "dist/react-three-editable.esm.js",
   "typings": "dist/index.d.ts",
   "files": [
     "dist",
@@ -77,6 +81,7 @@
     "babel-loader": "^8.1.0",
     "cross-env": "^7.0.3",
     "eslint-plugin-prettier": "^3.1.4",
+    "eslint-plugin-react-app": "^6.2.2",
     "husky": "^4.3.0",
     "postcss": "^8.1.10",
     "prettier": "^2.1.2",
@@ -87,11 +92,11 @@
     "rollup-plugin-postcss": "^3.1.8",
     "size-limit": "^4.6.0",
     "tailwindcss": "^2.0.1",
-    "three": "^0.123.0",
+    "three": "^0.128.0",
     "to-string-loader": "^1.1.6",
     "tsdx": "^0.14.1",
-    "tslib": "^2.0.3",
-    "typescript": "4.0.5"
+    "tslib": "^2.2.0",
+    "typescript": "4.2.4"
   },
   "dependencies": {
     "@react-three/drei": "2.2.11",
@@ -109,9 +114,6 @@
     "zustand": "^3.2.0"
   },
   "resolutions": {
-    "postcss": "8.1.7",
-    "**/typescript": "4.0.5",
-    "**/@typescript-eslint/eslint-plugin": "^4.6.1",
-    "**/@typescript-eslint/parser": "^4.6.1"
+    "postcss": "8.1.7"
   }
 }
