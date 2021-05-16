@@ -3550,17 +3550,32 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@theatre/core@git@github.com:ariaminaei/theatre.git#workspace=@theatre/core&head=main":
+"@theatre/core@git@github.com:ariaminaei/theatre.git#workspace=@theatre/core&commit=f4351bc51d4f33d838611aa98119042e35b52991":
   version: 0.0.0
-  resolution: "@theatre/core@git@github.com:ariaminaei/theatre.git#workspace=%40theatre%2Fcore&commit=13d3f2908a672b37a328febfbd91c7fc87bae1f1"
-  checksum: 3ed7d649fcdbae892c4077c0c4a67910a770504a8fde51c7731e14796f13bb6ed56c5e02a2a46b625b01ef0c0384036e40f00f695cb4c9ba131a6e44592532c8
+  resolution: "@theatre/core@git@github.com:ariaminaei/theatre.git#workspace=%40theatre%2Fcore&commit=f4351bc51d4f33d838611aa98119042e35b52991"
+  dependencies:
+    "@theatre/dataverse": 1.0.0-dev
+  checksum: 7fe7d3e20a8b1377b727676ca77e8c3e3cb6327efbe5db26b0ad7fb5cc002e6e3d2ff4bf447e9b9b54b188bf2f59e013dcd55437975bf9e56b2f3a533a7db657
   languageName: node
   linkType: hard
 
-"@theatre/studio@git@github.com:ariaminaei/theatre.git#workspace=@theatre/studio&head=main":
+"@theatre/dataverse@git@github.com:ariaminaei/theatre.git#workspace=@theatre/dataverse&commit=f4351bc51d4f33d838611aa98119042e35b52991":
+  version: 1.0.0-dev
+  resolution: "@theatre/dataverse@git@github.com:ariaminaei/theatre.git#workspace=%40theatre%2Fdataverse&commit=f4351bc51d4f33d838611aa98119042e35b52991"
+  dependencies:
+    lodash-es: ^4.17.21
+  checksum: aca15e10cd16d8ad089377087f014f913f6527d9cba7acd40800ecc0b930b5167c97a934ef6ac79550c8e5ea3775b1132b59b95dc7bae6c3c2314ae91e448f55
+  languageName: node
+  linkType: hard
+
+"@theatre/studio@git@github.com:ariaminaei/theatre.git#workspace=@theatre/studio&commit=f4351bc51d4f33d838611aa98119042e35b52991":
   version: 0.3.0-dev.1
-  resolution: "@theatre/studio@git@github.com:ariaminaei/theatre.git#workspace=%40theatre%2Fstudio&commit=13d3f2908a672b37a328febfbd91c7fc87bae1f1"
-  checksum: 4d2b043975e7ed1519f26bb82067720d05438ed923335e658bc3d1ffde87b130cb48b7b1b9f51db1bb9dcdd94214c4d0b6f0ea3183011f6e876a0d75481fbcf5
+  resolution: "@theatre/studio@git@github.com:ariaminaei/theatre.git#workspace=%40theatre%2Fstudio&commit=f4351bc51d4f33d838611aa98119042e35b52991"
+  dependencies:
+    "@theatre/dataverse": 1.0.0-dev
+  peerDependencies:
+    "@theatre/core": "*"
+  checksum: 3c3b0d7953452addbeb3f6e65a359282753f2d7c51299e362314b1c497d784dd967d47efdea5da06306e9e7e055908cca86c8e419790b68ec5e7bbd8b1b6de37
   languageName: node
   linkType: hard
 
@@ -8506,8 +8521,8 @@ __metadata:
   resolution: "example@workspace:example"
   dependencies:
     "@react-three/drei": ^4.3.3
-    "@theatre/core": "git@github.com:ariaminaei/theatre.git#workspace=@theatre/core&head=main"
-    "@theatre/studio": "git@github.com:ariaminaei/theatre.git#workspace=@theatre/studio&head=main"
+    "@theatre/core": 0.3.0-dev
+    "@theatre/studio": 0.3.0-dev
     "@types/jest": ^26.0.23
     "@types/node": ^15.0.3
     "@vitejs/plugin-react-refresh": ^1.3.3
@@ -12218,6 +12233,13 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
+"lodash-es@npm:^4.17.21":
+  version: 4.17.21
+  resolution: "lodash-es@npm:4.17.21"
+  checksum: 05cbffad6e2adbb331a4e16fbd826e7faee403a1a04873b82b42c0f22090f280839f85b95393f487c1303c8a3d2a010048bf06151a6cbe03eee4d388fb0a12d2
+  languageName: node
+  linkType: hard
+
 "lodash.camelcase@npm:^4.3.0":
   version: 4.3.0
   resolution: "lodash.camelcase@npm:4.3.0"
@@ -15744,8 +15766,8 @@ fsevents@^1.2.7:
     "@storybook/addons": ^6.1.6
     "@storybook/react": ^6.1.6
     "@tailwindcss/forms": ^0.2.1
-    "@theatre/core": "git@github.com:ariaminaei/theatre.git#workspace=@theatre/core&head=main"
-    "@theatre/studio": "git@github.com:ariaminaei/theatre.git#workspace=@theatre/studio&head=main"
+    "@theatre/core": 0.3.0-dev
+    "@theatre/studio": 0.3.0-dev
     "@types/file-saver": ^2.0.1
     "@types/react": ^17.0.0
     "@types/react-dom": ^17.0.0

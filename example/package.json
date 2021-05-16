@@ -4,8 +4,8 @@
   "private": true,
   "dependencies": {
     "@react-three/drei": "^4.3.3",
-    "@theatre/core": "git@github.com:ariaminaei/theatre.git#workspace=@theatre/core&head=main",
-    "@theatre/studio": "git@github.com:ariaminaei/theatre.git#workspace=@theatre/studio&head=main",
+    "@theatre/core": "0.3.0-dev",
+    "@theatre/studio": "0.3.0-dev",
     "@types/jest": "^26.0.23",
     "@types/node": "^15.0.3",
     "react": "^17.0.2",

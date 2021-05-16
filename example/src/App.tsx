@@ -1,15 +1,24 @@
+import '@theatre/studio';
 import React from 'react';
 import { Canvas } from 'react-three-fiber';
 import { editable as e, configure } from 'react-three-editable';
 import { PerspectiveCamera } from '@react-three/drei';
+import { getProject } from '@theatre/core';
+
+// console.log(studio);
 
 const ECamera = e(PerspectiveCamera, 'perspectiveCamera');
 
-const bind = configure({});
+const bindToCanvas = configure({});
 
 function App() {
   return (
-    <Canvas shadowMap onCreated={bind({})}>
+    <Canvas
+      shadowMap
+      onCreated={bindToCanvas({
+        theatreProject: getProject('Example project'),
+      })}
+    >
       <ECamera makeDefault uniqueName="Camera" />
       <e.spotLight
         uniqueName="Key Light"

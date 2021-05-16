@@ -13,11 +13,13 @@
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
+    "rootDir": ".",
     "noEmit": true,
     "jsx": "react",
-    "composite": true
+    "paths": {
+      "react-three-editable": ["../src/index.tsx"]
+    }
   },
-  "references": [{ "path": "../" }],
   "include": ["src"],
   "exclude": ["**/node_modules"]
 }

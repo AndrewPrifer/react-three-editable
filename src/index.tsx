@@ -10,8 +10,6 @@ export {
 export { default as editable } from './components/editable';
 export { EditableState, configure, BindFunction } from './store';
 
-console.log(studio);
-
 if (process.env.NODE_ENV === 'development') {
   const editorRoot = document.createElement('div');
   document.body.appendChild(editorRoot);

@@ -73,8 +73,8 @@
     "@storybook/addons": "^6.1.6",
     "@storybook/react": "^6.1.6",
     "@tailwindcss/forms": "^0.2.1",
-    "@theatre/core": "git@github.com:ariaminaei/theatre.git#workspace=@theatre/core&head=main",
-    "@theatre/studio": "git@github.com:ariaminaei/theatre.git#workspace=@theatre/studio&head=main",
+    "@theatre/core": "0.3.0-dev",
+    "@theatre/studio": "0.3.0-dev",
     "@types/react": "^17.0.0",
     "@types/react-dom": "^17.0.0",
     "@types/three": "^0.128.0",
@@ -117,6 +117,9 @@
     "zustand": "^3.2.0"
   },
   "resolutions": {
-    "postcss": "8.1.7"
+    "postcss": "8.1.7",
+    "@theatre/dataverse": "git@github.com:ariaminaei/theatre.git#workspace=@theatre/dataverse&commit=9bb70c3614514a5dac6190ad8529104c3a9107fb",
+    "@theatre/studio": "git@github.com:ariaminaei/theatre.git#workspace=@theatre/studio&commit=9bb70c3614514a5dac6190ad8529104c3a9107fb",
+    "@theatre/core": "git@github.com:ariaminaei/theatre.git#workspace=@theatre/core&commit=9bb70c3614514a5dac6190ad8529104c3a9107fb"
   }
 }
