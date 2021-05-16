@@ -12,4 +12,7 @@ export default defineConfig({
       root: '..',
     },
   },
+  optimizeDeps: {
+    include: ['@theatre/studio'],
+  },
 });

@@ -28,7 +28,7 @@
     "node": ">=10"
   },
   "scripts": {
-    "start": "tsdx watch",
+    "start": "tsdx watch --transpileOnly",
     "build": "cross-env NODE_ENV=production tsdx build --format cjs",
     "test": "tsdx test --passWithNoTests",
     "lint": "tsdx lint",
@@ -73,8 +73,11 @@
     "@storybook/addons": "^6.1.6",
     "@storybook/react": "^6.1.6",
     "@tailwindcss/forms": "^0.2.1",
+    "@theatre/core": "git@github.com:ariaminaei/theatre.git#workspace=@theatre/core&head=main",
+    "@theatre/studio": "git@github.com:ariaminaei/theatre.git#workspace=@theatre/studio&head=main",
     "@types/react": "^17.0.0",
     "@types/react-dom": "^17.0.0",
+    "@types/three": "^0.128.0",
     "@typescript-eslint/eslint-plugin": "^4.8.2",
     "@typescript-eslint/parser": "^4.8.2",
     "autoprefixer": "^10.0.2",
