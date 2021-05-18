@@ -1,6 +1,6 @@
 import React, { ComponentProps, ElementType } from 'react';
 import { useEditorStore } from '../store';
-import { createPortal } from 'react-three-fiber';
+import { createPortal } from '@react-three/fiber';
 
 export type EditorHelperProps<T extends ElementType> = {
   component: T;

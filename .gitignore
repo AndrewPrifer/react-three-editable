@@ -5,3 +5,13 @@ node_modules
 dist
 
 .idea
+.history
+**/.eslintcache
+
+.yarn/*
+!.yarn/patches
+!.yarn/releases
+!.yarn/plugins
+!.yarn/sdks
+!.yarn/versions
+.pnp.*

@@ -6,7 +6,7 @@ import React, {
   VFC,
   Suspense,
 } from 'react';
-import { Canvas } from 'react-three-fiber';
+import { Canvas } from '@react-three/fiber';
 import { useEditorStore } from '../store';
 import { OrbitControls, Environment } from '@react-three/drei';
 import shallow from 'zustand/shallow';
@@ -150,7 +150,7 @@ const Editor: VFC = () => {
                       </div>
                       <Code block>
                         {`import React from 'react';
-import { Canvas } from 'react-three-fiber';
+import { Canvas } from '@react-three/fiber';
 import { configure, editable as e } from 'react-three-editable';
 
 const bind = configure({

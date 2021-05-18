@@ -1,18 +1,15 @@
 import React, { VFC } from 'react';
 import {
   Tooltip as TooltipImpl,
-  TooltipProps,
   TooltipReference,
-  TooltipReferenceProps,
   useTooltipState,
 } from 'reakit';
 
-export {
-  TooltipProps,
-  TooltipReference,
-  TooltipReferenceProps,
-  useTooltipState,
-};
+import type { TooltipProps, TooltipReferenceProps } from 'reakit';
+
+export type { TooltipProps, TooltipReferenceProps };
+
+export { TooltipReference, useTooltipState };
 
 export const Tooltip: VFC<TooltipProps> = ({ className, ...props }) => (
   <TooltipImpl
