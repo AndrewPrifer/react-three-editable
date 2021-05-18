@@ -19,13 +19,13 @@ interface OptionButtonProps<Option> {
   onClick: () => void;
 }
 
-const OptionButton = <Option,>({
+function OptionButton<Option>({
   value,
   option,
   label,
   icon,
   onClick,
-}: OptionButtonProps<Option>) => {
+}: OptionButtonProps<Option>) {
   const tooltip = useTooltipState();
   return (
     <>
@@ -45,7 +45,7 @@ const OptionButton = <Option,>({
       <Tooltip {...tooltip}>{label}</Tooltip>
     </>
   );
-};
+}
 
 interface SettingsProps {
   children: ReactNode;

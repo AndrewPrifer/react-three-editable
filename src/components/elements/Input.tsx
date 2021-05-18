@@ -1,8 +1,9 @@
 import React, { forwardRef } from 'react';
-import { Input as InputImpl, InputProps } from 'reakit';
+import { Input as InputImpl } from 'reakit';
+import type { InputProps } from 'reakit';
 import { useFormControlContext } from './FormControl';
 
-export { InputProps };
+export type { InputProps };
 
 const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
   const id = useFormControlContext();

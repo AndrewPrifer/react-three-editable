@@ -21,6 +21,7 @@ export type EditableType =
   | 'pointLight'
   | 'perspectiveCamera'
   | 'orthographicCamera';
+
 export type TransformControlsMode = 'translate' | 'rotate' | 'scale';
 export type TransformControlsSpace = 'world' | 'local';
 export type ViewportShading = 'wireframe' | 'flat' | 'solid' | 'rendered';
@@ -308,7 +309,7 @@ const config: StateCreator<EditorStore> = (set, get) => {
         allowImplicitInstancing,
         editables: newEditables,
         initialEditorCamera: editorCamera,
-        initialState,
+        initialState: initialState ?? null,
       });
     },
     addEditable: (type, uniqueName, initialProperties) =>
@@ -407,7 +408,7 @@ const config: StateCreator<EditorStore> = (set, get) => {
     },
     createSnapshot: () => {
       set((state) => ({
-        sceneSnapshot: state.scene?.clone(),
+        sceneSnapshot: state.scene?.clone() ?? null,
         editablesSnapshot: state.editables,
       }));
     },

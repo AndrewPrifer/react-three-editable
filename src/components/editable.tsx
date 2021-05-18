@@ -39,21 +39,19 @@ const editable = <
 >(
   Component: T,
   type: T extends 'primitive' ? null : U
-) =>
-  forwardRef(
-    (
-      {
-        uniqueName,
-        visible,
-        editableType,
-        ...props
-      }: Omit<ComponentProps<T>, 'visible'> & {
-        uniqueName: string;
-        visible?: boolean | 'editor';
-      } & (T extends 'primitive' ? { editableType: U } : {}) &
-        RefAttributes<Elements[U]>,
-      ref
-    ) => {
+) => {
+  type Props = Omit<ComponentProps<T>, 'visible'> & {
+    uniqueName: string;
+    visible?: boolean | 'editor';
+  } & (T extends 'primitive'
+      ? {
+          editableType: U;
+        }
+      : {}) &
+    RefAttributes<Elements[U]>;
+
+  return forwardRef(
+    ({ uniqueName, visible, editableType, ...props }: Props, ref) => {
       const objectRef = useRef<Elements[U]>();
 
       const [addEditable, removeEditable] = useEditorStore(
@@ -136,6 +134,8 @@ const editable = <
 
         const unsub = useEditorStore.subscribe(
           (transform: Matrix4 | null) => {
+            console.log('t', transform);
+
             if (transform) {
               useEditorStore
                 .getState()
@@ -170,6 +170,7 @@ const editable = <
       );
     }
   );
+};
 
 const createEditable = <T extends EditableType>(type: T) =>
   // @ts-ignore
