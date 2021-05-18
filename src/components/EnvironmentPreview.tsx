@@ -1,5 +1,5 @@
 import React, { VFC, Suspense } from 'react';
-import { Canvas } from 'react-three-fiber';
+import { Canvas } from '@react-three/fiber';
 import { Environment, OrbitControls, TorusKnot } from '@react-three/drei';
 import { Clickable, ClickableProps } from 'reakit';
 import { IoIosClose } from 'react-icons/all';

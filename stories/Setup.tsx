@@ -1,5 +1,5 @@
 import React, { ReactNode, VFC, Suspense, useRef } from 'react';
-import { Canvas, ContainerProps, useFrame } from 'react-three-fiber';
+import { Canvas, ContainerProps, useFrame } from '@react-three/fiber';
 import Suitcase from './Suitcase';
 
 import {

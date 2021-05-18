@@ -10,7 +10,7 @@ import {
 import { MutableRefObject } from 'react';
 import { OrbitControls } from '@react-three/drei';
 import deepEqual from 'fast-deep-equal';
-import { ContainerProps } from 'react-three-fiber';
+import { ContainerProps } from '@react-three/fiber';
 import type { IProject } from '@theatre/core';
 
 export type EditableType =

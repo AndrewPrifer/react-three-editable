@@ -1,6 +1,6 @@
 import { Object3D, Event } from 'three';
 import React, { forwardRef, useLayoutEffect, useEffect, useMemo } from 'react';
-import { ReactThreeFiber, useThree, Overwrite } from 'react-three-fiber';
+import { ReactThreeFiber, useThree, Overwrite } from '@react-three/fiber';
 import { TransformControls as TransformControlsImpl } from 'three/examples/jsm/controls/TransformControls';
 import { OrbitControls } from '@react-three/drei';
 

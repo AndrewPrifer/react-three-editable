@@ -42,7 +42,7 @@
   "peerDependencies": {
     "react": ">=16",
     "react-dom": ">=16",
-    "react-three-fiber": "*",
+    "@react-three/fiber": "*",
     "three": "*"
   },
   "husky": {
@@ -91,7 +91,7 @@
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-is": "^17.0.1",
-    "react-three-fiber": "^5.3.4",
+    "@react-three/fiber": "^5.3.4",
     "rollup-plugin-postcss": "^3.1.8",
     "size-limit": "^4.6.0",
     "tailwindcss": "^2.0.1",

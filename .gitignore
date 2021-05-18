@@ -6,6 +6,7 @@ dist
 
 .idea
 .history
+**/.eslintcache
 
 .yarn/*
 !.yarn/patches
