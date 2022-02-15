@@ -1,5 +1,11 @@
 # React Three Editable
 
+> ⚠️ React Three Editable is now part of [Theatre.js](https://github.com/theatre-js/theatre) and can be found on NPM as `@theatre/r3f`. The new project is functionally almost the same as this one, just with more features, regular maintenance and... animation tools! 🎉 Chances are your current r3e code will work without any modifications.
+>
+> For those that haven't heard the news, I'm now also working on Theatre.js, and `@theatre/r3f` will be receiving regular improvements and maintenance as an official Theatre.js extension.
+>
+> With that, however, this package (`react-three-editable`) is deprecated in favor of `@theatre/r3f`. I encourage you all to check it out at [Theatre.js](https://github.com/theatre-js/theatre) and file issues there!
+
 React Three Editable is a library for React and react-three-fiber that lets you edit your scene in a visual editor while requiring minimal modifications to your r3f code. To get a quick idea of what it's all about, please take a look at this [codesandbox](https://codesandbox.io/s/ide-cream-demo-hcgcd).
 
 **Here be dragons! 🐉** React Three Editable is relatively stable, however being pre-1.0.0 software, the API and the internal logic can drastically change at any time, without warning.
