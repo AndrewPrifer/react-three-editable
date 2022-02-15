@@ -1,7 +1,8 @@
 import React, { forwardRef } from 'react';
-import { Button as ButtonImpl, ButtonProps } from 'reakit';
+import type { ButtonProps } from 'reakit';
+import { Button as ButtonImpl } from 'reakit';
 
-export { ButtonProps };
+export type { ButtonProps };
 
 const Button = forwardRef<HTMLButtonElement, ButtonProps>((props, ref) => {
   return (

@@ -10,7 +10,8 @@ import {
 import { MutableRefObject } from 'react';
 import { OrbitControls } from '@react-three/drei';
 import deepEqual from 'fast-deep-equal';
-import { ContainerProps } from 'react-three-fiber';
+import { ContainerProps } from '@react-three/fiber';
+import type { IProject } from '@theatre/core';
 
 export type EditableType =
   | 'group'
@@ -20,6 +21,7 @@ export type EditableType =
   | 'pointLight'
   | 'perspectiveCamera'
   | 'orthographicCamera';
+
 export type TransformControlsMode = 'translate' | 'rotate' | 'scale';
 export type TransformControlsSpace = 'world' | 'local';
 export type ViewportShading = 'wireframe' | 'flat' | 'solid' | 'rendered';
@@ -187,6 +189,7 @@ export type EditorStore = {
     gl: WebGLRenderer,
     allowImplicitInstancing: boolean,
     editorCamera: ContainerProps['camera'],
+    theatreProject: IProject,
     initialState?: EditableState
   ) => void;
   setOrbitControlsRef: (
@@ -267,7 +270,14 @@ const config: StateCreator<EditorStore> = (set, get) => {
     referenceWindowSize: 120,
     initialEditorCamera: {},
 
-    init: (scene, gl, allowImplicitInstancing, editorCamera, initialState) => {
+    init: (
+      scene,
+      gl,
+      allowImplicitInstancing,
+      editorCamera,
+      theatreProject,
+      initialState
+    ) => {
       const editables = get().editables;
 
       const newEditables: Record<string, Editable> = initialState
@@ -299,7 +309,7 @@ const config: StateCreator<EditorStore> = (set, get) => {
         allowImplicitInstancing,
         editables: newEditables,
         initialEditorCamera: editorCamera,
-        initialState,
+        initialState: initialState ?? null,
       });
     },
     addEditable: (type, uniqueName, initialProperties) =>
@@ -398,7 +408,7 @@ const config: StateCreator<EditorStore> = (set, get) => {
     },
     createSnapshot: () => {
       set((state) => ({
-        sceneSnapshot: state.scene?.clone(),
+        sceneSnapshot: state.scene?.clone() ?? null,
         editablesSnapshot: state.editables,
       }));
     },
@@ -518,10 +528,11 @@ const initPersistence = (
 
 let [initialPersistedState, unsub] = initPersistence('react-three-editable_');
 
-export type BindFunction = (options?: {
+export type BindFunction = (options: {
   allowImplicitInstancing?: boolean;
   state?: EditableState;
   editorCamera?: ContainerProps['camera'];
+  theatreProject: IProject;
 }) => (options: { gl: WebGLRenderer; scene: Scene }) => void;
 
 export const configure = ({
@@ -548,7 +559,8 @@ export const configure = ({
     allowImplicitInstancing = false,
     state,
     editorCamera = {},
-  } = {}) => {
+    theatreProject,
+  }) => {
     return ({ gl, scene }) => {
       const init = useEditorStore.getState().init;
       init(
@@ -556,6 +568,7 @@ export const configure = ({
         gl,
         allowImplicitInstancing,
         { ...{ position: [20, 20, 20] }, ...editorCamera },
+        theatreProject,
         state
       );
     };

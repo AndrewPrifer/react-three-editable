@@ -10,8 +10,9 @@ import {
   GiLightBulb,
   GiLightProjector,
 } from 'react-icons/all';
-import { Button as ButtonImpl, ButtonProps, Group } from 'reakit';
+import { Button as ButtonImpl, Group } from 'reakit';
 import { Heading, Button } from './elements';
+import type { ButtonProps } from 'reakit';
 
 interface ObjectButtonProps extends ButtonProps {
   objectName: string;
@@ -64,20 +65,16 @@ const ObjectButton: VFC<ObjectButtonProps> = ({
 };
 
 const SceneOutlinePanel: VFC = () => {
-  const [
-    editablesSnapshot,
-    selected,
-    setSelected,
-    createSnapshot,
-  ] = useEditorStore(
-    (state) => [
-      state.editablesSnapshot,
-      state.selected,
-      state.setSelected,
-      state.createSnapshot,
-    ],
-    shallow
-  );
+  const [editablesSnapshot, selected, setSelected, createSnapshot] =
+    useEditorStore(
+      (state) => [
+        state.editablesSnapshot,
+        state.selected,
+        state.setSelected,
+        state.createSnapshot,
+      ],
+      shallow
+    );
 
   if (editablesSnapshot === null) {
     return null;

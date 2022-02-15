@@ -108,7 +108,7 @@ const PropertiesPanel: VFC = () => {
     if (formValues) {
       Object.entries(formValues).forEach(([key, value]) => {
         // avoids rerenders, unlike reset
-        setValue(key, value);
+        setValue(key as keyof typeof formValues, value);
       });
     }
 
@@ -118,7 +118,7 @@ const PropertiesPanel: VFC = () => {
         if (formValues) {
           Object.entries(formValues).forEach(([key, value]) => {
             // avoids rerenders, unlike reset
-            setValue(key, value);
+            setValue(key as keyof typeof formValues, value);
           });
         }
       },

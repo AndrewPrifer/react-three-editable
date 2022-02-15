@@ -3,11 +3,14 @@ import React, { VFC } from 'react';
 import {
   usePopoverState,
   Popover as PopoverImpl,
-  PopoverProps,
   PopoverDisclosure,
 } from 'reakit';
 
-export { PopoverProps, PopoverDisclosure, usePopoverState };
+import type { PopoverProps } from 'reakit';
+
+export type { PopoverProps };
+
+export { PopoverDisclosure, usePopoverState };
 
 export const Popover: VFC<PopoverProps> = ({
   className,

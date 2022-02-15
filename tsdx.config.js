@@ -8,6 +8,7 @@ module.exports = {
       })
     );
     config.treeshake.moduleSideEffects = false;
+
     return config;
   },
 };

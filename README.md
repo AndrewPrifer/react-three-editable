@@ -18,7 +18,7 @@ yarn add react-three-editable
 
 ```tsx
 import React from 'react';
-import { Canvas } from 'react-three-fiber';
+import { Canvas } from '@react-three/fiber';
 import { editable as e, configure } from 'react-three-editable';
 
 // Import your previously exported state
